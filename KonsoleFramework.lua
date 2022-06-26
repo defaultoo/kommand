@@ -27,9 +27,6 @@ Konsole.Name = "Konsole"
 Konsole.Parent = game:GetService("CoreGui")
 Konsole.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-BlurEffect.Name = "BlurEffect"
-BlurEffect.Parent = game.StarterGui.Konsole.Blur
-
 ConsoleWindow.Name = "ConsoleWindow"
 ConsoleWindow.Parent = Konsole
 ConsoleWindow.AnchorPoint = Vector2.new(0.5, 0.5)
