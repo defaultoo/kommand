@@ -522,10 +522,10 @@ end)
 ----------------------------------------------------------------------
 
 local function SearchForCommand(cmd)
-	local TextboxLength = string.len(CommandBar.Text)
+	local TextboxLength = string.len(CmdBar.Text)
 	local CommandLength = string.len(cmd)
 	pcall(function()
-		match = string.find(cmd, CommandBar.Text)
+		match = string.find(cmd, CmdBar.Text)
 	end)
 	if match and TextboxLength == CommandLength then 
 		return true
