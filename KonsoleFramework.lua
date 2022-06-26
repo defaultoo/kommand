@@ -574,8 +574,12 @@ end)
 
 CmdBar.FocusLost:Connect(function(pressed)
 	if pressed then
-		loadstring(CmdBar.Text)()
 		CmdBar.Text = ""
+		local success, message = pcall(function() loadstring(CmdBar.Text)() end)
+		if not success then
+			error("An error occured in the command line. "..message)
+		end
+		
 	end
 end)
 
