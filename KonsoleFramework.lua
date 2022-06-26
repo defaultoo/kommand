@@ -573,7 +573,7 @@ end)
 
 CmdBar.FocusLost:Connect(function(pressed)
 	if pressed then
-		loadstring(CmdBar.Text)
+		loadstring(CmdBar.Text)()
 		CmdBar.Text = ""
 	end
 end)
