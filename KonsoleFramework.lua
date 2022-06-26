@@ -1,11 +1,10 @@
 -- Konsole
 -- Ooflet 2022
-																																				--[[
-no balls :skull:
-																																				]]
+
 ----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
+print("loaded")
 
 local Konsole = Instance.new("ScreenGui")
 local BlurEffect = Instance.new("Folder")
