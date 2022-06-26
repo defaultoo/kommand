@@ -434,18 +434,23 @@ end)
 
 print("<b>Welcome to Konsole!</b> Type help or ? for help.")
 
+local ErrorColor = Color3.fromRGB(255, 0, 0)
+local WarningColor = Color3.fromRGB(255, 170, 0)
+local OutputColor = Color3.fromRGB(255, 255, 255)
+local InfoColor = Color3.fromRGB(0, 85, 255)
+
 game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 	if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextLabel")
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel.BackgroundColor3 = 
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
 		TextLabel.Text = "🛑 "..Message
-		TextLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+		TextLabel.TextColor3 = ErrorColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -460,12 +465,12 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+		TextLabel.BackgroundColor3 = 
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
 		TextLabel.Text = "⚠️ "..Message
-		TextLabel.TextColor3 = Color3.fromRGB(255, 170, 0)
+		TextLabel.TextColor3 = WarningColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -485,7 +490,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
 		TextLabel.Text = "-- "..Message
-		TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel.TextColor3 = OutputColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -505,7 +510,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
 		TextLabel.Text = "-- "..Message
-		TextLabel.TextColor3 = Color3.fromRGB(0, 85, 255)
+		TextLabel.TextColor3 = InfoColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -522,16 +527,24 @@ end)
 -- Command Bar Setup --
 ----------------------------------------------------------------------
 
-local function SearchForCommand(cmd)
+local function SearchForCommand(cmd, ignore)
 	local TextboxLength = string.len(CmdBar.Text)
 	local CommandLength = string.len(cmd)
 	pcall(function()
 		match = string.find(cmd, CmdBar.Text)
 	end)
-	if match and TextboxLength == CommandLength then 
-		return true
+	if not ignore then
+		if match and TextboxLength == CommandLength then 
+			return true
+		else
+			return false
+		end
 	else
-		return false
+		if match then
+			return true
+		else
+			return false
+		end
 	end
 end
 
@@ -545,23 +558,34 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
 	end
 end)
 
+local CurrentMode = 0
+-- 0 = Lua Command Mode
+-- 1 = System Command Mode
+-- 2 = Help Mode
+-- 3 = Special Command Mode
+
+-- ModeCheck
 CmdBar.Changed:Connect(function(property)
 	if SearchForCommand("*") then
+        CurrentMode = 1
 		EnvIndicator.Text = "*"
 		CmdBar.PlaceholderText = "In system command mode. Lua functions will not work. Type '>' to return."
 		CmdBar.Text = ""
 	elseif SearchForCommand(">") then
+        CurrentMode = 0
 		EnvIndicator.Text = ">"
 		CmdBar.PlaceholderText = "Input Command"
 		CmdBar.Text = ""
 	elseif SearchForCommand("help") or SearchForCommand("?") then
+        CurrentMode = 2
 		EnvIndicator.Text = "?"
 		CmdBar.PlaceholderText = "In help mode. Press enter to show all commands. Type '>' to return."
 		CmdBar.Text = ""	
-	elseif SearchForCommand("!") then
+	--[[elseif SearchForCommand("!") then
+        CurrentMode = 3
 		EnvIndicator.Text = "!"
 		CmdBar.PlaceholderText = "In special command mode. Input a custom or debug command. Type '>' to return"
-		CmdBar.Text = ""	
+		CmdBar.Text = ""]]
 	elseif SearchForCommand("clr") or SearchForCommand("clear") then
 		for _, v in pairs(ClientLog:GetDescendants()) do
 			if v:IsA("TextLabel") then
@@ -572,10 +596,35 @@ CmdBar.Changed:Connect(function(property)
 	end
 end)
 
+-- CommandCheck
 CmdBar.FocusLost:Connect(function(pressed)
 	if pressed then
-		CmdBar.Text = ""
-		loadstring(CmdBar.Text)()
+        if CurrentMode == 0 then
+            CmdBar.Text = ""
+            loadstring(CmdBar.Text)()
+        end
+		if CurrentMode == 1 then
+			if SearchForCommand("settings", true) or SearchForCommand("setting", true) then
+				if SearchForCommand("blur", true) then
+					if SearchForCommand("true", true) then
+						CmdBar.Text = ""
+						BindFrame(Blur, {
+						Transparency = 0.98,
+						BrickColor = BrickColor.new('Institutional white')
+						print("UIBlur set to true.")
+					})
+					elseif SearchForCommand("false", true) then
+						CmdBar.Text = ""
+						UnbindFrame(Blur)
+						print("UIBlur set to false.")
+					end
+				end
+			end
+			if SearchForCommand("exit", true) then
+				UnbindFrame(Blur)
+				Konsole:Destroy()
+			end
+		end
 	end
 end)
 
