@@ -369,6 +369,7 @@ if qualityLevel > 7 then
 	UIBlur.FocusDistance = 51.6
 	UIBlur.InFocusRadius = 50
 	UIBlur.NearIntensity = 1	
+	UIBlur.Parent = game.Lighting
 	game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
 	BindFrame(Blur, {
 		Transparency = 0.98,
