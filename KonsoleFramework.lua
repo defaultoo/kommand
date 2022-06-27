@@ -1,11 +1,9 @@
 -- Konsole
--- Ooflet 2022
+-- Ooflet
 
 ----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
-print("loaded")
-
 local Konsole = Instance.new("ScreenGui")
 local BlurEffect = Instance.new("Folder")
 local ConsoleWindow = Instance.new("ImageLabel")
@@ -23,7 +21,7 @@ local CmdBar = Instance.new("TextBox")
 local EnvIndicator = Instance.new("TextLabel")
 
 Konsole.Name = "Konsole"
-Konsole.Parent = game:GetService("CoreGui")
+Konsole.Parent = game.Players.LocalPlayer.PlayerGui
 Konsole.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 ConsoleWindow.Name = "ConsoleWindow"
@@ -444,7 +442,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = 
+		TextLabel.BackgroundColor3 = ErrorColor
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
@@ -464,7 +462,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = 
+		TextLabel.BackgroundColor3 = WarningColor
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
@@ -532,14 +530,14 @@ local function SearchForCommand(cmd, ignore)
 	pcall(function()
 		match = string.find(cmd, CmdBar.Text)
 	end)
-	if not ignore then
-		if match and TextboxLength == CommandLength then 
+	if ignore then
+		if match then
 			return true
 		else
 			return false
 		end
 	else
-		if match then
+		if match and TextboxLength == CommandLength then 
 			return true
 		else
 			return false
@@ -566,17 +564,17 @@ local CurrentMode = 0
 -- ModeCheck
 CmdBar.Changed:Connect(function(property)
 	if SearchForCommand("*") then
-        CurrentMode = 1
+		CurrentMode = 1
 		EnvIndicator.Text = "*"
 		CmdBar.PlaceholderText = "In system command mode. Lua functions will not work. Type '>' to return."
 		CmdBar.Text = ""
 	elseif SearchForCommand(">") then
-        CurrentMode = 0
+		CurrentMode = 0
 		EnvIndicator.Text = ">"
 		CmdBar.PlaceholderText = "Input Command"
 		CmdBar.Text = ""
 	elseif SearchForCommand("help") or SearchForCommand("?") then
-        CurrentMode = 2
+		CurrentMode = 2
 		EnvIndicator.Text = "?"
 		CmdBar.PlaceholderText = "In help mode. Press enter to show all commands. Type '>' to return."
 		CmdBar.Text = ""	
@@ -597,33 +595,48 @@ end)
 
 -- CommandCheck
 CmdBar.FocusLost:Connect(function(pressed)
-	if pressed then
-        if CurrentMode == 0 then
-            CmdBar.Text = ""
-            loadstring(CmdBar.Text)()
-        end
+	local text = CmdBar.Text
+	if pressed then 
+		if CurrentMode == 0 then
+			CmdBar.Text = ""
+			loadstring(text)()
+		end
 		if CurrentMode == 1 then
-			if SearchForCommand("settings", true) or SearchForCommand("setting", true) then
-				if SearchForCommand("blur", true) then
-					if SearchForCommand("true", true) then
+			if text:match("setting") then
+				if text:match("blur") then
+					if text:match("true") then
 						CmdBar.Text = ""
 						BindFrame(Blur, {
-						Transparency = 0.98,
-						BrickColor = BrickColor.new('Institutional white')
-						print("UIBlur set to true.")
-					})
-					elseif SearchForCommand("false", true) then
+							Transparency = 0.98,
+							BrickColor = BrickColor.new('Institutional white')
+						})
+						print("<b>UIBlur set to true.</b>")
+					elseif text:match("false") then
 						CmdBar.Text = ""
 						UnbindFrame(Blur)
-						print("UIBlur set to false.")
+						print("<b>UIBlur set to false.</b>")
+					else
+						warn("<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>")
 					end
+				else
+					warn("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>")
 				end
-			end
-			if SearchForCommand("exit", true) then
+			elseif text:match("exit") then
 				UnbindFrame(Blur)
 				Konsole:Destroy()
+			else
+				warn("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>")
 			end
 		end
+		if CurrentMode == 2 then
+			if text:match("setting") then
+				print("<b>To see all available functions, please visit Konsole's documentation at https://github.com/ooflet/konsole/wiki (link has been copied)</b>")
+				print("blur <boolean>")
+			else
+				print("<b>To see all available functions, please visit Konsole's documentation at https://github.com/ooflet/konsole/wiki (link has been copied)</b>")
+			end
+		end
+		CmdBar.Text = ""
 	end
 end)
 
