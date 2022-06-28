@@ -123,6 +123,7 @@ CmdBar.Text = ""
 CmdBar.TextColor3 = Color3.fromRGB(255, 255, 255)
 CmdBar.TextSize = 16.000
 CmdBar.TextWrapped = true
+CmdBar.ClearTextOnFocus = false
 CmdBar.TextXAlignment = Enum.TextXAlignment.Left
 
 EnvIndicator.Name = "EnvIndicator"
@@ -329,7 +330,7 @@ local function UnbindFrame(frame)
 		end
 		binds[frame] = nil
 	else
-		warn(('No part bindings exist for %s'):format(frame:GetFullName()))
+		warn("UIBlur has already been set to false.")
 	end
 end
 
@@ -429,7 +430,7 @@ end)
 -- Console Setup --
 ----------------------------------------------------------------------
 
-print("<b>Welcome to Konsole!</b> Type help or ? for help.")
+print('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>')
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
@@ -438,7 +439,7 @@ local InfoColor = Color3.fromRGB(0, 85, 255)
 
 game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 	if Type == Enum.MessageType.MessageError then
-		local TextLabel = Instance.new("TextLabel")
+		local TextLabel = Instance.new("TextButton")
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -458,7 +459,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 			TextLabel.TextTransparency = i
 		end
 	elseif Type == Enum.MessageType.MessageWarning then
-		local TextLabel = Instance.new("TextLabel")
+		local TextLabel = Instance.new("TextButton")
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -478,7 +479,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 			TextLabel.TextTransparency = i
 		end
 	elseif Type == Enum.MessageType.MessageOutput then
-		local TextLabel = Instance.new("TextLabel")
+		local TextLabel = Instance.new("TextButton")
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -498,7 +499,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 			TextLabel.TextTransparency = i
 		end
 	elseif Type == Enum.MessageType.MessageInfo then
-		local TextLabel = Instance.new("TextLabel")
+		local TextLabel = Instance.new("TextButton")
 
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -517,6 +518,12 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 			wait(0.01)
 			TextLabel.TextTransparency = i
 		end
+	end
+end)
+
+ClientLog.Changed:Connect(function(property)
+	if property ~= "CanvasPosition" then
+		ClientLog.CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y)
 	end
 end)
 
@@ -560,84 +567,160 @@ local CurrentMode = 0
 -- 1 = System Command Mode
 -- 2 = Help Mode
 -- 3 = Special Command Mode
+-- 4 = Response Mode
 
 -- ModeCheck
 CmdBar.Changed:Connect(function(property)
-	if SearchForCommand("*") then
-		CurrentMode = 1
-		EnvIndicator.Text = "*"
-		CmdBar.PlaceholderText = "In system command mode. Lua functions will not work. Type '>' to return."
-		CmdBar.Text = ""
-	elseif SearchForCommand(">") then
-		CurrentMode = 0
-		EnvIndicator.Text = ">"
-		CmdBar.PlaceholderText = "Input Command"
-		CmdBar.Text = ""
-	elseif SearchForCommand("help") or SearchForCommand("?") then
-		CurrentMode = 2
-		EnvIndicator.Text = "?"
-		CmdBar.PlaceholderText = "In help mode. Press enter to show all commands. Type '>' to return."
-		CmdBar.Text = ""	
+	if CurrentMode ~= 4 then
+		if SearchForCommand("*") then
+			CurrentMode = 1
+			EnvIndicator.Text = "*"
+			CmdBar.PlaceholderText = "In system command mode. Lua functions will not work. Type '>' to return."
+			CmdBar.Text = ""
+		elseif SearchForCommand(">") then
+			CurrentMode = 0
+			EnvIndicator.Text = ">"
+			CmdBar.PlaceholderText = "Input Command"
+			CmdBar.Text = ""
+		elseif SearchForCommand("help") or SearchForCommand("?") then
+			CurrentMode = 2
+			EnvIndicator.Text = "?"
+			CmdBar.PlaceholderText = "In help mode. Type cmds to show all commands. Type '>' to return."
+			CmdBar.Text = ""	
 	--[[elseif SearchForCommand("!") then
         CurrentMode = 3
 		EnvIndicator.Text = "!"
-		CmdBar.PlaceholderText = "In special command mode. Input a custom or debug command. Type '>' to return"
+		CmdBar.PlaceholderText = "In special command mode. Input a module or debug command. Type '>' to return"
 		CmdBar.Text = ""]]
-	elseif SearchForCommand("clr") or SearchForCommand("clear") then
-		for _, v in pairs(ClientLog:GetDescendants()) do
-			if v:IsA("TextLabel") then
-				v:Destroy()
+		elseif SearchForCommand("clr") or SearchForCommand("clear") then
+			CmdBar.Text = ""
+			for _, v in pairs(ClientLog:GetDescendants()) do
+				if v:IsA("TextButton") then
+					v:Destroy()
+				end
+			end	
+		elseif SearchForCommand("stop") then
+			CmdBar.Text = ""
+			for _, v in pairs(ClientLog:GetDescendants()) do
+				if v:IsA("TextButton") then
+					v:Destroy()
+				end
 			end
+		elseif SearchForCommand("start") or SearchForCommand("resume") or SearchForCommand("continue") then
+			CmdBar.Text = ""
+			for _, v in pairs(ClientLog:GetDescendants()) do
+				if v:IsA("TextButton") then
+					v:Destroy()
+				end
+			end	
 		end
-		CmdBar.Text = ""	
 	end
 end)
 
 -- CommandCheck
+local IsLookingForResponse = false
+local PreviousMode, PreviousModePrefix = nil, nil
+local ResponseGiven = false
+local ResponseResult = nil
+
+local function CreateResponsePrompt(prefix)
+	CmdBar.Text = ""
+	PreviousMode = CurrentMode
+	wait(0.05)
+	CmdBar:CaptureFocus()
+	CurrentMode = 4
+	EnvIndicator.Text = "="
+	IsLookingForResponse = true
+	repeat wait() until ResponseGiven
+	ResponseGiven = false
+	return ResponseResult
+end
+
+local function RecieveResponsePromptResult(result)
+	IsLookingForResponse = false
+	ResponseGiven = true
+	ResponseResult = result
+	CurrentMode = PreviousMode
+	if CurrentMode == 0 then
+		EnvIndicator.Text = '>'
+	elseif CurrentMode == 1 then
+		EnvIndicator.Text = '*'
+	elseif CurrentMode == 2 then
+		EnvIndicator.Text = "?"
+	elseif CurrentMode == 3 then
+		EnvIndicator.Text = "!"
+	end
+end
+
 CmdBar.FocusLost:Connect(function(pressed)
-	local text = CmdBar.Text
-	if pressed then 
-		if CurrentMode == 0 then
-			CmdBar.Text = ""
-			loadstring(text)()
-		end
-		if CurrentMode == 1 then
-			if text:match("setting") then
-				if text:match("blur") then
-					if text:match("true") then
-						CmdBar.Text = ""
-						BindFrame(Blur, {
-							Transparency = 0.98,
-							BrickColor = BrickColor.new('Institutional white')
-						})
-						print("<b>UIBlur set to true.</b>")
-					elseif text:match("false") then
-						CmdBar.Text = ""
-						UnbindFrame(Blur)
-						print("<b>UIBlur set to false.</b>")
+	if CmdBar.Text ~= "" then
+		local text = CmdBar.Text
+		print("> "..text)
+		if pressed then 
+			if CurrentMode == 0 then
+				CmdBar.Text = ""
+				wait(0.05)
+				CmdBar:CaptureFocus()
+				loadstring(text)()
+			end
+			if CurrentMode == 1 then
+				if text:match("setting") then
+					if text:match("blur") then
+						if text:match("true") then
+							CmdBar.Text = ""
+							BindFrame(Blur, {
+								Transparency = 0.98,
+								BrickColor = BrickColor.new('Institutional white')
+							})
+							print('<font color="rgb(85, 170, 255)"><b>UIBlur set to true.</b></font>')
+						elseif text:match("false") then
+							CmdBar.Text = ""
+							UnbindFrame(Blur)
+							print('<font color="rgb(85, 170, 255)"><b>UIBlur set to false.</b></font>')
+						else
+							warn("<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>")
+						end
 					else
-						warn("<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>")
+						warn("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>")
+					end
+				elseif text:match("quit") then
+					print('<font color="rgb(85, 170, 255)"><b>Are you sure? y/n</b></font>')
+					if CreateResponsePrompt() then
+						UnbindFrame(Blur)
+						Konsole:Destroy()
 					end
 				else
-					warn("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>")
+					if not IsLookingForResponse then
+						warn("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>")
+					end
 				end
-			elseif text:match("exit") then
-				UnbindFrame(Blur)
-				Konsole:Destroy()
-			else
-				warn("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>")
 			end
-		end
-		if CurrentMode == 2 then
-			if text:match("setting") then
-				print("<b>To see all available functions, please visit Konsole's documentation at https://github.com/ooflet/konsole/wiki (link has been copied)</b>")
-				print("blur <boolean>")
-			else
-				print("<b>To see all available functions, please visit Konsole's documentation at https://github.com/ooflet/konsole/wiki (link has been copied)</b>")
+			if CurrentMode == 2 then
+				if text:match("setting") then
+					print('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki</b></font>')
+					print('<font color="rgb(85, 170, 255)"> blur (boolean) </font>')
+				else
+					print('<font color="rgb(85, 170, 255)"> <b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki (link has been copied)</b> </font>')
+				end
 			end
+			if text:match("openrobloxconsole") then
+				--
+			end
+
+			if IsLookingForResponse then
+				if SearchForCommand("y") then
+					RecieveResponsePromptResult(true)
+				elseif SearchForCommand("n") then
+					RecieveResponsePromptResult(false)
+				else
+					warn("Please provide a valid response ('y' or 'n')")
+				end
+			end
+			CmdBar.Text = ""
+			wait(0.05)
+			CmdBar:CaptureFocus()
 		end
-		CmdBar.Text = ""
-	end
+	end	
 end)
 
 Exit.MouseButton1Click:Connect(function()
