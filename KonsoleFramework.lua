@@ -454,10 +454,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
-		for i = 1,0,-0.1 do
-			wait(0.01)
-			TextLabel.TextTransparency = i
-		end
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageWarning then
 		local TextLabel = Instance.new("TextButton")
 
@@ -474,10 +471,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
-		for i = 1,0,-0.1 do
-			wait(0.01)
-			TextLabel.TextTransparency = i
-		end
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageOutput then
 		local TextLabel = Instance.new("TextButton")
 
@@ -494,10 +488,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
-		for i = 1,0,-0.1 do
-			wait(0.01)
-			TextLabel.TextTransparency = i
-		end
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageInfo then
 		local TextLabel = Instance.new("TextButton")
 
@@ -514,16 +505,15 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
-		for i = 1,0,-0.1 do
-			wait(0.01)
-			TextLabel.TextTransparency = i
-		end
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	end
 end)
 
+local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
+
 ClientLog.Changed:Connect(function(property)
 	if property ~= "CanvasPosition" then
-		ClientLog.CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y)
+		game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
 	end
 end)
 
@@ -594,9 +584,15 @@ CmdBar.Changed:Connect(function(property)
 		CmdBar.Text = ""]]
 		elseif SearchForCommand("clr") or SearchForCommand("clear") then
 			CmdBar.Text = ""
+			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, 0)}):Play()
 			for _, v in pairs(ClientLog:GetDescendants()) do
 				if v:IsA("TextButton") then
-					v:Destroy()
+					spawn(function()
+						game:GetService("TweenService"):Create(v, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
+						wait(0.5)
+						v:Destroy()
+					end)
+					
 				end
 			end	
 		elseif SearchForCommand("stop") then
@@ -696,11 +692,15 @@ CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			if CurrentMode == 2 then
-				if text:match("setting") then
-					print('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki</b></font>')
-					print('<font color="rgb(85, 170, 255)"> blur (boolean) </font>')
+				if text:match("copy") then
+					pcall(function()
+						if identifyexecutor() then
+							setclipboard("https://github.com/ooflet/konsole/wiki")	
+						end
+					end)
+					print('<font color="rgb(85, 170, 255)"><b>Copied</b></font>')
 				else
-					print('<font color="rgb(85, 170, 255)"> <b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki (link has been copied)</b> </font>')
+					print('<font color="rgb(85, 170, 255)"> <b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>')
 				end
 			end
 			if text:match("openrobloxconsole") then
