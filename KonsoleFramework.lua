@@ -27,7 +27,7 @@ local UIStroke = Instance.new("UIStroke")
 local IntroUIStroke = Instance.new("UIStroke")
 
 Konsole.Name = "Konsole"
-Konsole.Parent = game.Players.LocalPlayer.PlayerGui
+Konsole.Parent = game:GetService("CoreGui")
 Konsole.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Konsole.DisplayOrder = 9999999999999
 
@@ -47,6 +47,7 @@ IntroUIStroke.Color = Color3.fromRGB(80, 80, 80)
 IntroUICorner.CornerRadius = UDim.new(0, 0)
 IntroUICorner.Parent = Intro
 
+wait(1)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 wait(0.75)
