@@ -45,10 +45,10 @@ IntroUICorner.Parent = Intro
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 wait(0.75)
-game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(0,0,0), Size = UDim2.new(0,550,0,550)}):Play()
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,550,0,550)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,7)}):Play()
 wait(0.5)
-game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(0,0,0), Size = UDim2.new(0,800,0,550)}):Play()
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,800,0,550)}):Play()
 wait(0.5)
 
 UICorner.CornerRadius = UDim.new(0, 7)
@@ -60,8 +60,8 @@ BlurUICorner.Parent = Blur
 ConsoleWindow.Name = "ConsoleWindow"
 ConsoleWindow.Parent = Konsole
 ConsoleWindow.AnchorPoint = Vector2.new(0.5, 0.5)
-ConsoleWindow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ConsoleWindow.BackgroundTransparency = 0.200
+ConsoleWindow.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ConsoleWindow.BackgroundTransparency = 0.1
 ConsoleWindow.BorderSizePixel = 0
 ConsoleWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
 ConsoleWindow.Size = UDim2.new(0, 800, 0, 550)
@@ -480,10 +480,10 @@ local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
-game:GetService("LogService").MessageOut:Connect(function(Message, Type)
+local function OutputText(Message, Type)
 	if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextButton")
-
+		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
 		TextLabel.BackgroundColor3 = ErrorColor
@@ -500,7 +500,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageWarning then
 		local TextLabel = Instance.new("TextButton")
-
+		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
 		TextLabel.BackgroundColor3 = WarningColor
@@ -517,7 +517,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageOutput then
 		local TextLabel = Instance.new("TextButton")
-
+		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
 		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -534,7 +534,7 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageInfo then
 		local TextLabel = Instance.new("TextButton")
-
+		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
 		TextLabel.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
@@ -548,8 +548,12 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
-		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()	
 	end
+end
+
+game:GetService("LogService").MessageOut:Connect(function(Message, Type)
+	OutputText(Message, Type)
 end)
 
 local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
@@ -700,7 +704,18 @@ CmdBar.FocusLost:Connect(function(pressed)
 				CmdBar.Text = ""
 				wait(0.05)
 				CmdBar:CaptureFocus()
-				loadstring(text)()
+				local loadstringEnabled = pcall(function()
+					a = loadstring("print('Hello world')")
+				end)
+				if loadstringEnabled then
+					loadstring(text)()
+				else
+					warn("Loadstring cannot be accessed by your executor. Would you like to use a Lua VM? This may be unstable y/n")
+					if CreateResponsePrompt() then
+						print('<font color="rgb(85, 170, 255)"><b>Lua VM enabled.</b></font>')
+					end
+				end
+				
 			end
 			if CurrentMode == 1 then
 				if text:match("setting") then
