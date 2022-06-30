@@ -19,10 +19,41 @@ local UIListLayout = Instance.new("UIListLayout")
 local CommandBar = Instance.new("Frame")
 local CmdBar = Instance.new("TextBox")
 local EnvIndicator = Instance.new("TextLabel")
+local UICorner = Instance.new("UICorner")
+local BlurUICorner = Instance.new("UICorner")
+local Intro = Instance.new("Frame")
+local IntroUICorner = Instance.new("UICorner")
 
 Konsole.Name = "Konsole"
-Konsole.Parent = game.Players.LocalPlayer.PlayerGui
+Konsole.Parent = game:GetService("CoreGui")
 Konsole.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Konsole.DisplayOrder = 9999999999999
+
+Intro.Name = "Intro"
+Intro.Parent = Konsole
+Intro.AnchorPoint = Vector2.new(0.5, 0.5)
+Intro.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Intro.BackgroundTransparency = 1.000
+Intro.BorderSizePixel = 0
+Intro.Position = UDim2.new(0.5, 0, 0.5, 0)
+Intro.Size = UDim2.new(1, 0, 1, 0)
+Intro.ZIndex = 999999999
+
+IntroUICorner.CornerRadius = UDim.new(0, 0)
+IntroUICorner.Parent = Intro
+
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40), Size = UDim2.new(0,50,0,50)}):Play()
+game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
+wait(0.75)
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(0,0,0), Size = UDim2.new(0,800,0,550)}):Play()
+game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,7)}):Play()
+wait(1)
+
+UICorner.CornerRadius = UDim.new(0, 7)
+UICorner.Parent = ConsoleWindow
+
+BlurUICorner.CornerRadius = UDim.new(0, 7)
+BlurUICorner.Parent = Blur
 
 ConsoleWindow.Name = "ConsoleWindow"
 ConsoleWindow.Parent = Konsole
@@ -330,7 +361,7 @@ local function UnbindFrame(frame)
 		end
 		binds[frame] = nil
 	else
-		warn("UIBlur has already been set to false.")
+
 	end
 end
 
@@ -430,7 +461,17 @@ end)
 -- Console Setup --
 ----------------------------------------------------------------------
 
-print('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>')
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.F9 then
+		game:GetService("StarterGui"):SetCore("DevConsoleVisible", false)
+		Konsole.Enabled = true
+		BindFrame(Blur, {
+			Transparency = 0.98,
+			BrickColor = BrickColor.new('Institutional white')
+		})
+		game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
+	end
+end)
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
@@ -698,9 +739,9 @@ CmdBar.FocusLost:Connect(function(pressed)
 							setclipboard("https://github.com/ooflet/konsole/wiki")	
 						end
 					end)
-					print('<font color="rgb(85, 170, 255)"><b>Copied</b></font>')
+					print('<font color="rgb(85, 170, 255)"><b>Copied!</b></font>')
 				else
-					print('<font color="rgb(85, 170, 255)"> <b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>')
+					print('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>')
 				end
 			end
 			if text:match("openrobloxconsole") then
@@ -728,3 +769,7 @@ Exit.MouseButton1Click:Connect(function()
 	UnbindFrame(Blur)
 	game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
 end)
+
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
+wait(1)
+print('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>')
