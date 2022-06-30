@@ -23,6 +23,8 @@ local UICorner = Instance.new("UICorner")
 local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke")
+local IntroUIStroke = Instance.new("UIStroke")
 
 Konsole.Name = "Konsole"
 Konsole.Parent = game.Players.LocalPlayer.PlayerGui
@@ -38,6 +40,9 @@ Intro.BorderSizePixel = 0
 Intro.Position = UDim2.new(0.5, 0, 0.5, 0)
 Intro.Size = UDim2.new(1, 0, 1, 0)
 Intro.ZIndex = 999999999
+
+IntroUIStroke.Parent = Intro
+IntroUIStroke.Color = Color3.fromRGB(80, 80, 80)
 
 IntroUICorner.CornerRadius = UDim.new(0, 0)
 IntroUICorner.Parent = Intro
@@ -60,13 +65,16 @@ BlurUICorner.Parent = Blur
 ConsoleWindow.Name = "ConsoleWindow"
 ConsoleWindow.Parent = Konsole
 ConsoleWindow.AnchorPoint = Vector2.new(0.5, 0.5)
-ConsoleWindow.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ConsoleWindow.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ConsoleWindow.BackgroundTransparency = 0.1
 ConsoleWindow.BorderSizePixel = 0
 ConsoleWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
 ConsoleWindow.Size = UDim2.new(0, 800, 0, 550)
 ConsoleWindow.Image = "rbxassetid://9823958365"
 ConsoleWindow.ImageTransparency = 1.000
+
+UIStroke.Parent = ConsoleWindow
+UIStroke.Color = Color3.fromRGB(80, 80, 80)
 
 Blur.Name = "Blur"
 Blur.Parent = ConsoleWindow
@@ -715,7 +723,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 						print('<font color="rgb(85, 170, 255)"><b>Lua VM enabled.</b></font>')
 					end
 				end
-				
+
 			end
 			if CurrentMode == 1 then
 				if text:match("setting") then
@@ -789,4 +797,5 @@ end)
 
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 wait(1)
+Intro.Visible = false
 print('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>')
