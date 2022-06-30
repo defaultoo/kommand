@@ -25,7 +25,7 @@ local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
 
 Konsole.Name = "Konsole"
-Konsole.Parent = game:GetService("CoreGui")
+Konsole.Parent = game.Players.LocalPlayer.PlayerGui
 Konsole.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Konsole.DisplayOrder = 9999999999999
 
@@ -42,12 +42,14 @@ Intro.ZIndex = 999999999
 IntroUICorner.CornerRadius = UDim.new(0, 0)
 IntroUICorner.Parent = Intro
 
-game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(40, 40, 40), Size = UDim2.new(0,50,0,50)}):Play()
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 wait(0.75)
-game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(0,0,0), Size = UDim2.new(0,800,0,550)}):Play()
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(0,0,0), Size = UDim2.new(0,550,0,550)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,7)}):Play()
-wait(1)
+wait(0.5)
+game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(0,0,0), Size = UDim2.new(0,800,0,550)}):Play()
+wait(0.5)
 
 UICorner.CornerRadius = UDim.new(0, 7)
 UICorner.Parent = ConsoleWindow
@@ -633,7 +635,7 @@ CmdBar.Changed:Connect(function(property)
 						wait(0.5)
 						v:Destroy()
 					end)
-					
+
 				end
 			end	
 		elseif SearchForCommand("stop") then
