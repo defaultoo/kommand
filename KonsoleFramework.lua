@@ -39,6 +39,7 @@ Intro.BackgroundTransparency = 1.000
 Intro.BorderSizePixel = 0
 Intro.Position = UDim2.new(0.5, 0, 0.5, 0)
 Intro.Size = UDim2.new(1, 0, 1, 0)
+Intro.Visible = false
 Intro.ZIndex = 999999999
 
 IntroUIStroke.Parent = Intro
@@ -48,6 +49,7 @@ IntroUICorner.CornerRadius = UDim.new(0, 0)
 IntroUICorner.Parent = Intro
 
 wait(1)
+Intro.Visible = true
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 wait(0.75)
