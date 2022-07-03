@@ -23,11 +23,14 @@ local UICorner = Instance.new("UICorner")
 local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
-local UIStroke = Instance.new("UIStroke")
-local IntroUIStroke = Instance.new("UIStroke")
 
 Konsole.Name = "Konsole"
-Konsole.Parent = game:GetService("CoreGui")
+if game["Run Service"]:IsStudio() then
+	Konsole.Parent = game.Players.LocalPlayer.PlayerGui
+else
+	Konsole.Parent = game.CoreGui
+end
+
 Konsole.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Konsole.DisplayOrder = 9999999999999
 
@@ -39,17 +42,11 @@ Intro.BackgroundTransparency = 1.000
 Intro.BorderSizePixel = 0
 Intro.Position = UDim2.new(0.5, 0, 0.5, 0)
 Intro.Size = UDim2.new(1, 0, 1, 0)
-Intro.Visible = false
 Intro.ZIndex = 999999999
-
-IntroUIStroke.Parent = Intro
-IntroUIStroke.Color = Color3.fromRGB(80, 80, 80)
 
 IntroUICorner.CornerRadius = UDim.new(0, 0)
 IntroUICorner.Parent = Intro
 
-wait(1)
-Intro.Visible = true
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 wait(0.75)
@@ -75,9 +72,6 @@ ConsoleWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
 ConsoleWindow.Size = UDim2.new(0, 800, 0, 550)
 ConsoleWindow.Image = "rbxassetid://9823958365"
 ConsoleWindow.ImageTransparency = 1.000
-
-UIStroke.Parent = ConsoleWindow
-UIStroke.Color = Color3.fromRGB(80, 80, 80)
 
 Blur.Name = "Blur"
 Blur.Parent = ConsoleWindow
@@ -721,10 +715,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 				if loadstringEnabled then
 					loadstring(text)()
 				else
-					warn("Loadstring cannot be accessed by your executor. Would you like to use a Lua VM? This may be unstable y/n")
-					if CreateResponsePrompt() then
-						print('<font color="rgb(85, 170, 255)"><b>Lua VM enabled.</b></font>')
-					end
+					warn("Loadstring cannot be accessed by your executor.")
 				end
 
 			end
@@ -758,6 +749,11 @@ CmdBar.FocusLost:Connect(function(pressed)
 					if not IsLookingForResponse then
 						warn("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>")
 					end
+				end
+				if text:match("safehop") or text:match("serverhop") then
+					game.Players:ClearAllChildren()
+					game.Workspace:ClearAllChildren()
+					game["Teleport Service"]:Teleport(game.PlaceId)
 				end
 			end
 			if CurrentMode == 2 then
