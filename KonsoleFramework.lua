@@ -398,20 +398,19 @@ end
 local userSettings = UserSettings().GameSettings
 local qualityLevel = userSettings.SavedQualityLevel.Value
 
-if qualityLevel > 7 then
-	local UIBlur = Instance.new("DepthOfFieldEffect")
-	UIBlur.Name = "ConsoleBlur"
-	UIBlur.FarIntensity = 0
-	UIBlur.FocusDistance = 51.6
-	UIBlur.InFocusRadius = 50
-	UIBlur.NearIntensity = 1	
-	UIBlur.Parent = game.Lighting
-	game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
-	BindFrame(Blur, {
-		Transparency = 0.98,
-		BrickColor = BrickColor.new('Institutional white')
-	})
-end
+local UIBlur = Instance.new("DepthOfFieldEffect")
+UIBlur.Name = "ConsoleBlur"
+UIBlur.FarIntensity = 0
+UIBlur.FocusDistance = 51.6
+UIBlur.InFocusRadius = 50
+UIBlur.NearIntensity = 1	
+UIBlur.Parent = game.Lighting
+game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
+BindFrame(Blur, {
+	Transparency = 0.98,
+	BrickColor = BrickColor.new('Institutional white')
+})
+
 
 ----------------------------------------------------------------------
 -- Dragger Setup --
