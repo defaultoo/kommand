@@ -646,20 +646,6 @@ CmdBar.Changed:Connect(function(property)
 
 				end
 			end	
-		elseif SearchForCommand("stop") then
-			CmdBar.Text = ""
-			for _, v in pairs(ClientLog:GetDescendants()) do
-				if v:IsA("TextButton") then
-					v:Destroy()
-				end
-			end
-		elseif SearchForCommand("start") or SearchForCommand("resume") or SearchForCommand("continue") then
-			CmdBar.Text = ""
-			for _, v in pairs(ClientLog:GetDescendants()) do
-				if v:IsA("TextButton") then
-					v:Destroy()
-				end
-			end	
 		end
 	end
 end)
@@ -767,8 +753,11 @@ CmdBar.FocusLost:Connect(function(pressed)
 					print('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>')
 				end
 			end
-			if text:match("openrobloxconsole") then
-				--
+			if text:match("console") then
+				Konsole.Enabled = false
+				UnbindFrame(Blur)
+				game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
+				game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 			end
 
 			if IsLookingForResponse then
