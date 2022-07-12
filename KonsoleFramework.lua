@@ -730,6 +730,12 @@ CmdBar.FocusLost:Connect(function(pressed)
 						UnbindFrame(Blur)
 						Konsole:Destroy()
 					end
+						
+				elseif text:match("console") then
+					Konsole.Enabled = false
+					UnbindFrame(Blur)
+					game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
+					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 				else
 					if not IsLookingForResponse then
 						warn("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>")
@@ -753,13 +759,6 @@ CmdBar.FocusLost:Connect(function(pressed)
 					print('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>')
 				end
 			end
-			if text:match("console") then
-				Konsole.Enabled = false
-				UnbindFrame(Blur)
-				game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
-				game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
-			end
-
 			if IsLookingForResponse then
 				if SearchForCommand("y") then
 					RecieveResponsePromptResult(true)
