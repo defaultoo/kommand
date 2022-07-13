@@ -688,7 +688,7 @@ end
 CmdBar.FocusLost:Connect(function(pressed)
 	if CmdBar.Text ~= "" then
 		local text = CmdBar.Text
-		print("> "..text)
+		OutputText("> "..text, Enum.MessageType.MessageOutput)
 		if pressed then 
 			if CurrentMode == 0 then
 				CmdBar.Text = ""
@@ -698,9 +698,15 @@ CmdBar.FocusLost:Connect(function(pressed)
 					a = loadstring("print('Hello world')")
 				end)
 				if loadstringEnabled then
-					loadstring(text)()
+					local Correct, Err = pcall(function()
+						a = loadstring(text)()
+					end)
+					if not Correct then
+						OutputText("An error occured while executing: "..Err, Enum.MessageType.MessageError)
+					end
+					
 				else
-					warn("Loadstring cannot be accessed by your executor.")
+					OutputText("Loadstring cannot be accessed by your executor, which is odd considering you were able to execute this script.", Enum.MessageType.MessageError)
 				end
 
 			end
@@ -713,24 +719,24 @@ CmdBar.FocusLost:Connect(function(pressed)
 								Transparency = 0.98,
 								BrickColor = BrickColor.new('Institutional white')
 							})
-							print('<font color="rgb(85, 170, 255)"><b>UIBlur set to true.</b></font>')
+							OutputText('<font color="rgb(85, 170, 255)"><b>UIBlur set to true.</b></font>', Enum.MessageType.MessageOutput)
 						elseif text:match("false") then
 							CmdBar.Text = ""
 							UnbindFrame(Blur)
-							print('<font color="rgb(85, 170, 255)"><b>UIBlur set to false.</b></font>')
+							OutputText('<font color="rgb(85, 170, 255)"><b>UIBlur set to false.</b></font>', Enum.MessageType.MessageOutput)
 						else
-							warn("<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>")
+							OutputText("<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>", Enum.MessageType.MessageWarning)
 						end
 					else
-						warn("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>")
+						OutputText("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>", Enum.MessageType.MessageWarning)
 					end
 				elseif text:match("quit") then
-					print('<font color="rgb(85, 170, 255)"><b>Are you sure? y/n</b></font>')
+					OutputText('<font color="rgb(85, 170, 255)"><b>Are you sure? y/n</b></font>', Enum.MessageType.MessageOutput)
 					if CreateResponsePrompt() then
 						UnbindFrame(Blur)
 						Konsole:Destroy()
 					end
-						
+
 				elseif text:match("console") then
 					Konsole.Enabled = false
 					UnbindFrame(Blur)
@@ -738,13 +744,12 @@ CmdBar.FocusLost:Connect(function(pressed)
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 				else
 					if not IsLookingForResponse then
-						warn("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>")
+						OutputText("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>", Enum.MessageType.MessageOutput)
 					end
 				end
 				if text:match("safehop") or text:match("serverhop") then
-					game.Players:ClearAllChildren()
-					game.Workspace:ClearAllChildren()
 					game["Teleport Service"]:Teleport(game.PlaceId)
+					game.Players.LocalPlayer:Kick("Player has been disconnected from server. Please await teleport to "..game.PlaceId)	
 				end
 			end
 			if CurrentMode == 2 then
@@ -754,9 +759,9 @@ CmdBar.FocusLost:Connect(function(pressed)
 							setclipboard("https://github.com/ooflet/konsole/wiki")	
 						end
 					end)
-					print('<font color="rgb(85, 170, 255)"><b>Copied!</b></font>')
+					OutputText('<font color="rgb(85, 170, 255)"><b>Copied!</b></font>', Enum.MessageType.MessageOutput)
 				else
-					print('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>')
+					OutputText('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>', Enum.MessageType.MessageOutput)
 				end
 			end
 			if IsLookingForResponse then
@@ -765,7 +770,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 				elseif SearchForCommand("n") then
 					RecieveResponsePromptResult(false)
 				else
-					warn("Please provide a valid response ('y' or 'n')")
+					OutputText("Please provide a valid response ('y' or 'n')", Enum.MessageType.MessageWarning)
 				end
 			end
 			CmdBar.Text = ""
@@ -784,4 +789,4 @@ end)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 wait(1)
 Intro.Visible = false
-print('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>')
+OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>', Enum.MessageType.MessageOutput)
