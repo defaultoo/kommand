@@ -2,6 +2,43 @@
 -- Ooflet
 
 ----------------------------------------------------------------------
+-- Executor Check --
+----------------------------------------------------------------------
+
+if not game["Run Service"]:IsStudio() then
+	local WritefileEnabled = pcall(function()
+		local a = writefile()
+	end)
+	local ReadfileEnabled = pcall(function()
+		local a = readfile()
+	end)
+	local HttpEnabled = pcall(function()
+		local a = game:HttpGet()
+	end)
+	local LoadstringEnabled = pcall(function()
+		local a = loadstring("print('Hello world')")()
+	end)
+
+	if HttpEnabled then
+		if LoadstringEnabled then
+			if WritefileEnabled then
+				if ReadfileEnabled then
+					print("[...] Check SUCCESS")
+				else
+					game.Players.LocalPlayer:Kick("Executor does not support running Konsole: Check FAIL (readfile)")
+				end
+			else
+				game.Players.LocalPlayer:Kick("Executor does not support running Konsole: Check FAIL (writefile)")
+			end
+		else
+			game.Players.LocalPlayer:Kick("Executor does not support running Konsole: Check FAIL (loadstring)")
+		end
+	else
+		game.Players.LocalPlayer:Kick("Executor does not support running Konsole: Check FAIL (game:HttpGet)")
+	end
+end
+
+----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
 local Konsole = Instance.new("ScreenGui")
@@ -47,6 +84,8 @@ Intro.ZIndex = 999999999
 IntroUICorner.CornerRadius = UDim.new(0, 0)
 IntroUICorner.Parent = Intro
 
+print("[...] Intro Created")
+
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 wait(0.75)
@@ -55,6 +94,9 @@ game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.Easi
 wait(0.5)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,800,0,550)}):Play()
 wait(0.5)
+
+print("[...] Intro Complete")
+print("[...] Running GUI Setup")
 
 UICorner.CornerRadius = UDim.new(0, 7)
 UICorner.Parent = ConsoleWindow
@@ -181,6 +223,8 @@ EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
 ----------------------------------------------------------------------
 -- Blur Setup --
 ----------------------------------------------------------------------
+
+print("[...] Running Blur Setup")
 
 local RunService = game:GetService'RunService'
 local camera = workspace.CurrentCamera
@@ -416,6 +460,8 @@ BindFrame(Blur, {
 -- Dragger Setup --
 ----------------------------------------------------------------------
 
+print("[...] Running GUI Drag Setup")
+
 local UserInputService = game:GetService("UserInputService")
 local ts = game:GetService("TweenService")
 local CanDrag = false
@@ -466,6 +512,8 @@ end)
 ----------------------------------------------------------------------
 -- Console Setup --
 ----------------------------------------------------------------------
+
+print("[...] Running Console Setup")
 
 game:GetService("UserInputService").InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.F9 then
@@ -572,6 +620,8 @@ end)
 -- Command Bar Setup --
 ----------------------------------------------------------------------
 
+print("[...] Running Command Bar Setup")
+
 local function SearchForCommand(cmd, ignore)
 	local TextboxLength = string.len(CmdBar.Text)
 	local CommandLength = string.len(cmd)
@@ -628,11 +678,11 @@ CmdBar.Changed:Connect(function(property)
 			EnvIndicator.Text = "?"
 			CmdBar.PlaceholderText = "In help mode. Type cmds to show all commands. Type '>' to return."
 			CmdBar.Text = ""	
-	--[[elseif SearchForCommand("!") then
-        CurrentMode = 3
-		EnvIndicator.Text = "!"
-		CmdBar.PlaceholderText = "In special command mode. Input a module or debug command. Type '>' to return"
-		CmdBar.Text = ""]]
+		elseif SearchForCommand("!") then
+			CurrentMode = 3
+			EnvIndicator.Text = "!"
+			CmdBar.PlaceholderText = "In special mode. Install modules using 'install'. Type '>' to return"
+			CmdBar.Text = ""
 		elseif SearchForCommand("clr") or SearchForCommand("clear") then
 			CmdBar.Text = ""
 			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, 0)}):Play()
@@ -695,16 +745,16 @@ CmdBar.FocusLost:Connect(function(pressed)
 				wait(0.05)
 				CmdBar:CaptureFocus()
 				local loadstringEnabled = pcall(function()
-					a = loadstring("print('Hello world')")
+					local a = loadstring("print('Hello world')")
 				end)
 				if loadstringEnabled then
 					local Correct, Err = pcall(function()
-						a = loadstring(text)()
+						local a = loadstring(text)()
 					end)
 					if not Correct then
 						OutputText("An error occured while executing: "..Err, Enum.MessageType.MessageError)
 					end
-					
+
 				else
 					OutputText("Loadstring cannot be accessed by your executor, which is odd considering you were able to execute this script.", Enum.MessageType.MessageError)
 				end
@@ -744,7 +794,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 				else
 					if not IsLookingForResponse then
-						OutputText("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>", Enum.MessageType.MessageOutput)
+						OutputText("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>", Enum.MessageType.MessageWarning)
 					end
 				end
 				if text:match("safehop") or text:match("serverhop") then
@@ -762,6 +812,24 @@ CmdBar.FocusLost:Connect(function(pressed)
 					OutputText('<font color="rgb(85, 170, 255)"><b>Copied!</b></font>', Enum.MessageType.MessageOutput)
 				else
 					OutputText('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>', Enum.MessageType.MessageOutput)
+				end
+			end
+			if CurrentMode == 3 then
+				if text:match("install") then
+					text = string.gsub(text, "install", "")
+					text = string.gsub(text, " ", "")
+					if text ~= "" then
+						local ModuleName = text
+						OutputText('<font color="rgb(85, 170, 255)"><b>Install '..ModuleName.."? If you want to execute a module without downloading use 'executemodule' instead. (y/n)</b></font>", Enum.MessageType.MessageOutput)
+						if CreateResponsePrompt() then
+							local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName
+							OutputText('<font color="rgb(85, 170, 255)"><b>Downloading module. </b></font>', Enum.MessageType.MessageOutput)
+							OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'. </b></font>', Enum.MessageType.MessageOutput)
+							OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
+						end
+					else
+						OutputText("Expected value, got nil.", Enum.MessageType.MessageWarning)
+					end
 				end
 			end
 			if IsLookingForResponse then
