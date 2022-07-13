@@ -714,7 +714,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 						local a = loadstring(text)()
 					end)
 					if not Correct then
-						OutputText("An error occured while executing: "..Err, Enum.MessageType.MessageError)
+						OutputText("An error occured while executing.", Enum.MessageType.MessageError)
 					end
 
 				else
@@ -742,13 +742,6 @@ CmdBar.FocusLost:Connect(function(pressed)
 					else
 						OutputText("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>", Enum.MessageType.MessageWarning)
 					end
-				elseif text:match("quit") then
-					OutputText('<font color="rgb(85, 170, 255)"><b>Are you sure? y/n</b></font>', Enum.MessageType.MessageOutput)
-					if CreateResponsePrompt() then
-						UnbindFrame(Blur)
-						Konsole:Destroy()
-					end
-
 				elseif text:match("console") then
 					Konsole.Enabled = false
 					UnbindFrame(Blur)
