@@ -13,7 +13,7 @@ if not game["Run Service"]:IsStudio() then
 		local a = readfile()
 	end)
 	local HttpEnabled = pcall(function()
-		local a = game:HttpGet()
+		local a = game:HttpGet('https://www.google.com')
 	end)
 	local LoadstringEnabled = pcall(function()
 		local a = loadstring("print('Hello world')")()
