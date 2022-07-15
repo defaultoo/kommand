@@ -1,5 +1,4 @@
 -- Konsole
-
 -- Ooflet
 
 ----------------------------------------------------------------------
@@ -632,12 +631,12 @@ box.BackgroundTransparency = 1
 box.Size = UDim2.new(5, 0, 1, 0)
 box.Parent = container
 
-local PADDING = 0 -- pixels to the left/right of text
+local PADDING = 2
 
 local function Update()
 	local reveal = container.AbsoluteSize.X
 	if not box:IsFocused() or box.TextBounds.X <= reveal - 2 * PADDING then
-		box.Position = UDim2.new(0, PADDING, 0, 0)
+		box:TweenPosition(UDim2.new(0, PADDING, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
 	else
 		local cursor = box.CursorPosition
 		if cursor ~= -1 then
@@ -782,7 +781,6 @@ CmdBar.FocusLost:Connect(function(pressed)
 				CmdBar.Text = ""
 				wait(0.05)
 				CmdBar:CaptureFocus()
-				
 				if CheckExecutor() then
 					local Correct, Err = pcall(function()
 						local a = loadstring(text)()
@@ -812,13 +810,6 @@ CmdBar.FocusLost:Connect(function(pressed)
 					else
 						OutputText("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>", Enum.MessageType.MessageWarning)
 					end
-				elseif text:match("quit") then
-					OutputText('<font color="rgb(85, 170, 255)"><b>Are you sure? y/n</b></font>', Enum.MessageType.MessageOutput)
-					if CreateResponsePrompt() then
-						UnbindFrame(Blur)
-						Konsole:Destroy()
-					end
-
 				elseif text:match("console") then
 					Konsole.Enabled = false
 					UnbindFrame(Blur)
@@ -855,12 +846,21 @@ CmdBar.FocusLost:Connect(function(pressed)
 						OutputText('<font color="rgb(85, 170, 255)"><b>Install '..ModuleName.."? If you want to execute a module without downloading use 'executemodule' instead. (y/n)</b></font>", Enum.MessageType.MessageOutput)
 						if CreateResponsePrompt() then
 							if CheckExecutor() then
-								local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName
+								local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName..".konsole"
+								local module = game:HttpGet(link)
 								OutputText('<font color="rgb(85, 170, 255)"><b>Downloading module. </b></font>', Enum.MessageType.MessageOutput)
-								OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'. </b></font>', Enum.MessageType.MessageOutput)
-								OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
+								if string.match(module, "404") then
+									OutputText('<font color="rgb(85, 170, 255)"><b>Module was not found. Check if it is correct. </b></font>', Enum.MessageType.MessageWarning)
+								else
+									local filename = ModuleName..".konsole"
+									OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'.konsole </b></font>', Enum.MessageType.MessageOutput)
+									writefile(filename, module)
+									OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
+									loadstring(module)
+								end
+								
 							end
-							
+
 						end
 					else
 						OutputText("Expected value, got nil. You can't install nothing dumbass.", Enum.MessageType.MessageWarning)
