@@ -1,5 +1,5 @@
 # konsole - Buffed up Developer Console
-Console packed in with a handful features to help improve your workflow.
+Developer console tastefully designed and packed in with a handful of features to help improve your workflow.
 Also its pretty gamer.
 
 ### Loadstring
