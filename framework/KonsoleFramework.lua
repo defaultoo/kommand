@@ -843,10 +843,10 @@ CmdBar.FocusLost:Connect(function(pressed)
 						if CreateResponsePrompt() then
 							if CheckExecutor() then
 								local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName..".konsole"
-								local module = game:HttpGet(link)
+								local success, message = pcall(function() game:HttpGet(link) end) 
 								OutputText('<font color="rgb(85, 170, 255)"><b>Downloading module. </b></font>', Enum.MessageType.MessageOutput)
-								if string.match(module, "404") then
-									OutputText('<font color="rgb(85, 170, 255)"><b>Module was not found. Check if it is correct. </b></font>', Enum.MessageType.MessageWarning)
+								if not success then
+									OutputText('<font color="rgb(85, 170, 255)"><b>Module was not found. Module names are case sensitive and dont contain spaces. <i>Having trouble installing a module? Download the module manually and move it to the workspace folder of your executor. Make sure it has the .konsole extension </i></b></font>', Enum.MessageType.MessageWarning)
 								else
 									local filename = ModuleName..".konsole"
 									OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'.konsole </b></font>', Enum.MessageType.MessageOutput)
