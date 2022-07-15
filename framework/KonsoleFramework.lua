@@ -577,14 +577,10 @@ end)
 ----------------------------------------------------------------------
 
 local function CheckExecutor()
-	local WritefileEnabled = pcall(function()
-		local a = writefile()
-	end)
-	local ReadfileEnabled = pcall(function()
-		local a = readfile()
-	end)
+	local WritefileEnabled = true
+	local ReadfileEnabled = true
 	local LoadstringEnabled = pcall(function()
-		local a = loadstring("print('Hello world')")()
+		local a = loadstring("print('Hello world')")
 	end)
 	local CheckExecutor = pcall(function()
 		local a = identifyexecutor()
