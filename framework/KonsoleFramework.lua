@@ -889,6 +889,6 @@ Exit.MouseButton1Click:Connect(function()
 end)
 
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
-wait(1)
+task.wait(1)
 Intro:Destroy()
 OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>', Enum.MessageType.MessageOutput)
