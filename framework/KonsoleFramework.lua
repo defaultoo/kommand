@@ -1,5 +1,6 @@
 -- Konsole
 -- Ooflet
+
 ----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
@@ -16,6 +17,7 @@ local Console = Instance.new("Frame")
 local ClientLog = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 local CommandBar = Instance.new("Frame")
+local CmdBarHolder = Instance.new("Frame")
 local CmdBar = Instance.new("TextBox")
 local EnvIndicator = Instance.new("TextLabel")
 local UICorner = Instance.new("UICorner")
@@ -46,8 +48,6 @@ Intro.ZIndex = 999999999
 IntroUICorner.CornerRadius = UDim.new(0, 0)
 IntroUICorner.Parent = Intro
 
-print("[...] Intro Created")
-
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 wait(0.75)
@@ -56,9 +56,6 @@ game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.Easi
 wait(0.5)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,800,0,550)}):Play()
 wait(0.5)
-
-print("[...] Intro Complete")
-print("[...] Running GUI Setup")
 
 UICorner.CornerRadius = UDim.new(0, 7)
 UICorner.Parent = ConsoleWindow
@@ -152,12 +149,15 @@ CommandBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 CommandBar.BackgroundTransparency = 1.000
 CommandBar.Size = UDim2.new(1, 0, 1, 0)
 
-CmdBar.Name = "CmdBar"
-CmdBar.Parent = CommandBar
-CmdBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-CmdBar.BackgroundTransparency = 1.000
-CmdBar.Position = UDim2.new(0.0500000007, 0, 0.944999993, -5)
-CmdBar.Size = UDim2.new(0, 750, 0, 25)
+CmdBarHolder.Name = "CmdBarHolder"
+CmdBarHolder.Name = "CmdBar"
+CmdBarHolder.Parent = CommandBar
+CmdBarHolder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CmdBarHolder.BackgroundTransparency = 1.000
+CmdBarHolder.Position = UDim2.new(0.0500000007, 0, 0.944999993, -5)
+CmdBarHolder.Size = UDim2.new(0, 750, 0, 25)
+CmdBarHolder.ClipsDescendants = true
+
 CmdBar.Font = Enum.Font.RobotoMono
 CmdBar.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
 CmdBar.PlaceholderText = "Input Command (\\)"
@@ -185,8 +185,6 @@ EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
 ----------------------------------------------------------------------
 -- Blur Setup --
 ----------------------------------------------------------------------
-
-print("[...] Running Blur Setup")
 
 local RunService = game:GetService'RunService'
 local camera = workspace.CurrentCamera
@@ -422,8 +420,6 @@ BindFrame(Blur, {
 -- Dragger Setup --
 ----------------------------------------------------------------------
 
-print("[...] Running GUI Drag Setup")
-
 local UserInputService = game:GetService("UserInputService")
 local ts = game:GetService("TweenService")
 local CanDrag = false
@@ -474,8 +470,6 @@ end)
 ----------------------------------------------------------------------
 -- Console Setup --
 ----------------------------------------------------------------------
-
-print("[...] Running Console Setup")
 
 game:GetService("UserInputService").InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.F9 then
@@ -579,10 +573,91 @@ ClientLog.Changed:Connect(function(property)
 end)
 
 ----------------------------------------------------------------------
+-- Executor Check --
+----------------------------------------------------------------------
+
+local function CheckExecutor()
+	local WritefileEnabled = pcall(function()
+		local a = writefile()
+	end)
+	local ReadfileEnabled = pcall(function()
+		local a = readfile()
+	end)
+	local LoadstringEnabled = pcall(function()
+		local a = loadstring("print('Hello world')")()
+	end)
+	local CheckExecutor = pcall(function()
+		local a = identifyexecutor()
+	end)
+
+	if CheckExecutor then
+		if LoadstringEnabled then
+			if WritefileEnabled then
+				if ReadfileEnabled then
+					return true
+				else
+					OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (readfile)", Enum.MessageType.MessageError)
+					return false
+				end
+			else
+				OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (writefile)", Enum.MessageType.MessageError)
+				return false
+			end
+		else
+			OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (loadstring)", Enum.MessageType.MessageError)
+			return false
+		end
+	else
+		OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (identifyexecutor)", Enum.MessageType.MessageError)
+		return false
+	end
+
+end
+
+----------------------------------------------------------------------
 -- Command Bar Setup --
 ----------------------------------------------------------------------
 
-print("[...] Running Command Bar Setup")
+local TextService = game:GetService("TextService")
+
+local container = CmdBarHolder
+container.ClipsDescendants = true
+
+local box = CmdBar
+box.BorderSizePixel = 0
+box.TextXAlignment = Enum.TextXAlignment.Left
+box.ClearTextOnFocus = false
+box.BackgroundTransparency = 1
+box.Size = UDim2.new(5, 0, 1, 0)
+box.Parent = container
+
+local PADDING = 0 -- pixels to the left/right of text
+
+local function Update()
+	local reveal = container.AbsoluteSize.X
+	if not box:IsFocused() or box.TextBounds.X <= reveal - 2 * PADDING then
+		box.Position = UDim2.new(0, PADDING, 0, 0)
+	else
+		local cursor = box.CursorPosition
+		if cursor ~= -1 then
+			local subtext = string.sub(box.Text, 1, cursor-1)
+			local width = TextService:GetTextSize(subtext, box.TextSize, box.Font, Vector2.new(math.huge, math.huge)).X
+			local currentCursorPos = box.Position.X.Offset + width
+			if currentCursorPos < PADDING then
+				box:TweenPosition(UDim2.fromOffset(PADDING-width, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
+			elseif currentCursorPos > reveal - PADDING - 1 then
+				box:TweenPosition(UDim2.fromOffset(reveal-width-PADDING-1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
+			end
+		end
+	end
+end
+
+Update()
+
+box:GetPropertyChangedSignal("Text"):Connect(Update)
+box:GetPropertyChangedSignal("CursorPosition"):Connect(Update)
+box.Focused:Connect(Update)
+box.FocusLost:Connect(Update)
 
 local function SearchForCommand(cmd, ignore)
 	local TextboxLength = string.len(CmdBar.Text)
@@ -700,27 +775,21 @@ end
 CmdBar.FocusLost:Connect(function(pressed)
 	if CmdBar.Text ~= "" then
 		local text = CmdBar.Text
-		OutputText("> "..text, Enum.MessageType.MessageOutput)
 		if pressed then 
+			OutputText("> "..text, Enum.MessageType.MessageOutput)
 			if CurrentMode == 0 then
 				CmdBar.Text = ""
 				wait(0.05)
 				CmdBar:CaptureFocus()
-				local loadstringEnabled = pcall(function()
-					local a = loadstring("print('Hello world')")
-				end)
-				if loadstringEnabled then
+				
+				if CheckExecutor() then
 					local Correct, Err = pcall(function()
 						local a = loadstring(text)()
 					end)
 					if not Correct then
-						OutputText("An error occured while executing.", Enum.MessageType.MessageError)
+						OutputText("An error occured while executing.")
 					end
-
-				else
-					OutputText("Loadstring cannot be accessed by your executor, which is odd considering you were able to execute this script.", Enum.MessageType.MessageError)
 				end
-
 			end
 			if CurrentMode == 1 then
 				if text:match("setting") then
@@ -742,6 +811,13 @@ CmdBar.FocusLost:Connect(function(pressed)
 					else
 						OutputText("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>", Enum.MessageType.MessageWarning)
 					end
+				elseif text:match("quit") then
+					OutputText('<font color="rgb(85, 170, 255)"><b>Are you sure? y/n</b></font>', Enum.MessageType.MessageOutput)
+					if CreateResponsePrompt() then
+						UnbindFrame(Blur)
+						Konsole:Destroy()
+					end
+
 				elseif text:match("console") then
 					Konsole.Enabled = false
 					UnbindFrame(Blur)
@@ -777,13 +853,16 @@ CmdBar.FocusLost:Connect(function(pressed)
 						local ModuleName = text
 						OutputText('<font color="rgb(85, 170, 255)"><b>Install '..ModuleName.."? If you want to execute a module without downloading use 'executemodule' instead. (y/n)</b></font>", Enum.MessageType.MessageOutput)
 						if CreateResponsePrompt() then
-							local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName
-							OutputText('<font color="rgb(85, 170, 255)"><b>Downloading module. </b></font>', Enum.MessageType.MessageOutput)
-							OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'. </b></font>', Enum.MessageType.MessageOutput)
-							OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
+							if CheckExecutor() then
+								local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName
+								OutputText('<font color="rgb(85, 170, 255)"><b>Downloading module. </b></font>', Enum.MessageType.MessageOutput)
+								OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'. </b></font>', Enum.MessageType.MessageOutput)
+								OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
+							end
+							
 						end
 					else
-						OutputText("Expected value, got nil.", Enum.MessageType.MessageWarning)
+						OutputText("Expected value, got nil. You can't install nothing dumbass.", Enum.MessageType.MessageWarning)
 					end
 				end
 			end
@@ -811,5 +890,5 @@ end)
 
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 wait(1)
-Intro.Visible = false
+Intro:Destroy()
 OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>', Enum.MessageType.MessageOutput)
