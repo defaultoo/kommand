@@ -1,10 +1,10 @@
--- Konsole
+-- Kommand
 -- Ooflet
 
 ----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
-local Konsole = Instance.new("ScreenGui")
+local Kommand = Instance.new("ScreenGui")
 local BlurEffect = Instance.new("Folder")
 local ConsoleWindow = Instance.new("ImageLabel")
 local Blur = Instance.new("Frame")
@@ -25,18 +25,18 @@ local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
 
-Konsole.Name = "Konsole"
+Kommand.Name = "Kommand"
 if game["Run Service"]:IsStudio() then
-	Konsole.Parent = game.Players.LocalPlayer.PlayerGui
+	Kommand.Parent = game.Players.LocalPlayer.PlayerGui
 else
-	Konsole.Parent = game.CoreGui
+	Kommand.Parent = game.CoreGui
 end
 
-Konsole.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-Konsole.DisplayOrder = 9999999999999
+Kommand.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Kommand.DisplayOrder = 9999999999999
 
 Intro.Name = "Intro"
-Intro.Parent = Konsole
+Intro.Parent = Kommand
 Intro.AnchorPoint = Vector2.new(0.5, 0.5)
 Intro.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Intro.BackgroundTransparency = 1.000
@@ -64,7 +64,7 @@ BlurUICorner.CornerRadius = UDim.new(0, 7)
 BlurUICorner.Parent = Blur
 
 ConsoleWindow.Name = "ConsoleWindow"
-ConsoleWindow.Parent = Konsole
+ConsoleWindow.Parent = Kommand
 ConsoleWindow.AnchorPoint = Vector2.new(0.5, 0.5)
 ConsoleWindow.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ConsoleWindow.BackgroundTransparency = 0.1
@@ -112,7 +112,7 @@ Title.BackgroundTransparency = 1.000
 Title.Position = UDim2.new(0, 10, 0, 10)
 Title.Size = UDim2.new(0, 200, 0, 25)
 Title.Font = Enum.Font.GothamMedium
-Title.Text = "Konsole"
+Title.Text = "Kommand"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 20.000
 Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -474,7 +474,7 @@ end)
 game:GetService("UserInputService").InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.F9 then
 		game:GetService("StarterGui"):SetCore("DevConsoleVisible", false)
-		Konsole.Enabled = true
+		Kommand.Enabled = true
 		BindFrame(Blur, {
 			Transparency = 0.98,
 			BrickColor = BrickColor.new('Institutional white')
@@ -619,19 +619,19 @@ local function CheckExecutor()
 				if ReadfileEnabled then
 					return true
 				else
-					OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (readfile)", Enum.MessageType.MessageError)
+					OutputText("Executor does not support running Kommand. This function cannot run - Check FAIL (readfile)", Enum.MessageType.MessageError)
 					return false
 				end
 			else
-				OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (writefile)", Enum.MessageType.MessageError)
+				OutputText("Executor does not support running Kommand. This function cannot run - Check FAIL (writefile)", Enum.MessageType.MessageError)
 				return false
 			end
 		else
-			OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (loadstring)", Enum.MessageType.MessageError)
+			OutputText("Executor does not support running Kommand. This function cannot run - Check FAIL (loadstring)", Enum.MessageType.MessageError)
 			return false
 		end
 	else
-		OutputText("Executor does not support running Konsole. This function cannot run - Check FAIL (identifyexecutor)", Enum.MessageType.MessageError)
+		OutputText("Executor does not support running Kommand. This function cannot run - Check FAIL (identifyexecutor)", Enum.MessageType.MessageError)
 		return false
 	end
 
@@ -866,7 +866,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 						OutputText("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>", Enum.MessageType.MessageWarning)
 					end
 				elseif text:match("console") then
-					Konsole.Enabled = false
+					Kommand.Enabled = false
 					UnbindFrame(Blur)
 					game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
@@ -884,7 +884,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 				if text:match("copy") then
 					pcall(function()
 						if identifyexecutor() then
-							setclipboard("https://github.com/ooflet/konsole/wiki")	
+							setclipboard("https://github.com/ooflet/kommand/wiki")	
 						end
 					end)
 					OutputText('Copied!', "Custom", "==", Color3.fromRGB(85, 170, 255))
@@ -895,7 +895,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 					wait(0.5)
 					OutputLoadingSequence(10, "Complete")
 				else
-					OutputText('To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.', "Custom", "==", Color3.fromRGB(85, 170, 255))
+					OutputText('To see all available functions, please visit Kommand documentation at https://github.com/ooflet/kommand/wiki. Type "copy" to copy.', "Custom", "==", Color3.fromRGB(85, 170, 255))
 				end
 			end
 			if CurrentMode == 3 then
@@ -907,7 +907,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 						OutputText('<b>Install '..ModuleName.."? If you want to execute a module without downloading use 'executemodule' instead. [Y/n]", "Custom", "==", Color3.fromRGB(85, 170, 255))
 						if CreateResponsePrompt() then
 							if CheckExecutor() then
-								local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName..".konsole"
+								local link = "https://raw.githubusercontent.com/ooflet/kommand/main/modules/"..ModuleName..".kommand"
 								local module = nil
 								OutputLoadingSequence(1, "Sending GET request to "..link)
 								wait(0.1)
@@ -923,8 +923,8 @@ CmdBar.FocusLost:Connect(function(pressed)
 									
 								else
 									OutputLoadingSequence(3, "Copying "..link)
-									local filename = ModuleName..".konsole"
-									OutputLoadingSequence(7.5, 'Installing '..ModuleName..' to /'..identifyexecutor()..'/workspace/'..ModuleName..'.konsole ')
+									local filename = ModuleName..".kommand"
+									OutputLoadingSequence(7.5, 'Installing '..ModuleName..' to /'..identifyexecutor()..'/workspace/'..ModuleName..'.kommand ')
 									writefile(tostring(filename), tostring(module))
 									wait(0.5)
 									OutputLoadingSequence(10, 'Complete')
@@ -956,7 +956,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 end)
 
 Exit.MouseButton1Click:Connect(function()
-	Konsole.Enabled = false
+	Kommand.Enabled = false
 	UnbindFrame(Blur)
 	game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
 end)
@@ -964,4 +964,4 @@ end)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 task.wait(1)
 Intro:Destroy()
-OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Konsole!</b> Type help or ? for help.</font>', Enum.MessageType.MessageOutput)
+OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help or ? for help.</font>', Enum.MessageType.MessageOutput)
