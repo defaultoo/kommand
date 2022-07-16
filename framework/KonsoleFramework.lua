@@ -852,7 +852,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 									OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'.konsole </b></font>', Enum.MessageType.MessageOutput)
 									writefile(filename, module)
 									OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
-									loadstring(module)
+									loadstring(module)()
 								end
 								
 							end
