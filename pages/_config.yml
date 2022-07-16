@@ -3,4 +3,3 @@ title: konsole
 description: Documentation for Konsole
 baseurl: "/docs" # the subpath of your site, e.g. /blog
 url: "https://konsole.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-permalink: /404.md
