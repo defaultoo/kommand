@@ -850,7 +850,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 								else
 									local filename = ModuleName..".konsole"
 									OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'.konsole </b></font>', Enum.MessageType.MessageOutput)
-									writefile(filename, module)
+									writefile(tostring(filename), tostring(module))
 									OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
 									loadstring(module)()
 								end
