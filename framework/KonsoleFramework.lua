@@ -488,9 +488,9 @@ local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
-local function OutputText(Message, Type)
+local function OutputText(Message, Type, Prefix, Color)
 	if Type == Enum.MessageType.MessageError then
-		local TextLabel = Instance.new("TextButton")
+		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -503,11 +503,13 @@ local function OutputText(Message, Type)
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageWarning then
-		local TextLabel = Instance.new("TextButton")
+		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -519,12 +521,14 @@ local function OutputText(Message, Type)
 		TextLabel.TextColor3 = WarningColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageOutput then
-		local TextLabel = Instance.new("TextButton")
+		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -536,12 +540,14 @@ local function OutputText(Message, Type)
 		TextLabel.TextColor3 = OutputColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	elseif Type == Enum.MessageType.MessageInfo then
-		local TextLabel = Instance.new("TextButton")
+		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
@@ -553,6 +559,27 @@ local function OutputText(Message, Type)
 		TextLabel.TextColor3 = InfoColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.RichText = true
+		TextLabel.TextTransparency = 1
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()	
+	elseif Type == "Custom" then
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = Message
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = Prefix.." "..Message
+		TextLabel.TextColor3 = Color
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
@@ -720,7 +747,7 @@ CmdBar.Changed:Connect(function(property)
 			CmdBar.Text = ""
 			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, 0)}):Play()
 			for _, v in pairs(ClientLog:GetDescendants()) do
-				if v:IsA("TextButton") then
+				if v:IsA("TextBox") then
 					spawn(function()
 						game:GetService("TweenService"):Create(v, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
 						wait(0.5)
@@ -768,6 +795,38 @@ local function RecieveResponsePromptResult(result)
 	end
 end
 
+local bar = ""
+local function OutputLoadingSequence(percent, msg)
+	if ClientLog:FindFirstChild("LoadingBar") then
+		local TextLabel = ClientLog:FindFirstChild("LoadingBar")
+		TextLabel.Text = "[ "..percent * 10 .."% ] "..msg.."..."
+		if percent == 10 then
+			TextLabel.Name = "Complete"
+		end
+	else
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = "LoadingBar"
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = "[ "..percent * 10 .."% ] "..msg.."..."
+		TextLabel.TextColor3 = OutputColor
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.RichText = true
+		TextLabel.TextTransparency = 1
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+	end
+
+	
+end
+
 CmdBar.FocusLost:Connect(function(pressed)
 	if CmdBar.Text ~= "" then
 		local text = CmdBar.Text
@@ -795,11 +854,11 @@ CmdBar.FocusLost:Connect(function(pressed)
 								Transparency = 0.98,
 								BrickColor = BrickColor.new('Institutional white')
 							})
-							OutputText('<font color="rgb(85, 170, 255)"><b>UIBlur set to true.</b></font>', Enum.MessageType.MessageOutput)
+							OutputText('<b>UIBlur set to true.</b>', "Custom", "==", Color3.fromRGB(85, 170, 255))
 						elseif text:match("false") then
 							CmdBar.Text = ""
 							UnbindFrame(Blur)
-							OutputText('<font color="rgb(85, 170, 255)"><b>UIBlur set to false.</b></font>', Enum.MessageType.MessageOutput)
+							OutputText('<b>UIBlur set to false.</b>', "Custom", "==", Color3.fromRGB(85, 170, 255))
 						else
 							OutputText("<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>", Enum.MessageType.MessageWarning)
 						end
@@ -828,9 +887,15 @@ CmdBar.FocusLost:Connect(function(pressed)
 							setclipboard("https://github.com/ooflet/konsole/wiki")	
 						end
 					end)
-					OutputText('<font color="rgb(85, 170, 255)"><b>Copied!</b></font>', Enum.MessageType.MessageOutput)
+					OutputText('Copied!', "Custom", "==", Color3.fromRGB(85, 170, 255))
+				elseif text:match("bar") then
+					OutputLoadingSequence (5, "Inititalising Help...")
+					wait(0.5)
+					OutputLoadingSequence(9, "Downloading Help...")
+					wait(0.5)
+					OutputLoadingSequence(10, "Complete")
 				else
-					OutputText('<font color="rgb(85, 170, 255)"><b>To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.</b> </font>', Enum.MessageType.MessageOutput)
+					OutputText('To see all available functions, please visit Konsole documentation at https://github.com/ooflet/konsole/wiki. Type "copy" to copy.', "Custom", "==", Color3.fromRGB(85, 170, 255))
 				end
 			end
 			if CurrentMode == 3 then
@@ -839,22 +904,33 @@ CmdBar.FocusLost:Connect(function(pressed)
 					text = string.gsub(text, " ", "")
 					if text ~= "" then
 						local ModuleName = text
-						OutputText('<font color="rgb(85, 170, 255)"><b>Install '..ModuleName.."? If you want to execute a module without downloading use 'executemodule' instead. (y/n)</b></font>", Enum.MessageType.MessageOutput)
+						OutputText('<b>Install '..ModuleName.."? If you want to execute a module without downloading use 'executemodule' instead. [Y/n]", "Custom", "==", Color3.fromRGB(85, 170, 255))
 						if CreateResponsePrompt() then
 							if CheckExecutor() then
 								local link = "https://raw.githubusercontent.com/ooflet/konsole/main/modules/"..ModuleName..".konsole"
-								OutputText('<font color="rgb(85, 170, 255)"><b>Downloading module. </b></font>', Enum.MessageType.MessageOutput)
-								local success, message = pcall(function() game:HttpGet(link) end) 
+								local module = nil
+								OutputLoadingSequence(1, "Sending GET request to "..link)
+								wait(0.1)
+								local success, message = pcall(function() module = game:HttpGet(link) end)
 								if not success then
-									OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces. <i>Having trouble installing a module? Download the module manually and move it to the workspace folder of your executor. Make sure it has the .konsole extension </i></b>', Enum.MessageType.MessageWarning)
+									if string.find(tostring(message), "404") then
+										OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces.<b>', Enum.MessageType.MessageWarning)
+										OutputLoadingSequence(10, "Failed")	
+									else
+										OutputText('<b>Unknown error occured.<b>', Enum.MessageType.MessageWarning)
+										OutputLoadingSequence(10, "Failed")	
+									end
+									
 								else
+									OutputLoadingSequence(3, "Copying "..link)
 									local filename = ModuleName..".konsole"
-									OutputText('<font color="rgb(85, 170, 255)"><b>Installing module to /'..identifyexecutor()..'/workspace/'..ModuleName..'.konsole </b></font>', Enum.MessageType.MessageOutput)
+									OutputLoadingSequence(7.5, 'Installing '..ModuleName..' to /'..identifyexecutor()..'/workspace/'..ModuleName..'.konsole ')
 									writefile(tostring(filename), tostring(module))
-									OutputText('<font color="rgb(85, 170, 255)"><b>Executing module. </b></font>', Enum.MessageType.MessageOutput)	
-									loadstring(module)()
+									wait(0.5)
+									OutputLoadingSequence(10, 'Complete')
+									OutputText(ModuleName..' succesfully installed.', "Custom", "==", Color3.fromRGB(85, 170, 255))	
 								end
-								
+
 							end
 
 						end
