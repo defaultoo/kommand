@@ -112,7 +112,7 @@ Title.BackgroundTransparency = 1.000
 Title.Position = UDim2.new(0, 10, 0, 10)
 Title.Size = UDim2.new(0, 200, 0, 25)
 Title.Font = Enum.Font.GothamMedium
-Title.Text = "Kommand"
+Title.Text = "kommand"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 20.000
 Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -574,7 +574,7 @@ local function OutputText(Message, Type, Prefix, Color)
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = Prefix.." "..Message
+		TextLabel.Text = "-- "..Message
 		TextLabel.TextColor3 = Color
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
@@ -733,11 +733,15 @@ CmdBar.Changed:Connect(function(property)
 			EnvIndicator.Text = ">"
 			CmdBar.PlaceholderText = "Input Command"
 			CmdBar.Text = ""
-		elseif SearchForCommand("help") or SearchForCommand("?") then
+		elseif SearchForCommand("?") then
 			CurrentMode = 2
 			EnvIndicator.Text = "?"
-			CmdBar.PlaceholderText = "In help mode. Type cmds to show all commands. Type '>' to return."
+			CmdBar.PlaceholderText = "In help mode. Type '>' to return."
 			CmdBar.Text = ""	
+		elseif SearchForCommand("help") then
+			CurrentMode = 2
+			EnvIndicator.Text = "?"
+			CmdBar.PlaceholderText = "In help mode. Type '>' to return."
 		elseif SearchForCommand("!") then
 			CurrentMode = 3
 			EnvIndicator.Text = "!"
@@ -760,7 +764,10 @@ CmdBar.Changed:Connect(function(property)
 	end
 end)
 
--- CommandCheck
+----------------------------------------------------------------------
+-- Command Setup --
+----------------------------------------------------------------------
+
 local IsLookingForResponse = false
 local PreviousMode, PreviousModePrefix = nil, nil
 local ResponseGiven = false
@@ -799,7 +806,7 @@ local bar = ""
 local function OutputLoadingSequence(percent, msg)
 	if ClientLog:FindFirstChild("LoadingBar") then
 		local TextLabel = ClientLog:FindFirstChild("LoadingBar")
-		TextLabel.Text = "[ "..percent * 10 .."% ] "..msg.."..."
+		TextLabel.Text = "<b>[ "..percent * 10 .."% ]</b> "..msg.."..."
 		if percent == 10 then
 			TextLabel.Name = "Complete"
 		end
@@ -808,7 +815,7 @@ local function OutputLoadingSequence(percent, msg)
 		TextLabel.Name = "LoadingBar"
 		TextLabel.Parent = ClientLog
 		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
@@ -823,9 +830,90 @@ local function OutputLoadingSequence(percent, msg)
 		TextLabel.TextTransparency = 1
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	end
-
-	
 end
+
+local Installer = {}
+
+function Installer.InstallFromRepository(text)
+	if text ~= "" then
+		local ModuleName = text
+		OutputText('Install '..ModuleName.."? The module must be on the Github Repository (kommand/modules/Module.kmd). [y/n]", "Custom", "--", Color3.fromRGB(85, 170, 255))
+		if CreateResponsePrompt() then
+			if CheckExecutor() then
+				local link = "https://raw.githubusercontent.com/ooflet/kommand/main/modules/"..ModuleName..".kmd"
+				local module = nil
+				OutputLoadingSequence(1, "Sending GET request to "..link)
+				wait(0.5)
+				local success, message = pcall(function() module = game:HttpGet(link) end)
+				if not success then
+					if string.find(tostring(message), "404") then
+						OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces.</b>', Enum.MessageType.MessageWarning)
+						OutputLoadingSequence(10, "Failed")	
+					else
+						OutputText('<b>Unknown error occured.<b>', Enum.MessageType.MessageWarning)
+						OutputLoadingSequence(10, "Failed")	
+					end
+
+				else
+					OutputLoadingSequence(3, "Copying "..link)
+					local filename = ModuleName..".kmd"
+					wait(0.5)
+					OutputLoadingSequence(7.5, 'Installing '..ModuleName..' to /'..identifyexecutor()..'/workspace/'..ModuleName..'.kmd ')
+					writefile(tostring(filename), tostring(module))
+					wait(1)
+					OutputLoadingSequence(10, 'Complete')
+					OutputText(ModuleName..' succesfully installed.', "Custom", "--", Color3.fromRGB(85, 170, 255))	
+				end
+
+			end
+
+		end
+	else
+		OutputText("Expected value, got nil. You can't install nothing dumbass.", Enum.MessageType.MessageWarning)
+	end
+end
+
+function Installer.InstallFromLink(text)
+	if text ~= "" then
+		OutputText('<b>Install from '..text.."? The source must be raw and unformatted. If the module is available on the Github Repository, you should use 'install' instead.  [Y/n] </b>", "Custom", "--", Color3.fromRGB(85, 170, 255))
+		if CreateResponsePrompt() then
+			if CheckExecutor() then
+				local link = text
+				local module = nil
+				OutputLoadingSequence(1, "Sending GET request to "..link)
+				wait(0.5)
+				local success, message = pcall(function() module = game:HttpGet(link) end)
+				if not success then
+					if string.find(tostring(message), "404") then
+						OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces.</b>', Enum.MessageType.MessageWarning)
+						OutputLoadingSequence(10, "Failed")	
+					else
+						OutputText('<b>Unknown error occured.<b>', Enum.MessageType.MessageWarning)
+						OutputLoadingSequence(10, "Failed")	
+					end
+
+				else
+					OutputLoadingSequence(3, "Copying "..link)
+					local filename = link..".kmd"
+					wait(0.5)
+					OutputLoadingSequence(7.5, 'Installing '..link..' to /'..identifyexecutor()..'/workspace/'..link..'.kmd ')
+					writefile(tostring(filename), tostring(module))
+					wait(1)
+					OutputLoadingSequence(10, 'Complete')
+					OutputText('Succesfully installed. Feel free to rename the module file as it is currently just the link.', "Custom", "--", Color3.fromRGB(85, 170, 255))	
+				end
+
+			end
+
+		end
+	else
+		OutputText("Expected value, got nil. You can't install nothing.", Enum.MessageType.MessageWarning)
+	end
+end
+
+local dbug = {}
+
+function dbug.SetCurrentMode(text)
 
 CmdBar.FocusLost:Connect(function(pressed)
 	if CmdBar.Text ~= "" then
@@ -854,11 +942,11 @@ CmdBar.FocusLost:Connect(function(pressed)
 								Transparency = 0.98,
 								BrickColor = BrickColor.new('Institutional white')
 							})
-							OutputText('<b>UIBlur set to true.</b>', "Custom", "==", Color3.fromRGB(85, 170, 255))
+							OutputText('<b>UIBlur set to true.</b>', "Custom", "=>", Color3.fromRGB(85, 170, 255))
 						elseif text:match("false") then
 							CmdBar.Text = ""
 							UnbindFrame(Blur)
-							OutputText('<b>UIBlur set to false.</b>', "Custom", "==", Color3.fromRGB(85, 170, 255))
+							OutputText('<b>UIBlur set to false.</b>', "Custom", "=>", Color3.fromRGB(85, 170, 255))
 						else
 							OutputText("<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>", Enum.MessageType.MessageWarning)
 						end
@@ -884,59 +972,24 @@ CmdBar.FocusLost:Connect(function(pressed)
 				if text:match("copy") then
 					pcall(function()
 						if identifyexecutor() then
-							setclipboard("https://github.com/ooflet/kommand/wiki")	
+							setclipboard("https://ooflet.github.io/docs")	
 						end
 					end)
-					OutputText('Copied!', "Custom", "==", Color3.fromRGB(85, 170, 255))
-				elseif text:match("bar") then
-					OutputLoadingSequence (5, "Inititalising Help...")
-					wait(0.5)
-					OutputLoadingSequence(9, "Downloading Help...")
-					wait(0.5)
-					OutputLoadingSequence(10, "Complete")
+					OutputText('Copied!', "Custom", "=>", Color3.fromRGB(85, 170, 255))
 				else
-					OutputText('To see all available functions, please visit Kommand documentation at https://github.com/ooflet/kommand/wiki. Type "copy" to copy.', "Custom", "==", Color3.fromRGB(85, 170, 255))
+					OutputText('To see all available functions, please visit Kommand documentation at https://ooflet.github.io/docs. Type "copy" to copy.', "Custom", "=>", Color3.fromRGB(85, 170, 255))
 				end
 			end
 			if CurrentMode == 3 then
 				if text:match("install") then
 					text = string.gsub(text, "install", "")
 					text = string.gsub(text, " ", "")
-					if text ~= "" then
-						local ModuleName = text
-						OutputText('<b>Install '..ModuleName.."? If you want to execute a module without downloading use 'executemodule' instead. [Y/n]", "Custom", "==", Color3.fromRGB(85, 170, 255))
-						if CreateResponsePrompt() then
-							if CheckExecutor() then
-								local link = "https://raw.githubusercontent.com/ooflet/kommand/main/modules/"..ModuleName..".kommand"
-								local module = nil
-								OutputLoadingSequence(1, "Sending GET request to "..link)
-								wait(0.1)
-								local success, message = pcall(function() module = game:HttpGet(link) end)
-								if not success then
-									if string.find(tostring(message), "404") then
-										OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces.<b>', Enum.MessageType.MessageWarning)
-										OutputLoadingSequence(10, "Failed")	
-									else
-										OutputText('<b>Unknown error occured.<b>', Enum.MessageType.MessageWarning)
-										OutputLoadingSequence(10, "Failed")	
-									end
-									
-								else
-									OutputLoadingSequence(3, "Copying "..link)
-									local filename = ModuleName..".kommand"
-									OutputLoadingSequence(7.5, 'Installing '..ModuleName..' to /'..identifyexecutor()..'/workspace/'..ModuleName..'.kommand ')
-									writefile(tostring(filename), tostring(module))
-									wait(0.5)
-									OutputLoadingSequence(10, 'Complete')
-									OutputText(ModuleName..' succesfully installed.', "Custom", "==", Color3.fromRGB(85, 170, 255))	
-								end
-
-							end
-
-						end
-					else
-						OutputText("Expected value, got nil. You can't install nothing dumbass.", Enum.MessageType.MessageWarning)
-					end
+					Installer.InstallFromRepository (text)
+				end
+				if text:match("installfromlink") then
+					text = string.gsub(text, "installfromlink", "")
+					text = string.gsub(text, " ", "")
+					Installer.InstallFromLink(text)
 				end
 			end
 			if IsLookingForResponse then
@@ -964,4 +1017,4 @@ end)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 task.wait(1)
 Intro:Destroy()
-OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help or ? for help.</font>', Enum.MessageType.MessageOutput)
+OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help for help.</font>', Enum.MessageType.MessageOutput)
