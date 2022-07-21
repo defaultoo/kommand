@@ -367,9 +367,7 @@ local function UnbindFrame(frame)
 	local cb = binds[frame]
 	if cb then
 		RunService:UnbindFromRenderStep(cb.uid)
-		for _, v in pairs(cb.parts) do
-			v:Destroy()
-		end
+		workspace.CurrentCamera:FindFirstChild("blur"):Destroy()
 		binds[frame] = nil
 	else
 
@@ -914,6 +912,16 @@ end
 local dbug = {}
 
 function dbug.SetCurrentMode(text)
+	text = string.gsub(text, "setcurrentmode", "")
+	text = string.gsub(text, "debug", "")
+	text = string.gsub(text, " ", "")
+	if text == "0" or text == "1" or text == "2" or text == "3" or text == "4" then
+		OutputText("debug: set CurrentMode to "..text, Enum.MessageType.MessageInfo)
+		CurrentMode = text
+	else
+		OutputText("debug: "..text.." is not valid variable: CurrentMode", Enum.MessageType.MessageError)
+	end
+end
 
 CmdBar.FocusLost:Connect(function(pressed)
 	if CmdBar.Text ~= "" then
@@ -958,6 +966,10 @@ CmdBar.FocusLost:Connect(function(pressed)
 					UnbindFrame(Blur)
 					game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
+				elseif text:match("debug") then
+					if text:match("setcurrentmode") then
+						dbug.SetCurrentMode(text)
+					end
 				else
 					if not IsLookingForResponse then
 						OutputText("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>", Enum.MessageType.MessageWarning)
@@ -981,16 +993,21 @@ CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			if CurrentMode == 3 then
-				if text:match("install") then
-					text = string.gsub(text, "install", "")
-					text = string.gsub(text, " ", "")
-					Installer.InstallFromRepository (text)
+				if text:match("moduleinstaller") then
+					if text:match("installfromlink") then
+						text = string.gsub(text, "moduleinstaller", "")
+						text = string.gsub(text, "installfromlink", "")
+						text = string.gsub(text, " ", "")
+						Installer.InstallFromLink(text)
+					end
+					if text:match("install") then
+						text = string.gsub(text, "moduleinstaller", "")
+						text = string.gsub(text, "install", "")
+						text = string.gsub(text, " ", "")
+						Installer.InstallFromRepository (text)
+					end
 				end
-				if text:match("installfromlink") then
-					text = string.gsub(text, "installfromlink", "")
-					text = string.gsub(text, " ", "")
-					Installer.InstallFromLink(text)
-				end
+				
 			end
 			if IsLookingForResponse then
 				if SearchForCommand("y") then
