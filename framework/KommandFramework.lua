@@ -4,6 +4,10 @@
 ----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
+if game.CoreGui:FindFirstDescendant("Kommand") then
+	error("Kommand is already executed!")	
+end
+
 local Kommand = Instance.new("ScreenGui")
 local BlurEffect = Instance.new("Folder")
 local ConsoleWindow = Instance.new("ImageLabel")
@@ -24,6 +28,8 @@ local UICorner = Instance.new("UICorner")
 local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
+
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/lib.lua"))
 
 Kommand.Name = "Kommand"
 if game["Run Service"]:IsStudio() then
@@ -487,102 +493,7 @@ local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
 local function OutputText(Message, Type, Prefix, Color)
-	if Type == Enum.MessageType.MessageError then
-		local TextLabel = Instance.new("TextBox")
-		TextLabel.Name = Message
-		TextLabel.Parent = ClientLog
-		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = ErrorColor
-		TextLabel.BackgroundTransparency = 1.000
-		TextLabel.Size = UDim2.new(1, 0, 0, 0)
-		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "🛑 "..Message
-		TextLabel.TextColor3 = ErrorColor
-		TextLabel.TextSize = 16.000
-		TextLabel.TextWrapped = true
-		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-		TextLabel.ClearTextOnFocus = false
-		TextLabel.TextEditable = false
-		TextLabel.RichText = true
-		TextLabel.TextTransparency = 1
-		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-	elseif Type == Enum.MessageType.MessageWarning then
-		local TextLabel = Instance.new("TextBox")
-		TextLabel.Name = Message
-		TextLabel.Parent = ClientLog
-		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = WarningColor
-		TextLabel.BackgroundTransparency = 1.000
-		TextLabel.Size = UDim2.new(1, 0, 0, 0)
-		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "⚠️ "..Message
-		TextLabel.TextColor3 = WarningColor
-		TextLabel.TextSize = 16.000
-		TextLabel.TextWrapped = true
-		TextLabel.ClearTextOnFocus = false
-		TextLabel.TextEditable = false
-		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-		TextLabel.RichText = true
-		TextLabel.TextTransparency = 1
-		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-	elseif Type == Enum.MessageType.MessageOutput then
-		local TextLabel = Instance.new("TextBox")
-		TextLabel.Name = Message
-		TextLabel.Parent = ClientLog
-		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		TextLabel.BackgroundTransparency = 1.000
-		TextLabel.Size = UDim2.new(1, 0, 0, 0)
-		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "-- "..Message
-		TextLabel.TextColor3 = OutputColor
-		TextLabel.TextSize = 16.000
-		TextLabel.TextWrapped = true
-		TextLabel.ClearTextOnFocus = false
-		TextLabel.TextEditable = false
-		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-		TextLabel.RichText = true
-		TextLabel.TextTransparency = 1
-		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-	elseif Type == Enum.MessageType.MessageInfo then
-		local TextLabel = Instance.new("TextBox")
-		TextLabel.Name = Message
-		TextLabel.Parent = ClientLog
-		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
-		TextLabel.BackgroundTransparency = 1.000
-		TextLabel.Size = UDim2.new(1, 0, 0, 0)
-		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "-- "..Message
-		TextLabel.TextColor3 = InfoColor
-		TextLabel.TextSize = 16.000
-		TextLabel.TextWrapped = true
-		TextLabel.ClearTextOnFocus = false
-		TextLabel.TextEditable = false
-		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-		TextLabel.RichText = true
-		TextLabel.TextTransparency = 1
-		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()	
-	elseif Type == "Custom" then
-		local TextLabel = Instance.new("TextBox")
-		TextLabel.Name = Message
-		TextLabel.Parent = ClientLog
-		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
-		TextLabel.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
-		TextLabel.BackgroundTransparency = 1.000
-		TextLabel.Size = UDim2.new(1, 0, 0, 0)
-		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "-- "..Message
-		TextLabel.TextColor3 = Color
-		TextLabel.TextSize = 16.000
-		TextLabel.TextWrapped = true
-		TextLabel.ClearTextOnFocus = false
-		TextLabel.TextEditable = false
-		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-		TextLabel.RichText = true
-		TextLabel.TextTransparency = 1
-		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()	
-	end
+	lib:OutputText(Message, Type, Prefix, Color)
 end
 
 game:GetService("LogService").MessageOut:Connect(function(Message, Type)
