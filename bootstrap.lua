@@ -1,3 +1,4 @@
+rconsoleclear()
 rconsolename("Bootstrapper")
 rconsoleprint("Checking Kommand Framework\n")
 
