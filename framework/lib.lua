@@ -1,5 +1,7 @@
+-- Please excuse my absolute fucking trash code
+
 local lib = {}
-local ClientLog = game.CoreGui:FindFirstDescendant("ClientLog")
+local ClientLog = game.CoreGui:WaitForChild("ClientLog"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 
 function lib:OutputText(Message, Type, Prefix, Color)
   if Type == Enum.MessageType.MessageError then
