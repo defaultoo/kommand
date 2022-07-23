@@ -493,7 +493,7 @@ local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
 local function OutputText(Message, Type, Prefix, Color)
-	lib:OutputText(Message, Type, Prefix, Color)
+	lib:Output(Message, Type, Prefix, Color)
 end
 
 game:GetService("LogService").MessageOut:Connect(function(Message, Type)
