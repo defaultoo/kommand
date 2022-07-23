@@ -101,3 +101,5 @@ function lib:OutputText(Message, Type, Prefix, Color)
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()	
 	end
 end
+
+return lib
