@@ -4,7 +4,7 @@
 ----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
-if game.CoreGui:FindFirstDescendant("Kommand") then
+if game.CoreGui:FindFirstChild("Kommand") then
 	error("Kommand is already executed!")	
 end
 
