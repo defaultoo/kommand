@@ -29,7 +29,7 @@ local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
 
-local lib = require(loadstring(readfile("kommand/library/kommandlibrary.kmd")))
+local lib = loadstring(readfile("kommand/library/kommandlibrary.kmd")
 
 Kommand.Name = "Kommand"
 if game["Run Service"]:IsStudio() then
