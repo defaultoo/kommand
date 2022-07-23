@@ -3,6 +3,11 @@
 local lib = {}
 local ClientLog = game.CoreGui:WaitForChild("ClientLog"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 
+local ErrorColor = Color3.fromRGB(255, 0, 0)
+local WarningColor = Color3.fromRGB(255, 170, 0)
+local OutputColor = Color3.fromRGB(255, 255, 255)
+local InfoColor = Color3.fromRGB(0, 85, 255)
+
 function lib:OutputText(Message, Type, Prefix, Color)
   if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextBox")
