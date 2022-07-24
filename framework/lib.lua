@@ -1,6 +1,7 @@
 -- Please excuse my absolute fucking trash code
 
-lib = {}
+_G.Output = {}
+
 local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
@@ -8,8 +9,7 @@ local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
-function lib:Init()
-function lib:OutputText(Message, Type, Prefix, Color)
+function _G.Output:OutputText(Message, Type, Prefix, Color)
   if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
@@ -109,7 +109,4 @@ function lib:OutputText(Message, Type, Prefix, Color)
 	end
 end
 
-
-
-
-return lib
+return _G:OutputText()
