@@ -474,7 +474,7 @@ end)
 ----------------------------------------------------------------------
 
 game:GetService("UserInputService").InputBegan:Connect(function(input)
-	--[[if input.KeyCode == Enum.KeyCode.F9 then
+	if input.KeyCode == Enum.KeyCode.F9 then
 		game:GetService("StarterGui"):SetCore("DevConsoleVisible", false)
 		Kommand.Enabled = true
 		BindFrame(Blur, {
@@ -482,16 +482,21 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
 			BrickColor = BrickColor.new('Institutional white')
 		})
 		game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
-	end]]
+	end
 end)
+
+loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
+local OutputLibrary = _G.Output
+
+
 
 local function OutputText(Message, Type, Prefix, Color)
-	loadstring(readfile("kommand/library/kommandlibrary.kmd"))():Output(Message, Type, Prefix, Color)
+	OutputLibrary:OutputText(Message, Type, Prefix, Color)
 end
 
 game:GetService("LogService").MessageOut:Connect(function(Message, Type)
