@@ -29,8 +29,6 @@ local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
 
-local lib = loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
-
 Kommand.Name = "Kommand"
 if game["Run Service"]:IsStudio() then
 	Kommand.Parent = game.Players.LocalPlayer.PlayerGui
@@ -946,3 +944,5 @@ game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.
 task.wait(1)
 Intro:Destroy()
 OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help for help.</font>', Enum.MessageType.MessageOutput)
+
+local lib = loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
