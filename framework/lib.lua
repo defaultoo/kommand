@@ -8,6 +8,7 @@ local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
+function lib:Init()
 function lib:OutputText(Message, Type, Prefix, Color)
   if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextBox")
@@ -105,6 +106,10 @@ function lib:OutputText(Message, Type, Prefix, Color)
 		TextLabel.TextTransparency = 1
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()	
 	end
+	end
 end
+
+
+
 
 return lib
