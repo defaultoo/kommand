@@ -1,7 +1,7 @@
 -- Please excuse my absolute fucking trash code
 
 local lib = {}
-local ClientLog = game.CoreGui:WaitForChild("ClientLog"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
+local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
