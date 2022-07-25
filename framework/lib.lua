@@ -109,4 +109,4 @@ function _G.Output:OutputText(Message, Type, Prefix, Color)
 	end
 end
 
-return _G:OutputText()
+return _G.Output
