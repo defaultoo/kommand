@@ -476,7 +476,7 @@ end)
 ----------------------------------------------------------------------
 
 game:GetService("UserInputService").InputBegan:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.F9 then
+	--[[if input.KeyCode == Enum.KeyCode.F9 then
 		game:GetService("StarterGui"):SetCore("DevConsoleVisible", false)
 		Kommand.Enabled = true
 		BindFrame(Blur, {
@@ -484,7 +484,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
 			BrickColor = BrickColor.new('Institutional white')
 		})
 		game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
-	end
+	end]]
 end)
 
 loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
