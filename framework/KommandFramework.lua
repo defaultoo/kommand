@@ -371,7 +371,9 @@ local function UnbindFrame(frame)
 	local cb = binds[frame]
 	if cb then
 		RunService:UnbindFromRenderStep(cb.uid)
-		workspace.CurrentCamera:FindFirstChild("blur"):Destroy()
+		for _, v in pairs(cb.parts) do
+			v:Destroy()
+		end
 		binds[frame] = nil
 	else
 
