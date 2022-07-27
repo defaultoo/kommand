@@ -36,4 +36,7 @@ end
 rconsoleprint("Launching Kommand\n")
 wait(0.5)
 rconsoleclose()
-loadstring(readfile("kommand/framework/kommandframework.kmd"))()
+spawn(function()
+	loadstring(readfile("kommand/framework/kommandframework.kmd"))()
+	loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
+end)
