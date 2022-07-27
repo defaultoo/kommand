@@ -34,5 +34,6 @@ else
 end
 
 rconsoleprint("Launching Kommand\n")
+wait(0.5)
 rconsoleclose()
 loadstring(readfile("kommand/framework/kommandframework.kmd"))()
