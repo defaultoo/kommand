@@ -187,12 +187,6 @@ EnvIndicator.TextSize = 16.000
 EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
 
 ----------------------------------------------------------------------
--- Library Setup --
-----------------------------------------------------------------------
-
-local OutputLibrary = _G.Output
-
-----------------------------------------------------------------------
 -- Blur Setup --
 ----------------------------------------------------------------------
 
@@ -492,6 +486,8 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
 		game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
 	end
 end)
+
+local OutputLibrary = _G.Output
 
 local function OutputText(Message, Type, Prefix, Color)
 	OutputLibrary:OutputText(Message, Type, Prefix, Color)
