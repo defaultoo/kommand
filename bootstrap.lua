@@ -32,11 +32,9 @@ else
 	makefolder("kommand/library")
 	writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/lib.lua"))
 end
-
+rconsoleprint("Initializing Kommand Library\n")
+loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 rconsoleprint("Launching Kommand\n")
 wait(0.5)
 rconsoleclose()
-spawn(function()
-	loadstring(readfile("kommand/framework/kommandframework.kmd"))()
-	loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
-end)
+loadstring(readfile("kommand/framework/kommandframework.kmd"))()
