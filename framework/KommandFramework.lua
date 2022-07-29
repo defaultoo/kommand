@@ -884,8 +884,9 @@ CmdBar.FocusLost:Connect(function(pressed)
 					end
 				end
 				if text:match("safehop") or text:match("serverhop") then
+					queue_on_teleport(readfile("kommand/framework/kommandframework.kmd"))
 					game["Teleport Service"]:Teleport(game.PlaceId)
-					game.Players.LocalPlayer:Kick("Player has been disconnected from server. Please await teleport to "..game.PlaceId)	
+					game.Players.LocalPlayer:Kick("Please await teleport to "..game.PlaceId)	
 				end
 			end
 			if CurrentMode == 2 then
