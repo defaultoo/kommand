@@ -28,6 +28,9 @@ local UICorner = Instance.new("UICorner")
 local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
+local Tabs = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+local TextLabel = Instance.new("TextButton")
 
 Kommand.Name = "Kommand"
 if game["Run Service"]:IsStudio() then
@@ -172,7 +175,7 @@ CmdBar.TextWrapped = true
 CmdBar.ClearTextOnFocus = false
 CmdBar.TextXAlignment = Enum.TextXAlignment.Left
 
-EnvIndicator.Name = "EnvIndicator"
+EnvIndicator.Name = "ModeIndicator"
 EnvIndicator.Parent = CommandBar
 EnvIndicator.Active = true
 EnvIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -185,6 +188,35 @@ EnvIndicator.Text = ">"
 EnvIndicator.TextColor3 = Color3.fromRGB(255, 255, 255)
 EnvIndicator.TextSize = 16.000
 EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
+
+Tabs.Name = "Tabs"
+Tabs.Parent = game.StarterGui.Kommand.ConsoleWindow.TopBar
+Tabs.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Tabs.BackgroundTransparency = 1.000
+Tabs.Position = UDim2.new(0.0250000004, 0, 0, 40)
+Tabs.Selectable = false
+Tabs.Size = UDim2.new(0, 765, 0, 25)
+Tabs.CanvasSize = UDim2.new(0, 0, 0, 0)
+Tabs.ScrollBarThickness = 0
+Tabs.AutomaticCanvasSize = Enum.AutomaticSize.X
+
+UIListLayout.Parent = Tabs
+UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 10)
+
+TextLabel.Name = "NewTab"
+TextLabel.Parent = Tabs
+TextLabel.Active = false
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.LayoutOrder = 2
+TextLabel.Selectable = false
+TextLabel.Size = UDim2.new(0, 0, 1, 0)
+TextLabel.Font = Enum.Font.RobotoMono
+TextLabel.Text = "+"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 20.000
 
 ----------------------------------------------------------------------
 -- Blur Setup --
