@@ -8,7 +8,7 @@ _G.KommandLibrary.Tabs = {}
 _G.KommandLibrary.Info = {}
 
 local KonsoleExecuted = false
-local ClientLog = game.CoreGui:WaitForChild("Kommand", 5):WaitForChild("ConsoleWindow", 0.1):WaitForChild("Console", 0.1):WaitForChild("ClientLog", 0.1)
+local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 
 if game.CoreGui:FindFirstChild("Kommand") then
 	KonsoleExecuted = true	
