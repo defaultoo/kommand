@@ -190,7 +190,7 @@ EnvIndicator.TextSize = 16.000
 EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
 
 Tabs.Name = "Tabs"
-Tabs.Parent = game.StarterGui.Kommand.ConsoleWindow.TopBar
+Tabs.Parent = TopBar
 Tabs.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Tabs.BackgroundTransparency = 1.000
 Tabs.Position = UDim2.new(0.0250000004, 0, 0, 40)
