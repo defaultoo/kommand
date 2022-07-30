@@ -121,8 +121,8 @@ end
 return _G.Output
 
 function _G.Tabs:CreateTab()
-	local Terminal = Instance.new("ImageButton")
-	local Tab = Instance.new("Frame")
+	local Tab = Instance.new("ImageButton")
+	local Container = Instance.new("Frame")
 	local Color = Instance.new("Frame")
 	local Title = Instance.new("TextLabel")
 	local UIPadding = Instance.new("UIPadding")
@@ -131,26 +131,26 @@ function _G.Tabs:CreateTab()
 	local Exit = Instance.new("TextButton")
 	local Color_2 = Instance.new("Frame")
 
-	Terminal.Name = "Terminal"
-	Terminal.Parent = game.CoreGui.Kommand.ConsoleWindow.TopBar.Tabs
-	Terminal.Active = false
-	Terminal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Terminal.BackgroundTransparency = 1.000
-	Terminal.BorderSizePixel = 0
-	Terminal.Selectable = false
-	Terminal.Size = UDim2.new(0, 0, 0, 25)
-	Terminal.ClipsDescendants = true
-	Terminal.AutomaticSize = Enum.AutomaticSize.X
-
-	Tab.Name = "Tab"
-	Tab.Parent = Terminal
+	Tab.Name = "Terminal"
+	Tab.Parent = game.CoreGui.Kommand.ConsoleWindow.TopBar.Tabs
+	Tab.Active = false
 	Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	Tab.BackgroundTransparency = 1.000
-	Tab.Size = UDim2.new(0, 0, 0, 20)
+	Tab.BorderSizePixel = 0
+	Tab.Selectable = false
+	Tab.Size = UDim2.new(0, 0, 0, 25)
+	Tab.ClipsDescendants = true
 	Tab.AutomaticSize = Enum.AutomaticSize.X
 
+	Container.Name = "Container"
+	Container.Parent = Tab
+	Container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Container.BackgroundTransparency = 1.000
+	Container.Size = UDim2.new(0, 0, 0, 20)
+	Container.AutomaticSize = Enum.AutomaticSize.X
+
 	Color.Name = "Color"
-	Color.Parent = Tab
+	Color.Parent = Container
 	Color.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 	Color.BorderSizePixel = 0
 	Color.Size = UDim2.new(0, 0, 0, 25)
@@ -195,7 +195,7 @@ function _G.Tabs:CreateTab()
 	Exit.TextSize = 16.000
 
 	Color_2.Name = "Color"
-	Color_2.Parent = Tab
+	Color_2.Parent = Container
 	Color_2.AnchorPoint = Vector2.new(0, 1)
 	Color_2.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 	Color_2.BorderSizePixel = 0
