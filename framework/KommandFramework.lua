@@ -29,7 +29,7 @@ local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
 local Tabs = Instance.new("ScrollingFrame")
-local UIListLayout = Instance.new("UIListLayout")
+local UIListLayout_2 = Instance.new("UIListLayout")
 local TextLabel = Instance.new("TextButton")
 
 Kommand.Name = "Kommand"
@@ -200,10 +200,10 @@ Tabs.CanvasSize = UDim2.new(0, 0, 0, 0)
 Tabs.ScrollBarThickness = 0
 Tabs.AutomaticCanvasSize = Enum.AutomaticSize.X
 
-UIListLayout.Parent = Tabs
-UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout_2.Parent = Tabs
+UIListLayout_2.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout_2.Padding = UDim.new(0, 10)
 
 TextLabel.Name = "NewTab"
 TextLabel.Parent = Tabs
