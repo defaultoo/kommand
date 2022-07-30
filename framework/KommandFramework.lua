@@ -138,8 +138,8 @@ ClientLog.Active = true
 ClientLog.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ClientLog.BackgroundTransparency = 1.000
 ClientLog.BorderSizePixel = 0
-ClientLog.Position = UDim2.new(0.0250000004, 0, 0.0649999976, 10)
-ClientLog.Size = UDim2.new(0, 765, 0, 460)
+ClientLog.Position = UDim2.new(0.025, 0, 0.065, 30)
+ClientLog.Size = UDim2.new(0, 765, 0, 440)
 ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
 ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
