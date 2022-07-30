@@ -1,9 +1,11 @@
 -- Please excuse my absolute fucking trash code
 
-_G.Output = {}
-_G.Installer = {}
-_G.Tabs = {}
-_G.Info = {}
+_G.KommandLibrary = {}
+
+_G.KommandLibrary.Output = {}
+_G.KommandLibrary.PackageManager = {}
+_G.KommandLibrary.Tabs = {}
+_G.KommandLibrary.Info = {}
 
 local KonsoleExecuted = false
 local ClientLog = game.CoreGui:WaitForChild("Kommand", 5):WaitForChild("ConsoleWindow", 0.1):WaitForChild("Console", 0.1):WaitForChild("ClientLog", 0.1)
@@ -19,7 +21,7 @@ local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
-function _G.Output:OutputText(Message, Type, Prefix, Color)
+function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
 	if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
@@ -118,9 +120,7 @@ function _G.Output:OutputText(Message, Type, Prefix, Color)
 	end
 end
 
-return _G.Output
-
-function _G.Tabs:CreateTab()
+function _G.KommandLibrary.Tabs:CreateTab()
 	local Tab = Instance.new("ImageButton")
 	local Container = Instance.new("Frame")
 	local Color = Instance.new("Frame")
@@ -206,7 +206,7 @@ function _G.Tabs:CreateTab()
 	Tab.Position = UDim2.fromScale(0,1)
 	Tab:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5)
 
-	Terminal.MouseButton1Click:Connect(function()
+	Tab.MouseButton1Click:Connect(function()
 		for i, obj in pairs(game.Players.LocalPlayer.PlayerGui.Kommand.ConsoleWindow.TopBar.Tabs:GetDescendants()) do
 			if obj.Name == "Color" or obj.Name == "Color_2" then
 				game:GetService("TweenService"):Create(obj, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(50,50,50)}):Play()
@@ -220,6 +220,8 @@ function _G.Tabs:CreateTab()
 		Tab.Position = UDim2.fromScale(0,0)
 		Tab:TweenPosition(UDim2.new(0,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.1)
 		wait(0.1)
-		Terminal:Destroy()
+		Tab:Destroy()
 	end)	
 end
+
+return _G.KommandLibrary
