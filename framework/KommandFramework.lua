@@ -725,8 +725,8 @@ local function OutputLoadingSequence(percent, msg)
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "[ "..percent * 10 .."% ] "..msg.."..."
-		TextLabel.TextColor3 = OutputColor
+		TextLabel.Text = "<b>[ "..percent * 10 .."% ]</b> "..msg.."..."
+		TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
