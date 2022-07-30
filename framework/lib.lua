@@ -1,8 +1,18 @@
 -- Please excuse my absolute fucking trash code
 
 _G.Output = {}
+_G.Installer = {}
+_G.Tabs = {}
+_G.Info = {}
 
-local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
+local KonsoleExecuted = false
+local ClientLog = game.CoreGui:WaitForChild("Kommand", 5):WaitForChild("ConsoleWindow", 0.1):WaitForChild("Console", 0.1):WaitForChild("ClientLog", 0.1)
+
+if game.CoreGui:FindFirstChild("Kommand") then
+	KonsoleExecuted = true	
+else
+	error("Konsole not found!")	
+end
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
@@ -108,5 +118,108 @@ function _G.Output:OutputText(Message, Type, Prefix, Color)
 	end
 end
 
-
 return _G.Output
+
+function _G.Tabs:CreateTab()
+	local Terminal = Instance.new("ImageButton")
+	local Tab = Instance.new("Frame")
+	local Color = Instance.new("Frame")
+	local Title = Instance.new("TextLabel")
+	local UIPadding = Instance.new("UIPadding")
+	local UICorner = Instance.new("UICorner")
+	local UIListLayout = Instance.new("UIListLayout")
+	local Exit = Instance.new("TextButton")
+	local Color_2 = Instance.new("Frame")
+
+	Terminal.Name = "Terminal"
+	Terminal.Parent = game.CoreGui.Kommand.ConsoleWindow.TopBar.Tabs
+	Terminal.Active = false
+	Terminal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Terminal.BackgroundTransparency = 1.000
+	Terminal.BorderSizePixel = 0
+	Terminal.Selectable = false
+	Terminal.Size = UDim2.new(0, 0, 0, 25)
+	Terminal.ClipsDescendants = true
+	Terminal.AutomaticSize = Enum.AutomaticSize.X
+
+	Tab.Name = "Tab"
+	Tab.Parent = Terminal
+	Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Tab.BackgroundTransparency = 1.000
+	Tab.Size = UDim2.new(0, 0, 0, 20)
+	Tab.AutomaticSize = Enum.AutomaticSize.X
+
+	Color.Name = "Color"
+	Color.Parent = Tab
+	Color.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	Color.BorderSizePixel = 0
+	Color.Size = UDim2.new(0, 0, 0, 25)
+	Color.AutomaticSize = Enum.AutomaticSize.XY
+
+	Title.Name = "Title"
+	Title.Parent = Color
+	Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Title.BackgroundTransparency = 1.000
+	Title.LayoutOrder = 2
+	Title.Size = UDim2.new(0, 0, 1, 0)
+	Title.Font = Enum.Font.RobotoMono
+	Title.Text = "Terminal"
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextSize = 16.000
+	Title.AutomaticSize = Enum.AutomaticSize.X
+
+	UIPadding.Parent = Color
+	UIPadding.PaddingBottom = UDim.new(0, 5)
+	UIPadding.PaddingLeft = UDim.new(0, 10)
+	UIPadding.PaddingRight = UDim.new(0, 10)
+	UIPadding.PaddingTop = UDim.new(0, 5)
+
+	UICorner.Parent = Color
+
+	UIListLayout.Parent = Color
+	UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 10)
+
+	Exit.Name = "Exit"
+	Exit.Parent = Color
+	Exit.Active = false
+	Exit.BackgroundTransparency = 1
+	Exit.BorderSizePixel = 0
+	Exit.LayoutOrder = 2
+	Exit.Selectable = false
+	Exit.Size = UDim2.new(0, 10, 1, 0)
+	Exit.Font = Enum.Font.SciFi
+	Exit.Text = "x"
+	Exit.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Exit.TextSize = 16.000
+
+	Color_2.Name = "Color"
+	Color_2.Parent = Tab
+	Color_2.AnchorPoint = Vector2.new(0, 1)
+	Color_2.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	Color_2.BorderSizePixel = 0
+	Color_2.Position = UDim2.new(0, 0, 1, 5)
+	Color_2.Size = UDim2.new(1, 0, 0, 8)
+	Color_2.ZIndex = 0
+
+	Tab.Position = UDim2.fromScale(0,1)
+	Tab:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5)
+
+	Terminal.MouseButton1Click:Connect(function()
+		for i, obj in pairs(game.Players.LocalPlayer.PlayerGui.Kommand.ConsoleWindow.TopBar.Tabs:GetDescendants()) do
+			if obj.Name == "Color" or obj.Name == "Color_2" then
+				game:GetService("TweenService"):Create(obj, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(50,50,50)}):Play()
+			end
+		end
+		game:GetService("TweenService"):Create(Color, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(75,75,75)}):Play()
+		game:GetService("TweenService"):Create(Color_2, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(75,75,75)}):Play()
+	end)
+
+	Exit.MouseButton1Click:Connect(function()
+		Tab.Position = UDim2.fromScale(0,0)
+		Tab:TweenPosition(UDim2.new(0,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.1)
+		wait(0.1)
+		Terminal:Destroy()
+	end)	
+end
