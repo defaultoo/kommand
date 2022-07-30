@@ -207,7 +207,7 @@ function _G.KommandLibrary.Tabs:CreateTab()
 	Container:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5)
 
 	Tab.MouseButton1Click:Connect(function()
-		for i, obj in pairs(game.Players.LocalPlayer.PlayerGui.Kommand.ConsoleWindow.TopBar.Tabs:GetDescendants()) do
+		for i, obj in pairs(game.CoreGui.Kommand.ConsoleWindow.TopBar.Tabs:GetDescendants()) do
 			if obj.Name == "Color" or obj.Name == "Color_2" then
 				game:GetService("TweenService"):Create(obj, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(50,50,50)}):Play()
 			end
@@ -218,7 +218,7 @@ function _G.KommandLibrary.Tabs:CreateTab()
 
 	Exit.MouseButton1Click:Connect(function()
 		Container.Position = UDim2.fromScale(0,0)
-		Container:TweenPosition(UDim2.new(0,0,1,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5)
+		Container:TweenPosition(UDim2.new(0,0,1,0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 0.25)
 		wait(0.5)
 		Tab:Destroy()
 	end)	
