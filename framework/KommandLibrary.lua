@@ -218,8 +218,8 @@ function _G.KommandLibrary.Tabs:CreateTab()
 
 	Exit.MouseButton1Click:Connect(function()
 		Container.Position = UDim2.fromScale(0,0)
-		Container:TweenPosition(UDim2.new(0,0,1,0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 0.25)
-		wait(0.5)
+		Container:TweenPosition(UDim2.new(0,0,1,0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 0.1)
+		wait(0.1)
 		Tab:Destroy()
 	end)	
 end
