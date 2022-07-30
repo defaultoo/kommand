@@ -20,17 +20,17 @@ else
 end
 
 if isfile("kommand/library/kommandlibrary.kmd") then
-	if readfile("kommand/library/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/lib.lua") then
+	if readfile("kommand/library/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
 	else 
 		rconsoleprint("Library Update Found\n")
 		rconsoleprint("Updating Kommand Library\n")
 		delfile("kommand/library/kommandlibrary.kmd")
-		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/lib.lua"))
+		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 	end
 else
 	rconsoleprint("Installing Kommand Library\n")
 	makefolder("kommand/library")
-	writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/lib.lua"))
+	writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 end
 rconsoleprint("Initializing Kommand Library\n")
 spawn(function()
