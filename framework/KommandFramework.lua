@@ -519,7 +519,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
 	end
 end)
 
-local OutputLibrary = _G.Output
+local OutputLibrary = _G.KommandLibrary.Output
 
 local function OutputText(Message, Type, Prefix, Color)
 	OutputLibrary:OutputText(Message, Type, Prefix, Color)
