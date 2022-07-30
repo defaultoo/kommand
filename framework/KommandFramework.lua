@@ -217,6 +217,15 @@ TextLabel.Font = Enum.Font.RobotoMono
 TextLabel.Text = "+"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 20.000
+TextLabel.AutomaticSize = Enum.AutomaticSize.X
+
+----------------------------------------------------------------------
+-- Tabs Setup --
+----------------------------------------------------------------------
+
+TextLabel.MouseButton1Down:Connect(function()
+	_G.KommandLibrary.Tabs:CreateTab()	
+end)
 
 ----------------------------------------------------------------------
 -- Blur Setup --
