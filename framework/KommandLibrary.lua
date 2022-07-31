@@ -6,6 +6,7 @@ _G.KommandLibrary.Output = {}
 _G.KommandLibrary.PackageManager = {}
 _G.KommandLibrary.Tabs = {}
 _G.KommandLibrary.Info = {}
+_G.KommandLibrary.Debug = {}
 
 local KonsoleExecuted = false
 local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
@@ -117,6 +118,8 @@ function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
 		TextLabel.RichText = true
 		TextLabel.TextTransparency = 1
 		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()	
+	else
+		error("No type was specified!")	
 	end
 end
 
@@ -222,6 +225,81 @@ function _G.KommandLibrary.Tabs:CreateTab()
 		wait(0.1)
 		Tab:Destroy()
 	end)	
+end
+
+function _G.KommandLibrary.PackageManager:InstallFromRepository(text)
+	local function OutputText(text, type, prefix, color)
+		_G.KommandLibrary.Output:OutputText(text, type, prefix, color)
+	end
+	
+	if text ~= "" then
+		local ModuleName = text
+		OutputText('Install '..ModuleName.."? The module must be on the Github Repository (kommand/modules/Module.kmd). [y/n]", "Custom", "--", Color3.fromRGB(85, 170, 255))
+		if CreateResponsePrompt() then
+			if CheckExecutor() then
+				local link = "https://raw.githubusercontent.com/ooflet/kommand/main/modules/"..ModuleName..".kmd"
+				local module = nil
+				OutputLoadingSequence(1, "Sending GET request to "..link)
+				wait(0.5)
+				local success, message = pcall(function() module = game:HttpGet(link) end)
+				if not success then
+					if string.find(tostring(message), "404") then
+						OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces.</b>', Enum.MessageType.MessageWarning)
+						OutputLoadingSequence(10, "Failed")	
+					else
+						OutputText('<b>Unknown error occured.<b>', Enum.MessageType.MessageWarning)
+						OutputLoadingSequence(10, "Failed")	
+					end
+
+				else
+					OutputLoadingSequence(3, "Copying "..link)
+					local filename = ModuleName..".kmd"
+					wait(0.5)
+					OutputLoadingSequence(7.5, 'Installing '..ModuleName..' to /'..identifyexecutor()..'/workspace/'..ModuleName..'.kmd ')
+					writefile(tostring(filename), tostring(module))
+					wait(1)
+					OutputLoadingSequence(10, 'Complete')
+					OutputText(ModuleName..' succesfully installed.', "Custom", "--", Color3.fromRGB(85, 170, 255))	
+				end
+
+			end
+
+		end
+	else
+		OutputText("Expected value, got nil. You can't install nothing.", Enum.MessageType.MessageWarning)
+	end
+end
+
+function _G.KommandLibrary.PackageManager:InstallFromLink(text)
+	if text ~= "" then
+		OutputText('<b>Install from '..text.."? The source must be raw and unformatted. If the module is available on the Github Repository, you should use 'install' instead.  [Y/n] </b>", "Custom", "--", Color3.fromRGB(85, 170, 255))
+		if CreateResponsePrompt() then
+			if CheckExecutor() then
+				local link = text
+				local module = nil
+				OutputLoadingSequence(1, "Sending GET request to "..link)
+				wait(0.5)
+				local success, message = pcall(function() module = game:HttpGet(link) end)
+				if not success then	
+					OutputText('<b>Website returned '..message..'. Check if link is correctly spelt</b>', Enum.MessageType.MessageWarning)
+					OutputLoadingSequence(10, "Failed")	
+				else
+					OutputLoadingSequence(3, "Copying "..link)
+					local filename = link..".kmd"
+					wait(0.5)
+					OutputLoadingSequence(7.5, 'Installing '..link..' to /'..identifyexecutor()..'/workspace/'..link..'.kmd ')
+					writefile(tostring(filename), tostring(module))
+					wait(1)
+					OutputLoadingSequence(10, 'Complete')
+					OutputText('Succesfully installed. Feel free to rename the module file as it is currently just the link.', "Custom", "--", Color3.fromRGB(85, 170, 255))	
+				end
+
+			end
+
+		end
+	else
+		OutputText("Expected value, got nil. You can't install nothing.", Enum.MessageType.MessageWarning)
+	end
 end
 
 return _G.KommandLibrary
