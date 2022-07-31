@@ -781,82 +781,8 @@ end
 
 local Installer = {}
 
-function Installer.InstallFromRepository(text)
-	if text ~= "" then
-		local ModuleName = text
-		OutputText('Install '..ModuleName.."? The module must be on the Github Repository (kommand/modules/Module.kmd). [y/n]", "Custom", "--", Color3.fromRGB(85, 170, 255))
-		if CreateResponsePrompt() then
-			if CheckExecutor() then
-				local link = "https://raw.githubusercontent.com/ooflet/kommand/main/modules/"..ModuleName..".kmd"
-				local module = nil
-				OutputLoadingSequence(1, "Sending GET request to "..link)
-				wait(0.5)
-				local success, message = pcall(function() module = game:HttpGet(link) end)
-				if not success then
-					if string.find(tostring(message), "404") then
-						OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces.</b>', Enum.MessageType.MessageWarning)
-						OutputLoadingSequence(10, "Failed")	
-					else
-						OutputText('<b>Unknown error occured.<b>', Enum.MessageType.MessageWarning)
-						OutputLoadingSequence(10, "Failed")	
-					end
 
-				else
-					OutputLoadingSequence(3, "Copying "..link)
-					local filename = ModuleName..".kmd"
-					wait(0.5)
-					OutputLoadingSequence(7.5, 'Installing '..ModuleName..' to /'..identifyexecutor()..'/workspace/'..ModuleName..'.kmd ')
-					writefile(tostring(filename), tostring(module))
-					wait(1)
-					OutputLoadingSequence(10, 'Complete')
-					OutputText(ModuleName..' succesfully installed.', "Custom", "--", Color3.fromRGB(85, 170, 255))	
-				end
 
-			end
-
-		end
-	else
-		OutputText("Expected value, got nil. You can't install nothing dumbass.", Enum.MessageType.MessageWarning)
-	end
-end
-
-function Installer.InstallFromLink(text)
-	if text ~= "" then
-		OutputText('<b>Install from '..text.."? The source must be raw and unformatted. If the module is available on the Github Repository, you should use 'install' instead.  [Y/n] </b>", "Custom", "--", Color3.fromRGB(85, 170, 255))
-		if CreateResponsePrompt() then
-			if CheckExecutor() then
-				local link = text
-				local module = nil
-				OutputLoadingSequence(1, "Sending GET request to "..link)
-				wait(0.5)
-				local success, message = pcall(function() module = game:HttpGet(link) end)
-				if not success then
-					if string.find(tostring(message), "404") then
-						OutputText('<b>Module was not found. Module names are case sensitive and dont contain spaces.</b>', Enum.MessageType.MessageWarning)
-						OutputLoadingSequence(10, "Failed")	
-					else
-						OutputText('<b>Unknown error occured.<b>', Enum.MessageType.MessageWarning)
-						OutputLoadingSequence(10, "Failed")	
-					end
-
-				else
-					OutputLoadingSequence(3, "Copying "..link)
-					local filename = link..".kmd"
-					wait(0.5)
-					OutputLoadingSequence(7.5, 'Installing '..link..' to /'..identifyexecutor()..'/workspace/'..link..'.kmd ')
-					writefile(tostring(filename), tostring(module))
-					wait(1)
-					OutputLoadingSequence(10, 'Complete')
-					OutputText('Succesfully installed. Feel free to rename the module file as it is currently just the link.', "Custom", "--", Color3.fromRGB(85, 170, 255))	
-				end
-
-			end
-
-		end
-	else
-		OutputText("Expected value, got nil. You can't install nothing.", Enum.MessageType.MessageWarning)
-	end
-end
 
 local dbug = {}
 
@@ -943,18 +869,15 @@ CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			if CurrentMode == 3 then
-				if text:match("moduleinstaller") then
-					if text:match("installfromlink") then
-						text = string.gsub(text, "moduleinstaller", "")
-						text = string.gsub(text, "installfromlink", "")
-						text = string.gsub(text, " ", "")
-						Installer.InstallFromLink(text)
+				if text:match("installfromlink") then
+					text = string.gsub(text, "installfromlink", "")
+					text = string.gsub(text, " ", "")
+					_G.KommandLibrary.PackageManager:InstallFromLink(text)
 					end
 					if text:match("install") then
-						text = string.gsub(text, "moduleinstaller", "")
 						text = string.gsub(text, "install", "")
 						text = string.gsub(text, " ", "")
-						Installer.InstallFromRepository (text)
+						_G.KommandLibrary.PackageManager:InstallFromRepository(text)
 					end
 				end
 				
