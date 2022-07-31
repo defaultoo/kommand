@@ -873,12 +873,10 @@ CmdBar.FocusLost:Connect(function(pressed)
 					text = string.gsub(text, "installfromlink", "")
 					text = string.gsub(text, " ", "")
 					_G.KommandLibrary.PackageManager:InstallFromLink(text)
-					end
-					if text:match("install") then
-						text = string.gsub(text, "install", "")
-						text = string.gsub(text, " ", "")
-						_G.KommandLibrary.PackageManager:InstallFromRepository(text)
-					end
+				elseif text:match("install") then
+					text = string.gsub(text, "install", "")
+					text = string.gsub(text, " ", "")
+					_G.KommandLibrary.PackageManager:InstallFromRepository(text)
 				end
 				
 			end
