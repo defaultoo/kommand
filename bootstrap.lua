@@ -2,6 +2,15 @@ rconsoleclear()
 rconsolename("Bootstrapper")
 rconsoleprint("Checking Kommand Framework\n")
 
+if not pcall(function() game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.luau") end )() then
+	rconsoleprint("[GET] https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua failed!")
+	error()
+end
+if not pcall(function() game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") end )() then
+	rconsoleprint("[GET] https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua failed!")
+	error()
+end
+
 if isfile("kommand/framework/kommandframework.kmd") then
 	if readfile("kommand/framework/kommandframework.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") then
 		rconsoleprint("Checking Kommand Library\n")
