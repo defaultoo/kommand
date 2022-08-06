@@ -36,14 +36,7 @@ rconsoleprint("Initializing Kommand Library\n")
 spawn(function()
 	loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
 end)
-if Debug == true then
-	rconsoleprint("Launching Kommand\n")
-		wait(1)
-	rconsoleclose()
-	loadstring(readfile("kommand/framework/kommandframework.kmd"))()
-else
-	rconsoleprint("Launching Kommand\n")
-		wait(1)
-	rconsoleclose()
-	loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
-end
+rconsoleprint("Launching Kommand\n")
+wait(1)
+rconsoleclose()
+loadstring(readfile("kommand/framework/kommandframework.kmd"))()
