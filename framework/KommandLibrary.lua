@@ -9,7 +9,7 @@ _G.KommandLibrary.Info = {}
 _G.KommandLibrary.Debug = {}
 
 local KonsoleExecuted = false
-local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
+local Ronaco = loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/vanilla/RonacoMain.lua")
 
 if game.CoreGui:FindFirstChild("Kommand") then
 	KonsoleExecuted = true	
