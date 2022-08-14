@@ -1,8 +1,7 @@
 rconsoleclear()
-wait(0.5)
 rconsolename("Kommand")
 rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nInterrupt boot sequence by pressing the ` key\n\n")
-rconsoleprint("Initializing Bootstrapp\n")
+rconsoleprint("Initializing Bootstrapp\n\n")
 
 local function PrintInfo()
 	rconsoleprint("[")
@@ -38,17 +37,17 @@ end
 
 wait(0.1)
 
-local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KomandFramework.lua") end)
+local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
 if not framework then
 	PrintError()
-	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. Return message: \n"..message.."\n")
+	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. \n"..message.."\n")
 	error()
 end
 
-local library, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KomandLibrary.lua") end)
+local library, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") end)
 if not library then
 	PrintError()
-	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. Return message: \n"..message.."\n")
+	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. \n"..message.."\n")
 	error()
 end
 
