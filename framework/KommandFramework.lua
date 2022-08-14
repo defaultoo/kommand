@@ -812,7 +812,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 						local a = loadstring(text)()
 					end)
 					if not Correct then
-						OutputText("An error occured while executing.")
+						OutputText("An error occured while executing: "..Err, Enum.MessageType.MessageError)
 					end
 				end
 			end
