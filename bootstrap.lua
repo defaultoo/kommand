@@ -98,6 +98,7 @@ else
 	PrintSucess()
 	rconsoleprint("Library up-to-date\n")
 end
+wait(0.5)
 spawn(function()
 	loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 end)
