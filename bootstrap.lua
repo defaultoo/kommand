@@ -3,7 +3,7 @@ rconsolename("Kommand")
 rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nInterrupt boot sequence by pressing the enter key\n\n")
 rconsoleprint("Initializing Bootstrapp\n\n")
 
-local Debug = false
+local DebugCommands = false
 
 local UIS = game:GetService("UserInputService")
 
@@ -41,10 +41,9 @@ end
 
 spawn(function()
 	rconsoleinput()
-	rconsoleprint("\n")
+	DebugCommands = true
 	PrintSystem()
-	rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'exit' on the prompt once debug mode has activated\n\n")
-	debug = true
+	rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'continue' on the prompt once debug mode has activated\n")
 end)
 
 wait(3)
@@ -115,7 +114,7 @@ end
 
 wait(0.5)
 
-if Debug then
+if DebugCommands == true then
 	while true do
 		rconsoleprint("> ")
 		local command = rconsoleinput()
@@ -126,16 +125,18 @@ if Debug then
 			rconsoleclose()
 			game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
 			loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
+			break
 		elseif command == "exit" then
 			rconsoleclose()	
+			break
 		else
-			local success, err = pcall(function() loadstring(command) end)
+			local success, err = pcall(function() loadstring(command)() end)
 			if success then
 				PrintSucess()
 				rconsoleprint("Successfully ran.\n")
 			else
 				PrintError()
-				rconsoleprint("Error occured during execution: "..message.."\n")
+				rconsoleprint("Error occured during execution: "..err.."\n")
 			end
 		end
 	end
