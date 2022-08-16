@@ -87,6 +87,7 @@ ConsoleWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
 ConsoleWindow.Size = UDim2.new(0, 800, 0, 550)
 ConsoleWindow.Image = "rbxassetid://9823958365"
 ConsoleWindow.ImageTransparency = 1.000
+ConsoleWindow.Visible = false
 
 Blur.Name = "Blur"
 Blur.Parent = ConsoleWindow
@@ -913,6 +914,7 @@ game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyl
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,7)}):Play()
 wait(0.5)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,800,0,550)}):Play()
+ConsoleWindow.Visible = true
 wait(0.5)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 task.wait(1)
