@@ -3,6 +3,10 @@ rconsolename("Kommand")
 rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nInterrupt boot sequence by pressing the ` key\n\n")
 rconsoleprint("Initializing Bootstrapp\n\n")
 
+local Debug = false
+
+local UIS = game:GetService("UserInputService")
+
 local function PrintInfo()
 	rconsoleprint("[")
 	rconsoleprint("@@CYAN@@")
@@ -34,6 +38,14 @@ local function PrintSystem()
 	rconsoleprint("@@WHITE@@")
 	rconsoleprint("] ")
 end
+
+UIS.InputBegan:Connect(function(IO)
+	if IO.KeyCode == Enum.KeyCode.BackQuote then
+		rconsoleprint("\n")
+		PrintSystem()
+		rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'exit' on the prompt once debug mode has activated\n\n")
+	end
+end)
 
 wait(5)
 
@@ -100,10 +112,17 @@ else
 	PrintSucess()
 	rconsoleprint("Library up-to-date\n")
 end
-wait(0.5)
-spawn(function()
-	loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
-end)
-rconsoleclose()
-game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
-loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
+
+if Debug then
+	
+else
+	wait(0.5)
+	spawn(function()
+		loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
+	end)
+	rconsoleclose()
+	game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
+	loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
+end
+
+
