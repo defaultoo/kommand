@@ -1,6 +1,6 @@
 rconsoleclear()
 rconsolename("Kommand")
-rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nInterrupt boot sequence by pressing the ` key\n\n")
+rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nInterrupt boot sequence by pressing the enter key\n\n")
 rconsoleprint("Initializing Bootstrapp\n\n")
 
 local Debug = false
@@ -39,12 +39,12 @@ local function PrintSystem()
 	rconsoleprint("] ")
 end
 
-UIS.InputBegan:Connect(function(IO)
-	if IO.KeyCode == Enum.KeyCode.BackQuote then
-		rconsoleprint("\n")
-		PrintSystem()
-		rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'exit' on the prompt once debug mode has activated\n\n")
-	end
+spawn(function()
+	rconsoleinput()
+	rconsoleprint("\n")
+	PrintSystem()
+	rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'exit' on the prompt once debug mode has activated\n\n")
+	debug = true
 end)
 
 wait(3)
@@ -129,7 +129,7 @@ if Debug then
 		elseif command == "exit" then
 			rconsoleclose()	
 		else
-			local success, err = pcall(function() loadstring(command) end))
+			local success, err = pcall(function() loadstring(command) end)
 			if success then
 				PrintSucess()
 				rconsoleprint("Successfully ran.\n")
@@ -148,5 +148,3 @@ else
 	game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
 	loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 end
-
-
