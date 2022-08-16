@@ -51,6 +51,9 @@ if not library then
 	error()
 end
 
+PrintInfo()
+rconsoleprint("Checking Kommand Framework\n")
+
 if isfile("kommand/framework/kommandframework.kmd") then
 	if readfile("kommand/framework/kommandframework.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") then
 		PrintSucess()
@@ -62,7 +65,6 @@ if isfile("kommand/framework/kommandframework.kmd") then
 		rconsoleprint("Framework Update Found\n")
 		PrintInfo()
 		rconsoleprint("Updating Kommand Framework\n")
-		PrintInfo()
 		delfile("kommand/framework/kommandframework.kmd")
 		writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))	
 		PrintSucess()
