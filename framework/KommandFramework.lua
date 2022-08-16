@@ -62,9 +62,9 @@ game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.E
 wait(0.75)
 spawn(function()
 	while not loaded do
-		Intro:TweenPosition(UDim2.new(0.6,0,0.5,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5)
+		Intro:TweenPosition(UDim2.new(0.5,0,0.6,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
 		wait(0.5)
-		Intro:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.In, Enum.EasingStyle.Quint, 0.5)
+		Intro:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.In, Enum.EasingStyle.Quint, 0.5, true)
 		wait(0.5)
 	end	
 end)
