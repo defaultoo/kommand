@@ -47,7 +47,7 @@ UIS.InputBegan:Connect(function(IO)
 	end
 end)
 
-wait(5)
+wait(3)
 
 local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
 if not framework then
@@ -113,8 +113,32 @@ else
 	rconsoleprint("Library up-to-date\n")
 end
 
+wait(0.5)
+
 if Debug then
-	
+	while true do
+		rconsoleprint("> ")
+		local command = rconsoleinput()
+		if command == "continue" then
+			spawn(function()
+				loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
+			end)
+			rconsoleclose()
+			game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
+			loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
+		elseif command == "exit" then
+			rconsoleclose()	
+		else
+			local success, err = pcall(function() loadstring(command) end))
+			if success then
+				PrintSucess()
+				rconsoleprint("Successfully ran.\n")
+			else
+				PrintError()
+				rconsoleprint("Error occured during execution: "..message.."\n")
+			end
+		end
+	end
 else
 	wait(0.5)
 	spawn(function()
