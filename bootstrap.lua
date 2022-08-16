@@ -35,7 +35,7 @@ local function PrintSystem()
 	rconsoleprint("] ")
 end
 
-wait(0.1)
+wait(0.5)
 
 local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
 if not framework then
