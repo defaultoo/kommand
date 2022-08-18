@@ -535,14 +535,6 @@ game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 	OutputText(Message, Type)
 end)
 
-local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
-
-ClientLog.Changed:Connect(function(property)
-	if property ~= "CanvasPosition" then
-		game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
-	end
-end)
-
 ----------------------------------------------------------------------
 -- Executor Check --
 ----------------------------------------------------------------------
@@ -911,7 +903,7 @@ game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.
 task.wait(1)
 Intro:Destroy()
 OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help for help.</font>', Enum.MessageType.MessageOutput)
-end))
+end)
 if not success then
 	error("FrameworkError! "..msg)
 end
