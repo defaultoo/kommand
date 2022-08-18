@@ -26,7 +26,7 @@ local InfoColor = Color3.fromRGB(0, 85, 255)
 
 local CurrentPage = nil
 
-local function CreatePage(Name)
+local function CreateTerminal(Name)
 	local ClientLog = Instance.new("ScrollingFrame")
 	ClientLog.Parent = Console
 	ClientLog.Active = true
@@ -37,6 +37,14 @@ local function CreatePage(Name)
 	ClientLog.Size = UDim2.new(0, 765, 0, 440)
 	ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
 	ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
+			
+	local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
+
+	ClientLog.Changed:Connect(function(property)
+		if property ~= "CanvasPosition" then
+			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
+		end
+	end)
 	local pageloop = 0
 	for i, obj in pairs(game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):GetDescendants()) do
 		if string.find(obj.Name, "Terminal") then
@@ -262,7 +270,7 @@ function _G.KommandLibrary.Tabs:CreateTab()
 	-- Page
 	local pageloop = 0
 	
-	CreatePage("Terminal"..pageloop)
+	CreateTerminal("Terminal"..pageloop)
 	CurrentPage = "Terminal"..pageloop
 end
 
