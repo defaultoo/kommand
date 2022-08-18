@@ -8,6 +8,8 @@ if game.CoreGui:FindFirstChild("Kommand") then
 	error("Kommand is already executed!")	
 end
 
+
+local success, msg = pcall(function()
 local Kommand = Instance.new("ScreenGui")
 local BlurEffect = Instance.new("Folder")
 local ConsoleWindow = Instance.new("ImageLabel")
@@ -909,3 +911,7 @@ game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.
 task.wait(1)
 Intro:Destroy()
 OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help for help.</font>', Enum.MessageType.MessageOutput)
+end))
+if not success then
+	error("FrameworkError! "..msg)
+end
