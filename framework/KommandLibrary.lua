@@ -51,7 +51,7 @@ local function CreatePage(Name)
 		CurrentPage = Name..pageloop
 	end
 	
-end)
+end
 
 function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
 	local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild(CurrentPage)
@@ -263,7 +263,7 @@ function _G.KommandLibrary.Tabs:CreateTab()
 	local pageloop = 0
 	
 	CreatePage("Terminal"..pageloop)
-	CurrentPage = 
+	CurrentPage = "Terminal"..pageloop
 end
 
 function _G.KommandLibrary.PackageManager:InstallFromRepository(text)
