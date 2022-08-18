@@ -5,6 +5,7 @@ _G.KommandLibrary = {}
 _G.KommandLibrary.Output = {}
 _G.KommandLibrary.PackageManager = {}
 _G.KommandLibrary.Tabs = {}
+_G.KommandLibrary.Pages = {}
 _G.KommandLibrary.Info = {}
 _G.KommandLibrary.Debug = {}
 
@@ -23,6 +24,33 @@ local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
 local CurrentPage = nil
+
+local function CreatePage(Name)
+	local ClientLog = Instance.new("ScrollingFrame")
+	ClientLog.Parent = Console
+	ClientLog.Active = true
+	ClientLog.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ClientLog.BackgroundTransparency = 1.000
+	ClientLog.BorderSizePixel = 0
+	ClientLog.Position = UDim2.new(0.025, 0, 0.065, 30)
+	ClientLog.Size = UDim2.new(0, 765, 0, 440)
+	ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	local pageloop = 0
+	for i, obj in pairs(game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):GetDescendants()) do
+		if string.find(obj.Name, "Terminal") then
+			pageloop += 1
+		end
+	end
+	if pageloop == 0 then
+		ClientLog.Name = Name
+		CurrentPage = Name
+	else
+		ClientLog.Name = Name..pageloop
+		CurrentPage = Name..pageloop
+	end
+	
+end)
 
 function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
 	local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild(CurrentPage)
@@ -127,6 +155,7 @@ function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
 end
 
 function _G.KommandLibrary.Tabs:CreateTab()
+	-- Tab
 	local Tab = Instance.new("ImageButton")
 	local Container = Instance.new("Frame")
 	local Color = Instance.new("Frame")
@@ -228,6 +257,12 @@ function _G.KommandLibrary.Tabs:CreateTab()
 		wait(0.1)
 		Tab:Destroy()
 	end)	
+
+	-- Page
+	local pageloop = 0
+	
+	CreatePage("Terminal"..pageloop)
+	CurrentPage = 
 end
 
 function _G.KommandLibrary.PackageManager:InstallFromRepository(text)
