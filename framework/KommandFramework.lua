@@ -23,7 +23,7 @@ local CommandBar = Instance.new("Frame")
 local CmdBarHolder = Instance.new("Frame")
 local CmdBar = Instance.new("TextBox")
 local EnvIndicator = Instance.new("TextLabel")
-local ClientLog = Instance.new("ScrollingFrame")
+
 local UICorner = Instance.new("UICorner")
 local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
@@ -140,17 +140,6 @@ Console.Parent = ConsoleWindow
 Console.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Console.BackgroundTransparency = 1.000
 Console.Size = UDim2.new(1, 0, 1, 0)
-
-ClientLog.Name = "ClientLog"
-ClientLog.Parent = Console
-ClientLog.Active = true
-ClientLog.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ClientLog.BackgroundTransparency = 1.000
-ClientLog.BorderSizePixel = 0
-ClientLog.Position = UDim2.new(0.025, 0, 0.065, 30)
-ClientLog.Size = UDim2.new(0, 765, 0, 440)
-ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
-ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
 UIListLayout.Parent = ClientLog
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
