@@ -120,11 +120,10 @@ if DebugCommands == true then
 		local command = rconsoleinput()
 		if command == "continue" then
 			spawn(function()
+				loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 				loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 			end)
 			rconsoleclose()
-			game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
-			loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
 			break
 		elseif command == "exit" then
 			rconsoleclose()	
@@ -147,6 +146,4 @@ else
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 	end)
 	rconsoleclose()
-	game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
-	
 end
