@@ -13,12 +13,6 @@ local success, msg = pcall(function()
 local KonsoleExecuted = false
 local Ronaco = loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/vanilla/RonacoMain.lua"))
 
-if game.CoreGui:FindFirstChild("Kommand") then
-	KonsoleExecuted = true	
-else
-	error("Konsole not found!")	
-end
-
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
