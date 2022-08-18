@@ -143,10 +143,6 @@ Console.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Console.BackgroundTransparency = 1.000
 Console.Size = UDim2.new(1, 0, 1, 0)
 
-UIListLayout.Parent = ClientLog
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 5)
-
 CommandBar.Name = "CommandBar"
 CommandBar.Parent = Console
 CommandBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
