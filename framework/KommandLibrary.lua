@@ -32,6 +32,10 @@ local function CreateTerminal(Name)
 	ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
 	ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
 			
+	UIListLayout.Parent = ClientLog
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 5)
+			
 	local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
 
 	ClientLog.Changed:Connect(function(property)
