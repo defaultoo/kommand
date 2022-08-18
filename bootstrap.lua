@@ -143,9 +143,10 @@ if DebugCommands == true then
 else
 	wait(0.5)
 	spawn(function()
+		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 	end)
 	rconsoleclose()
 	game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow")
-	loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
+	
 end
