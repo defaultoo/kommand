@@ -18,7 +18,7 @@ end
 local function PrintSucess()
 	rconsoleprint("[")
 	rconsoleprint("@@GREEN@@")
-	rconsoleprint("SUCESS")
+	rconsoleprint("SUCCESS")
 	rconsoleprint("@@WHITE@@")
 	rconsoleprint("] ")
 end
