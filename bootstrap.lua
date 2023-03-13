@@ -138,14 +138,14 @@ if DebugCommands == true then
 		elseif string.find(command, "install") then
 			command = string.split(command, " ")
 			PrintInfo()
-			rconsoleprint("Downloading module from "..command[2].."...\n"
-			local success, err = pcall(function() writefile("kommand/modules/"..command[2], game:HttpGet(command[2]) end
+			rconsoleprint("Downloading module from "..command[2].."...\n")
+			local success, err = pcall(function() writefile("kommand/modules/module", game:HttpGet(command[2])) end)
 			if success then 
 				PrintSucess()
 				rconsoleprint("Succesfully downloaded module!\n")
 				PrintInfo()
-				rconsoleprint("Executing...")
-				local success, err = pcall(function() loadstring(readfile("kommand/modules/"..command[2]) end)
+				rconsoleprint("Executing...\n")
+				local success, err = pcall(function() loadstring(readfile("kommand/modules/module")) end)
 				if success then
 					PrintSucess()
 					rconsoleprint("Successfully ran.\n")					
