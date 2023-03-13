@@ -114,6 +114,7 @@ end
 
 wait(0.5)
 
+local success, err = pcall function()
 if DebugCommands == true then
 	while true do
 		rconsoleprint("> ")
@@ -149,4 +150,9 @@ else
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 	end)
 	rconsoleclose()
+end
+end)
+if not success then
+	rconsoleprint("@@RED@@")
+	rconsoleprint("RCONSOLE ERROR! SYSTEM HUNG, PRESS CTRL+C TO TERMINATE.")
 end
