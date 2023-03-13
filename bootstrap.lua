@@ -129,6 +129,8 @@ if DebugCommands == true then
 		elseif command == "exit" then
 			rconsoleclose()	
 			break
+		elseif command == "clear" or command == "clr" then
+			rconsoleclear()
 		else
 			local success, err = pcall(function() loadstring(command)() end)
 			if success then
