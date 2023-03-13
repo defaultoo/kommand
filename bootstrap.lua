@@ -135,7 +135,10 @@ if DebugCommands == true then
 				rconsoleprint("Successfully ran.\n")
 			else
 				PrintError()
-				rconsoleprint("Error occured during execution: "..err.."\n")
+				local success, err = pcall(function() rconsoleprint("Error occured during execution: "..err.."\n") end)
+				if not success then 
+					rconsoleprint("Error occured during execution.\n")	
+				end
 			end
 		end
 	end
