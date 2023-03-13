@@ -112,6 +112,10 @@ else
 	rconsoleprint("Library up-to-date\n")
 end
 
+if not isfolder("kommand/modules") then
+	makefolder("kommand/modules")
+end
+
 wait(0.5)
 
 local success, err = pcall(function()
@@ -131,6 +135,31 @@ if DebugCommands == true then
 			break
 		elseif command == "clear" or command == "clr" then
 			rconsoleclear()
+		elseif string.find(command, "install") then
+			command = string.split(command, " ")
+			PrintInfo()
+			rconsoleprint("Downloading module from "..command[2].."...\n"
+			local success, err = pcall(function() writefile("kommand/modules/"..command[2], game:HttpGet(command[2]) end
+			if success then 
+				PrintSucess()
+				rconsoleprint("Succesfully downloaded module!\n")
+				PrintInfo()
+				rconsoleprint("Executing...")
+				local success, err = pcall(function() loadstring(readfile("kommand/modules/"..command[2]) end)
+				if success then
+					PrintSucess()
+					rconsoleprint("Successfully ran.\n")					
+				else
+					PrintError()
+					local success, err = pcall(function() rconsoleprint("Error occured during execution: "..err.."\n") end)
+					if not success then 
+						rconsoleprint("Error occured during execution.\n")	
+					end					
+				end
+			else
+				PrintError()
+				rconsoleprint("Failed to download module "..err.."\n")
+			end
 		else
 			local success, err = pcall(function() loadstring(command)() end)
 			if success then
