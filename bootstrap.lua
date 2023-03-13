@@ -1,6 +1,6 @@
 rconsoleclear()
 rconsolename("Kommand")
-rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nInterrupt boot sequence by pressing the enter key\n\n")
+rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nEnter debug mode by pressing the enter key\n\n")
 rconsoleprint("Initializing Bootstrapp\n\n")
 
 local DebugCommands = false
