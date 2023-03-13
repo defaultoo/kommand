@@ -114,7 +114,7 @@ end
 
 wait(0.5)
 
-local success, err = pcall function()
+local success, err = pcall(function()
 if DebugCommands == true then
 	while true do
 		rconsoleprint("> ")
