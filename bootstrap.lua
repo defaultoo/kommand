@@ -1,23 +1,11 @@
 rconsoleclear()
-rconsoleprint("@@WHITE@@")
-rconsolename("Bootstrapp v0.8b")
-ConsolePrint("Bootstrapp version 0.8b - (c) Ooflet|Interrupt boot sequence by pressing the enter key||")
-ConsolePrint("Initializing Bootstrapp||")
+rconsolename("Kommand")
+rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nInterrupt boot sequence by pressing the enter key\n\n")
+rconsoleprint("Initializing Bootstrapp\n\n")
 
 local DebugCommands = false
 
 local UIS = game:GetService("UserInputService")
-
-local function ConsolePrint(word)
-	for w in string.gmatch(word, "(%w)") do -- 'w' represents the individual letter returned
-		if w == "|" then
-			ConsolePrint("\n")
-		else
-			ConsolePrint(w)
-		end
-		wait(0.05)
-	end
-end
 
 local function PrintInfo()
 	rconsoleprint("[")
@@ -55,7 +43,7 @@ spawn(function()
 	rconsoleinput()
 	DebugCommands = true
 	PrintSystem()
-	ConsolePrint("Interrupt! Wait for update daemon finish. If this was a mistake, type 'continue' on the prompt once debug mode has activated|")
+	rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'continue' on the prompt once debug mode has activated\n")
 end)
 
 wait(3)
@@ -63,41 +51,41 @@ wait(3)
 local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
 if not framework then
 	PrintError()
-	ConsolePrint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. |"..message.."|")
+	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. \n"..message.."\n")
 	error()
 end
 
 local library, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") end)
 if not library then
 	PrintError()
-	ConsolePrint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. |"..message.."|")
+	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. \n"..message.."\n")
 	error()
 end
 
 PrintInfo()
-ConsolePrint("Checking Kommand Framework|")
+rconsoleprint("Checking Kommand Framework\n")
 
 if isfile("kommand/framework/kommandframework.kmd") then
 	if readfile("kommand/framework/kommandframework.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") then
 		PrintSucess()
-		ConsolePrint("Framework up-to-date|")
+		rconsoleprint("Framework up-to-date\n")
 		PrintInfo()
-		ConsolePrint("Checking Kommand Library|")
+		rconsoleprint("Checking Kommand Library\n")
 	else 
 		PrintInfo()
-		ConsolePrint("Framework Update Found|")
+		rconsoleprint("Framework Update Found\n")
 		PrintInfo()
-		ConsolePrint("Updating Kommand Framework|")
+		rconsoleprint("Updating Kommand Framework\n")
 		delfile("kommand/framework/kommandframework.kmd")
 		writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))	
 		PrintSucess()
-		ConsolePrint("Framework up-to-date|")
+		rconsoleprint("Framework up-to-date\n")
 		PrintInfo()
-		ConsolePrint("Checking Kommand Library|")
+		rconsoleprint("Checking Kommand Library\n")
 	end
 else
 	PrintInfo()
-	ConsolePrint("Installing Kommand Framework|")
+	rconsoleprint("Installing Kommand Framework\n")
 	makefolder("kommand")
 	makefolder("kommand/framework")
 	writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))
@@ -106,28 +94,30 @@ end
 if isfile("kommand/library/kommandlibrary.kmd") then
 	if readfile("kommand/library/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
 		PrintSucess()
-		ConsolePrint("Library up-to-date|")
+		rconsoleprint("Library up-to-date\n")
 	else 
 		PrintInfo()
-		ConsolePrint("Library Update Found|")
+		rconsoleprint("Library Update Found\n")
 		PrintInfo()
-		ConsolePrint("Updating Kommand Library|")
+		rconsoleprint("Updating Kommand Library\n")
 		delfile("kommand/library/kommandlibrary.kmd")
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 	end
 else
 	PrintInfo()
-	ConsolePrint("Installing Kommand Library|")
+	rconsoleprint("Installing Kommand Library\n")
 	makefolder("kommand/library")
 	writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 	PrintSucess()
-	ConsolePrint("Library up-to-date|")
+	rconsoleprint("Library up-to-date\n")
 end
+
+wait(0.5)
 
 local success, err = pcall(function()
 if DebugCommands == true then
 	while true do
-		ConsolePrint("> ")
+		rconsoleprint("> ")
 		local command = rconsoleinput()
 		if command == "continue" then
 			spawn(function()
@@ -139,23 +129,22 @@ if DebugCommands == true then
 		elseif command == "exit" then
 			rconsoleclose()	
 			break
-		elseif command == "clear" or command == "clr" then
-			rconsoleclear()
 		else
 			local success, err = pcall(function() loadstring(command)() end)
 			if success then
 				PrintSucess()
-				ConsolePrint("Successfully ran.|")
+				rconsoleprint("Successfully ran.\n")
 			else
 				PrintError()
-				local success, err = pcall(function() ConsolePrint("Error occured during execution: "..err.."|") end)
+				local success, err = pcall(function() rconsoleprint("Error occured during execution: "..err.."\n") end)
 				if not success then 
-					ConsolePrint("Error occured during execution.|")	
+					rconsoleprint("Error occured during execution.\n")	
 				end
 			end
 		end
 	end
 else
+	wait(0.5)
 	spawn(function()
 		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
@@ -164,7 +153,6 @@ else
 end
 end)
 if not success then
-	rconsoleclear()
 	rconsoleprint("@@RED@@")
-	ConsolePrint("BOOTSTRAPP ERROR! SYSTEM HUNG, PRESS CTRL+C TO TERMINATE.")
+	rconsoleprint("RCONSOLE ERROR! SYSTEM HUNG, PRESS CTRL+C TO TERMINATE.")
 end
