@@ -118,27 +118,27 @@ end
 
 wait(0.5)
 
-local success, err = pcall(function()
-if DebugCommands == true then
+local function DebugCmd()
+	local success, err = pcall(function()
 	while true do
 		rconsoleprint("> ")
 		local command = rconsoleinput()
-		if command == "help" then
+		command = string.split(command, " ")
+		if command[1] == "help" then
 			rconsoleprint("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\nclear/clr - Clears output.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n")		
-		elseif command == "continue" then
+		elseif command[1] == "continue" then
 			spawn(function()
 				loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 				loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 			end)
 			rconsoleclose()
 			break
-		elseif command == "exit" then
+		elseif command[1] == "exit" then
 			rconsoleclose()	
 			break
-		elseif command == "clear" or command == "clr" then
+		elseif command[1] == "clear" or command == "clr" then
 			rconsoleclear()
-		elseif string.find(command, "install") then
-			command = string.split(command, " ")
+		elseif command[1] == "install" then
 			local name = command[3] or command[2]
 			if command[2] == nil then
 				PrintError()
@@ -156,8 +156,7 @@ if DebugCommands == true then
 				end		
 			end
 			
-		elseif string.find(command, "uninstall") then
-			command = string.split(command, " ")
+		elseif command[1] == "uninstall" then
 			if command[2] ~= nil then
 				if isfile("kommand/modules/"..command[2]) then
 					delfile("kommand/modules/"..command[2])
@@ -172,6 +171,7 @@ if DebugCommands == true then
 				rconsoleprint("Argument 2 (name) must not be empty!\n")
 			end
 		else
+			command = table.concat(command, " ")
 			local success, err = pcall(function() loadstring(command)() end)
 			if success then
 				PrintSucess()
@@ -185,6 +185,19 @@ if DebugCommands == true then
 			end
 		end
 	end
+	end)
+	if not success then 
+		rconsoleprint("\n")
+		PrintError()
+		rconsoleprint("@@RED@@")	
+		rconsoleprint("Bootstrapp system error! "..err..". Terminate Bootstrapp manually by pressing ctrl+c. \n\n")
+		rconsoleprint("@@WHITE@@")
+		DebugCmd()
+	end
+end
+
+if DebugCommands == true then
+	DebugCmd()
 else
 	wait(0.5)
 	spawn(function()
@@ -192,9 +205,4 @@ else
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 	end)
 	rconsoleclose()
-end
-end)
-if not success then
-	rconsoleprint("@@RED@@")
-	rconsoleprint("RCONSOLE ERROR! SYSTEM HUNG, PRESS CTRL+C TO TERMINATE.")
 end
