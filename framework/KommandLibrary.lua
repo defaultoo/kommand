@@ -1,5 +1,7 @@
 -- Please excuse my absolute fucking trash code
 
+print("lib init")
+
 _G.KommandLibrary = {}
 
 _G.KommandLibrary.Output = {}
