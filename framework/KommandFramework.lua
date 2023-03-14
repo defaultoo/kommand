@@ -13,6 +13,8 @@ IsLoaded.Parent = game:GetService("CoreGui")
 ----------------------------------------------------------------------
 if game.CoreGui:FindFirstChild("Kommand") then
 	error("Kommand is already executed!")	
+else
+	print("framework init")	
 end
 
 local Kommand = Instance.new("ScreenGui")
@@ -217,7 +219,7 @@ TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 20.000
 TextLabel.AutomaticSize = Enum.AutomaticSize.X
 
-repeat wait() until IsLoaded.Value
+repeat wait() until IsLoaded.Value == true
 IsLoaded:Destroy()
 
 ----------------------------------------------------------------------
