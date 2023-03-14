@@ -124,7 +124,7 @@ if DebugCommands == true then
 		rconsoleprint("> ")
 		local command = rconsoleinput()
 		if command == "help" then
-			rconsoleprint("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\nclear/clr - Clears output.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.")		
+			rconsoleprint("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\nclear/clr - Clears output.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n")		
 		elseif command == "continue" then
 			spawn(function()
 				loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
@@ -165,7 +165,7 @@ if DebugCommands == true then
 					rconsoleprint("Successfully uninstalled module.\n")
 				else
 					PrintError()
-					rconsoleprint("Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).\n"
+					rconsoleprint("Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).\n")
 				end
 			else
 				PrintError()
