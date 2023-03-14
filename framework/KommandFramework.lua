@@ -218,6 +218,7 @@ TextLabel.TextSize = 20.000
 TextLabel.AutomaticSize = Enum.AutomaticSize.X
 
 repeat wait() until IsLoaded.Value
+IsLoaded:Destroy()
 
 ----------------------------------------------------------------------
 -- Tabs Setup --
