@@ -207,6 +207,6 @@ else
 	end)
 	spawn(function()
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
-	end
+	end)
 	rconsoleclose()
 end
