@@ -348,6 +348,6 @@ function _G.KommandLibrary.PackageManager:InstallFromLink(text)
 	end
 end
 
-game:GetService("CoreGui"):WaitForChild("IsLoaded").IsLoaded.Value = true
+game:GetService("CoreGui"):WaitForChild("IsLoaded").Value = true
 
 return _G.KommandLibrary
