@@ -102,6 +102,8 @@ if isfile("kommand/library/kommandlibrary.kmd") then
 		rconsoleprint("Updating Kommand Library\n")
 		delfile("kommand/library/kommandlibrary.kmd")
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
+		PrintSucess()
+		rconsoleprint("Library up-to-date\n")
 	end
 else
 	PrintInfo()
@@ -201,8 +203,10 @@ if DebugCommands == true then
 else
 	wait(0.5)
 	spawn(function()
-		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
-		loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
+		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
 	end)
+	spawn(function()
+		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
+	end
 	rconsoleclose()
 end
