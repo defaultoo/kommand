@@ -123,7 +123,9 @@ if DebugCommands == true then
 	while true do
 		rconsoleprint("> ")
 		local command = rconsoleinput()
-		if command == "continue" then
+		if command == "help" then
+			rconsoleprint("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\nclear/clr - Clears output.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.")		
+		elseif command == "continue" then
 			spawn(function()
 				loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 				loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
@@ -137,28 +139,37 @@ if DebugCommands == true then
 			rconsoleclear()
 		elseif string.find(command, "install") then
 			command = string.split(command, " ")
-			PrintInfo()
-			rconsoleprint("Downloading module from "..command[2].."...\n")
-			local success, err = pcall(function() writefile("kommand/modules/module", game:HttpGet(command[2])) end)
-			if success then 
-				PrintSucess()
-				rconsoleprint("Succesfully downloaded module!\n")
+			local name = command[3] or command[2]
+			if command[2] == nil then
+				PrintError()
+				rconsoleprint("Argument 2 (moduleLink) must not be empty!\n")			
+			else
 				PrintInfo()
-				rconsoleprint("Executing...\n")
-				local success, err = pcall(function() loadstring(readfile("kommand/modules/module")) end)
-				if success then
+				rconsoleprint("Downloading module from "..command[2].." with name "..command[3].."...\n")
+				local success, err = pcall(function() writefile("kommand/modules/"..name, game:HttpGet(command[2])) end)
+				if success then 
 					PrintSucess()
-					rconsoleprint("Successfully ran.\n")					
+					rconsoleprint("Succesfully downloaded module\n")
 				else
 					PrintError()
-					local success, err = pcall(function() rconsoleprint("Error occured during execution: "..err.."\n") end)
-					if not success then 
-						rconsoleprint("Error occured during execution.\n")	
-					end					
+					rconsoleprint("Failed to download module; "..err.."\n")
+				end		
+			end
+			
+		elseif string.find(command, "uninstall") then
+			command = string.split(command, " ")
+			if command[2] ~= nil then
+				if isfile("kommand/modules/"..command[2]) then
+					delfile("kommand/modules/"..command[2])
+					PrintSucess()
+					rconsoleprint("Successfully uninstalled module.\n")
+				else
+					PrintError()
+					rconsoleprint("Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).\n"
 				end
 			else
 				PrintError()
-				rconsoleprint("Failed to download module "..err.."\n")
+				rconsoleprint("Argument 2 (name) must not be empty!\n")
 			end
 		else
 			local success, err = pcall(function() loadstring(command)() end)
