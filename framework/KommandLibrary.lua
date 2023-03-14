@@ -9,7 +9,6 @@ _G.KommandLibrary.Pages = {}
 _G.KommandLibrary.Info = {}
 _G.KommandLibrary.Debug = {}
 
-local success, msg = pcall(function()
 local KonsoleExecuted = false
 local Ronaco = loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/vanilla/RonacoMain.lua"))
 
@@ -347,8 +346,6 @@ function _G.KommandLibrary.PackageManager:InstallFromLink(text)
 	end
 end
 
+game:GetService("CoreGui"):WaitForChild("IsLoaded").Value = true
+
 return _G.KommandLibrary
-end)
-if not success then
-	error("LibraryError! "..msg)
-end
