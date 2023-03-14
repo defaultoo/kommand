@@ -2,6 +2,13 @@
 -- Ooflet
 
 ----------------------------------------------------------------------
+-- Library Setup --
+----------------------------------------------------------------------
+local IsLoaded = Instance.new("BoolValue")
+IsLoaded.Name = "IsLoaded"
+IsLoaded.Value = false
+IsLoaded.Parent = game:GetService("CoreGui")
+----------------------------------------------------------------------
 -- GUI Setup --
 ----------------------------------------------------------------------
 if game.CoreGui:FindFirstChild("Kommand") then
@@ -209,6 +216,8 @@ TextLabel.Text = "+"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 20.000
 TextLabel.AutomaticSize = Enum.AutomaticSize.X
+
+repeat wait() until IsLoaded.Value
 
 ----------------------------------------------------------------------
 -- Tabs Setup --
