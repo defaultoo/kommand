@@ -813,7 +813,8 @@ CmdBar.FocusLost:Connect(function(pressed)
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 				elseif text[1] == "debug" then
 					if text[2] == "setcurrentmode" then
-						dbug.SetCurrentMode(text[3])
+						CurrentMode = text[3]
+						OutputText("Set CurrentMode to "..tostring(text[3]), Enum.MessageType.Info)
 					end
 				else
 					if not IsLookingForResponse then
