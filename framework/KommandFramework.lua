@@ -617,7 +617,7 @@ local function SearchForCommand(cmd, ignore)
 			return false
 		end
 	else
-		if CmdBar.Text = cmd then
+		if CmdBar.Text == cmd then
 			return true
 		else
 			return false
@@ -787,16 +787,16 @@ CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			if CurrentMode == 1 then
-				if text[1] = "settings" then
-					if text[2] = "blur" then
-						if text[3] = "true" then
+				if text[1] == "settings" then
+					if text[2] == "blur" then
+						if text[3] == "true" then
 							CmdBar.Text = ""
 							BindFrame(Blur, {
 								Transparency = 0.98,
 								BrickColor = BrickColor.new('Institutional white')
 							})
 							OutputText('<b>UIBlur set to true.</b>', "Custom", "=>", Color3.fromRGB(85, 170, 255))
-						elseif text[3] = "false" then
+						elseif text[3] == "false" then
 							CmdBar.Text = ""
 							UnbindFrame(Blur)
 							OutputText('<b>UIBlur set to false.</b>', "Custom", "=>", Color3.fromRGB(85, 170, 255))
@@ -806,13 +806,13 @@ CmdBar.FocusLost:Connect(function(pressed)
 					else
 						OutputText("<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>", Enum.MessageType.MessageWarning)
 					end
-				elseif text[1] = "console" then
+				elseif text[1] == "console" then
 					Kommand.Enabled = false
 					UnbindFrame(Blur)
 					game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
-				elseif text[1] = "debug" then
-					if text[2] = "setcurrentmode" then
+				elseif text[1] == "debug" then
+					if text[2] == "setcurrentmode" then
 						dbug.SetCurrentMode(text[3])
 					end
 				else
@@ -820,14 +820,14 @@ CmdBar.FocusLost:Connect(function(pressed)
 						OutputText("<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>", Enum.MessageType.MessageWarning)
 					end
 				end
-				if text[1] = "safehop" or text[1] = "serverhop" then
+				if text[1] == "safehop" or text[1] == "serverhop" then
 					queue_on_teleport(readfile("kommand/framework/kommandframework.kmd"))
 					game["Teleport Service"]:Teleport(game.PlaceId)
 					game.Players.LocalPlayer:Kick("Please await teleport to "..game.PlaceId)	
 				end
 			end
 			if CurrentMode == 2 then
-				if text[1] = "copy" then
+				if text[1] == "copy" then
 					pcall(function()
 						if identifyexecutor() then
 							setclipboard("https://ooflet.github.io/docs")	
@@ -839,9 +839,9 @@ CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			if CurrentMode == 3 then
-				if text[1] = "installfromlink" then
+				if text[1] == "installfromlink" then
 					_G.KommandLibrary.PackageManager:InstallFromLink(text[2])
-				elseif text[1] = "install" then
+				elseif text[1] == "install" then
 					_G.KommandLibrary.PackageManager:InstallFromRepository(text[2])
 				end
 				
