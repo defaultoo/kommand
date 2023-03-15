@@ -1,6 +1,6 @@
 rconsoleclear()
 rconsolename("Kommand")
-rconsoleprint("Bootstrapp version 0.7b - (c) Ooflet\nEnter debug mode by pressing the enter key\n\n")
+rconsoleprint("Bootstrapp version 0.8b - (c) Ooflet\nEnter debug mode by pressing the enter key\n\n")
 rconsoleprint("Initializing Bootstrapp\n\n")
 
 local DebugCommands = false
@@ -46,7 +46,7 @@ spawn(function()
 	rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'continue' on the prompt once debug mode has activated\n")
 end)
 
-wait(3)
+wait(2)
 
 local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
 if not framework then
@@ -91,8 +91,8 @@ else
 	writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))
 end
 
-if isfile("kommand/framework/kommandlibrary.kmd") then
-	if readfile("kommand/framework/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
+if isfile("kommand/library/kommandlibrary.kmd") then
+	if readfile("kommand/library/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
 		PrintSucess()
 		rconsoleprint("Library up-to-date\n")
 	else 
@@ -100,44 +100,21 @@ if isfile("kommand/framework/kommandlibrary.kmd") then
 		rconsoleprint("Library Update Found\n")
 		PrintInfo()
 		rconsoleprint("Updating Kommand Library\n")
-		delfile("kommand/framework/kommandlibrary.kmd")
-		writefile("kommand/framework/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
+		delfile("kommand/library/kommandlibrary.kmd")
+		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 		PrintSucess()
 		rconsoleprint("Library up-to-date\n")
 	end
 else
 	PrintInfo()
 	rconsoleprint("Installing Kommand Library\n")
-	writefile("kommand/franework/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
+	makefolder("kommand/library")
+	writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 	PrintSucess()
 	rconsoleprint("Library up-to-date\n")
 end
 
-if isfile("kommand/framework/kronaco.kmd") then
-	if readfile("kommand/framework/kronaco.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua") then
-		PrintSucess()
-		rconsoleprint("Ronaco up-to-date\n")
-	else 
-		PrintInfo()
-		rconsoleprint("Ronaco Update Found\n")
-		PrintInfo()
-		rconsoleprint("Updating Ronaco\n")
-		delfile("kommand/framework/kronaco.kmd")
-		writefile("kommand/framework/kronaco.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua"))
-		PrintSucess()
-		rconsoleprint("Ronaco up-to-date\n")
-	end
-else
-	PrintInfo()
-	rconsoleprint("Installing Ronaco\n")
-	writefile("kommand/franework/kronaco.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua"))
-	PrintSucess()
-	rconsoleprint("Ronaco up-to-date\n")
-end
-
 if not isfolder("kommand/modules") then
-	PrintInfo()
-	rconsoleprint("Creating modules folder\n")
 	makefolder("kommand/modules")
 end
 
@@ -226,7 +203,7 @@ if DebugCommands == true then
 else
 	wait(0.5)
 	spawn(function()
-		loadstring(readfile("kommand/framework/kommandlibrary.kmd"))()	
+		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
 	end)
 	spawn(function()
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
