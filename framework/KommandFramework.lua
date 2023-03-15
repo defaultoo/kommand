@@ -72,7 +72,7 @@ spawn(function()
 		Intro:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.In, Enum.EasingStyle.Quint, 0.5, true)
 		wait(0.5)
 	end	
-end
+end)
 
 ConsoleWindow.Name = "ConsoleWindow"
 ConsoleWindow.Parent = Kommand
