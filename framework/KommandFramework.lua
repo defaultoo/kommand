@@ -33,12 +33,8 @@ local CmdBarHolder = Instance.new("Frame")
 local CmdBar = Instance.new("TextBox")
 local EnvIndicator = Instance.new("TextLabel")
 
-local UICorner = Instance.new("UICorner")
-local BlurUICorner = Instance.new("UICorner")
 local Intro = Instance.new("Frame")
 local IntroUICorner = Instance.new("UICorner")
-local Tabs = Instance.new("ScrollingFrame")
-local UIListLayout_2 = Instance.new("UIListLayout")
 local TextLabel = Instance.new("TextButton")
 
 Kommand.Name = "Kommand"
@@ -76,13 +72,7 @@ spawn(function()
 		Intro:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.In, Enum.EasingStyle.Quint, 0.5, true)
 		wait(0.5)
 	end	
-end)
-
-UICorner.CornerRadius = UDim.new(0, 7)
-UICorner.Parent = ConsoleWindow
-
-BlurUICorner.CornerRadius = UDim.new(0, 7)
-BlurUICorner.Parent = Blur
+end
 
 ConsoleWindow.Name = "ConsoleWindow"
 ConsoleWindow.Parent = Kommand
@@ -189,46 +179,8 @@ EnvIndicator.TextColor3 = Color3.fromRGB(255, 255, 255)
 EnvIndicator.TextSize = 16.000
 EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
 
-Tabs.Name = "Tabs"
-Tabs.Parent = TopBar
-Tabs.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Tabs.BackgroundTransparency = 1.000
-Tabs.Position = UDim2.new(0.0250000004, 0, 0, 40)
-Tabs.Selectable = false
-Tabs.Size = UDim2.new(0, 765, 0, 25)
-Tabs.CanvasSize = UDim2.new(0, 0, 0, 0)
-Tabs.ScrollBarThickness = 0
-Tabs.AutomaticCanvasSize = Enum.AutomaticSize.X
-
-UIListLayout_2.Parent = Tabs
-UIListLayout_2.FillDirection = Enum.FillDirection.Horizontal
-UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout_2.Padding = UDim.new(0, 10)
-
-TextLabel.Name = "NewTab"
-TextLabel.Parent = Tabs
-TextLabel.Active = false
-TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.BackgroundTransparency = 1.000
-TextLabel.LayoutOrder = 2
-TextLabel.Selectable = false
-TextLabel.Size = UDim2.new(0, 0, 1, 0)
-TextLabel.Font = Enum.Font.RobotoMono
-TextLabel.Text = "+"
-TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.TextSize = 20.000
-TextLabel.AutomaticSize = Enum.AutomaticSize.X
-
 repeat wait() until IsLoaded.Value == true
 IsLoaded:Destroy()
-
-----------------------------------------------------------------------
--- Tabs Setup --
-----------------------------------------------------------------------
-
-TextLabel.MouseButton1Down:Connect(function()
-	_G.KommandLibrary.Tabs:CreateTab()	
-end)
 
 ----------------------------------------------------------------------
 -- Blur Setup --
@@ -458,11 +410,6 @@ UIBlur.InFocusRadius = 50
 UIBlur.NearIntensity = 1	
 UIBlur.Parent = game.Lighting
 game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
-BindFrame(Blur, {
-	Transparency = 0.98,
-	BrickColor = BrickColor.new('Institutional white')
-})
-
 
 ----------------------------------------------------------------------
 -- Dragger Setup --
@@ -579,6 +526,34 @@ local function CheckExecutor()
 
 end
 
+----------------------------------------------------------------------
+-- ClientLog Setup --
+----------------------------------------------------------------------
+	
+local ClientLog = Instance.new("ScrollingFrame")
+	ClientLog.Parent = Console
+	ClientLog.Name = "ClientLog"
+	ClientLog.Active = true
+	ClientLog.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ClientLog.BackgroundTransparency = 1.000
+	ClientLog.BorderSizePixel = 0
+	ClientLog.Position = UDim2.new(0.025, 0, 0.065, 30)
+	ClientLog.Size = UDim2.new(0, 765, 0, 440)
+	ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
+			
+	UIListLayout.Parent = ClientLog
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 5)
+			
+	local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
+
+	ClientLog.Changed:Connect(function(property)
+		if property ~= "CanvasPosition" then
+			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
+		end
+	end)
+	
 ----------------------------------------------------------------------
 -- Command Bar Setup --
 ----------------------------------------------------------------------
@@ -900,11 +875,15 @@ end)
 task.wait(2)
 loaded = true
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,550,0,550)}):Play()
-game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,7)}):Play()
+game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,0)}):Play()
 wait(0.5)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,800,0,550)}):Play()
-ConsoleWindow.Visible = true
 wait(0.5)
+ConsoleWindow.Visible = true
+BindFrame(Blur, {
+	Transparency = 0.98,
+	BrickColor = BrickColor.new('Institutional white')
+})
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 task.wait(1)
 Intro:Destroy()
