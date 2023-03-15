@@ -617,7 +617,7 @@ local function SearchForCommand(cmd, ignore)
 			return false
 		end
 	else
-		if match and TextboxLength == CommandLength then 
+		if CmdBar.Text = cmd then
 			return true
 		else
 			return false
