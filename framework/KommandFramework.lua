@@ -787,7 +787,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			if CurrentMode == 1 then
-				if text[1] = "setting" then
+				if text[1] = "settings" then
 					if text[2] = "blur" then
 						if text[3] = "true" then
 							CmdBar.Text = ""
