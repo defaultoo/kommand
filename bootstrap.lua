@@ -91,8 +91,8 @@ else
 	writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))
 end
 
-if isfile("kommand/library/kommandlibrary.kmd") then
-	if readfile("kommand/library/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
+if isfile("kommand/framework/kommandlibrary.kmd") then
+	if readfile("kommand/framework/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
 		PrintSucess()
 		rconsoleprint("Library up-to-date\n")
 	else 
@@ -100,21 +100,44 @@ if isfile("kommand/library/kommandlibrary.kmd") then
 		rconsoleprint("Library Update Found\n")
 		PrintInfo()
 		rconsoleprint("Updating Kommand Library\n")
-		delfile("kommand/library/kommandlibrary.kmd")
-		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
+		delfile("kommand/framework/kommandlibrary.kmd")
+		writefile("kommand/framework/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 		PrintSucess()
 		rconsoleprint("Library up-to-date\n")
 	end
 else
 	PrintInfo()
 	rconsoleprint("Installing Kommand Library\n")
-	makefolder("kommand/library")
-	writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
+	writefile("kommand/franework/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 	PrintSucess()
 	rconsoleprint("Library up-to-date\n")
 end
 
+if isfile("kommand/framework/kronaco.kmd") then
+	if readfile("kommand/framework/kronaco.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua") then
+		PrintSucess()
+		rconsoleprint("Ronaco up-to-date\n")
+	else 
+		PrintInfo()
+		rconsoleprint("Ronaco Update Found\n")
+		PrintInfo()
+		rconsoleprint("Updating Ronaco\n")
+		delfile("kommand/framework/kronaco.kmd")
+		writefile("kommand/frameworkd/kronaco.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua"))
+		PrintSucess()
+		rconsoleprint("Ronaco up-to-date\n")
+	end
+else
+	PrintInfo()
+	rconsoleprint("Installing Ronaco\n")
+	writefile("kommand/franework/kronaco.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua"))
+	PrintSucess()
+	rconsoleprint("Ronaco up-to-date\n")
+end
+
 if not isfolder("kommand/modules") then
+	PrintInfo()
+	rconsoleprint("Creating modules folder\n")
 	makefolder("kommand/modules")
 end
 
