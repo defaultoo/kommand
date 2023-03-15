@@ -576,7 +576,7 @@ box.BackgroundTransparency = 1
 box.Size = UDim2.new(5, 0, 1, 0)
 box.Parent = container
 
-local PADDING = 2
+local PADDING = 5
 
 local function Update()
 	local reveal = container.AbsoluteSize.X
