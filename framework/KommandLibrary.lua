@@ -61,7 +61,7 @@ local function CreateTerminal(Name)
 end
 
 function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
-	local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild(CurrentPage)
+	local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 	if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
