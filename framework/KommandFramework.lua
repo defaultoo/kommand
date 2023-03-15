@@ -13,8 +13,6 @@ IsLoaded.Parent = game:GetService("CoreGui")
 ----------------------------------------------------------------------
 if game.CoreGui:FindFirstChild("Kommand") then
 	error("Kommand is already executed!")	
-else
-	print("framework init")	
 end
 
 local Kommand = Instance.new("ScreenGui")
@@ -773,7 +771,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 		local text = CmdBar.Text
 		text = string.split(text, " ")
 		if pressed then 
-			OutputText("> "..text, Enum.MessageType.MessageOutput)
+			OutputText("> "..table.concat(text, " "), Enum.MessageType.MessageOutput)
 			if CurrentMode == 0 then
 				CmdBar.Text = ""
 				wait(0.05)
