@@ -467,6 +467,7 @@ end)
 game:GetService("UserInputService").InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.F9 then
 		if Kommand.Enabled then
+			game:GetService("StarterGui"):SetCore("DevConsoleVisible", false)
 			Kommand.Enabled = false
 			UnbindFrame(Blur)
 			game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false	
