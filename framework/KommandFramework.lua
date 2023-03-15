@@ -868,7 +868,6 @@ Exit.MouseButton1Click:Connect(function()
 	game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
 end)
 
-task.wait(2)
 loaded = true
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,550,0,550)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,0)}):Play()
