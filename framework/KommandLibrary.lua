@@ -1,6 +1,5 @@
--- Please excuse my absolute fucking trash code
-
-print("lib init")
+-- Kommand Library
+-- Ooflet
 
 _G.KommandLibrary = {}
 
