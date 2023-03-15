@@ -123,7 +123,7 @@ if isfile("kommand/framework/kronaco.kmd") then
 		PrintInfo()
 		rconsoleprint("Updating Ronaco\n")
 		delfile("kommand/framework/kronaco.kmd")
-		writefile("kommand/frameworkd/kronaco.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua"))
+		writefile("kommand/framework/kronaco.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/k-ronaco/RonacoMain.lua"))
 		PrintSucess()
 		rconsoleprint("Ronaco up-to-date\n")
 	end
@@ -226,7 +226,7 @@ if DebugCommands == true then
 else
 	wait(0.5)
 	spawn(function()
-		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
+		loadstring(readfile("kommand/framework/kommandlibrary.kmd"))()	
 	end)
 	spawn(function()
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
