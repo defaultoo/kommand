@@ -109,11 +109,8 @@ end)
 
 local function ThrobberError()
     StatusFail = true
-    Fill.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    Fill.Position = UDim2.new(-1,0,0,0)
-    Fill:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
     wait(5)
-    Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,50), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+    Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
     wait(0.5)
     BootstrapScreenGUI:Destroy()
 end
@@ -121,12 +118,8 @@ end
 wait(1)
 
 -- Bootstrap Setup
-if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift) then
-	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
-	DefaultState.Visible = false
-	PromptState.Visible = true
-	TextBox:CaptureFocus()
-	TextBox.InputEnded:Connect(function()
+TextBox.Changed:Connect(function(property)
+	if property == "Text" then
 		if TextBox.Text == "y" then
 			BootstrapScreenGUI:Destroy()
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrapCMD.lua"))()
@@ -138,7 +131,14 @@ if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) and g
 			wait()
 			TextBox:CaptureFocus()
 		end
-	end)
+	end
+end)
+
+if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift) then
+	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+	DefaultState.Visible = false
+	PromptState.Visible = true
+	TextBox:CaptureFocus()
 else
 	Status.Text = "Checking Kommand Framework"
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
@@ -190,8 +190,6 @@ else
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 		Status.Text = "Initializing..."
 	end
-
-	ThrobberError()
 
 	wait(0.5)
 
