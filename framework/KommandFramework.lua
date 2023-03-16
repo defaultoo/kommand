@@ -1,6 +1,8 @@
 -- Kommand
 -- Ooflet
 
+local connections = {}
+
 ----------------------------------------------------------------------
 -- Library Setup --
 ----------------------------------------------------------------------
@@ -408,10 +410,10 @@ local UserInputService = game:GetService("UserInputService")
 local ts = game:GetService("TweenService")
 local CanDrag = false
 local gui = ConsoleWindow
-ConsoleWindow.MouseEnter:Connect(function()
+connections[#connections+1] = ConsoleWindow.MouseEnter:Connect(function()
 	CanDrag = true
 end)
-ConsoleWindow.MouseLeave:Connect(function()
+connections[#connections+1] = ConsoleWindow.MouseLeave:Connect(function()
 	CanDrag = false
 end)
 local dragging
@@ -423,14 +425,14 @@ local function update(input)
 	gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 end
 
-gui.InputBegan:Connect(function(input)
+connections[#connections+1] = gui.InputBegan:Connect(function(input)
 	if CanDrag == true then
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			dragging = true
 			dragStart = input.Position
 			startPos = gui.Position
 
-			input.Changed:Connect(function()
+			connections[#connections+1] = input.Changed:Connect(function()
 				if input.UserInputState == Enum.UserInputState.End then
 					dragging = false
 				end
@@ -439,13 +441,13 @@ gui.InputBegan:Connect(function(input)
 	end
 end)
 
-gui.InputChanged:Connect(function(input)
+connections[#connections+1] = gui.InputChanged:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 		dragInput = input
 	end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
+connections[#connections+1] = UserInputService.InputChanged:Connect(function(input)
 	if input == dragInput and dragging then
 		update(input)
 	end
@@ -455,7 +457,7 @@ end)
 -- Console Setup --
 ----------------------------------------------------------------------
 
-game:GetService("UserInputService").InputBegan:Connect(function(input)
+connections[#connections+1] = game:GetService("UserInputService").InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.F9 then
 		if Kommand.Enabled then
 			game:GetService("StarterGui"):SetCore("DevConsoleVisible", false)
@@ -480,7 +482,7 @@ local function OutputText(Message, Type, Prefix, Color)
 	OutputLibrary:OutputText(Message, Type, Prefix, Color)
 end
 
-game:GetService("LogService").MessageOut:Connect(function(Message, Type)
+connections[#connections+1] = game:GetService("LogService").MessageOut:Connect(function(Message, Type)
 	OutputText(Message, Type)
 end)
 
@@ -544,7 +546,7 @@ local ClientLog = Instance.new("ScrollingFrame")
 			
 	local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
 
-	ClientLog.Changed:Connect(function(property)
+	connections[#connections+1] = ClientLog.Changed:Connect(function(property)
 		if property ~= "CanvasPosition" then
 			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
 		end
@@ -590,10 +592,10 @@ end
 
 Update()
 
-box:GetPropertyChangedSignal("Text"):Connect(Update)
-box:GetPropertyChangedSignal("CursorPosition"):Connect(Update)
-box.Focused:Connect(Update)
-box.FocusLost:Connect(Update)
+connections[#connections+1] = box:GetPropertyChangedSignal("Text"):Connect(Update)
+connections[#connections+1] = box:GetPropertyChangedSignal("CursorPosition"):Connect(Update)
+connections[#connections+1] = box.Focused:Connect(Update)
+connections[#connections+1] = box.FocusLost:Connect(Update)
 
 local function SearchForCommand(cmd, ignore)
 	local TextboxLength = string.len(CmdBar.Text)
@@ -616,7 +618,7 @@ local function SearchForCommand(cmd, ignore)
 	end
 end
 
-game:GetService("UserInputService").InputBegan:Connect(function(input)
+connections[#connections+1] = game:GetService("UserInputService").InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.BackSlash then
 		wait(0.05)
 		CmdBar:CaptureFocus()
@@ -634,7 +636,7 @@ local CurrentMode = 0
 -- 4 = Response Mode
 
 -- ModeCheck
-CmdBar.Changed:Connect(function(property)
+connections[#connections+1] = CmdBar.Changed:Connect(function(property)
 	if CurrentMode ~= 4 then
 		if SearchForCommand("*") then
 			CurrentMode = 1
@@ -758,7 +760,7 @@ function dbug.SetCurrentMode(text)
 	end
 end
 
-CmdBar.FocusLost:Connect(function(pressed)
+connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 	if CmdBar.Text ~= "" then
 		local text = CmdBar.Text
 		text = string.split(text, " ")
@@ -802,6 +804,14 @@ CmdBar.FocusLost:Connect(function(pressed)
 					UnbindFrame(Blur)
 					game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
+				elseif text[1] == "exit" or text[1] == "quit" then
+					OutputText("<b>Are you sure you want to quit Kommand? If you would like to hide Kommand, press F9 or click the X button. [y/n]</b>", Enum.MessageType.MessageWarning)
+					if CreateResponsePrompt() then
+						for _, connection in pairs(connections) do
+   							connection:Disconnect()
+						end		
+						Kommand:Destroy()
+					end
 				elseif text[1] == "debug" then
 					if text[2] == "setcurrentmode" then
 						CurrentMode = text[3]
@@ -854,7 +864,7 @@ CmdBar.FocusLost:Connect(function(pressed)
 	end	
 end)
 
-Exit.MouseButton1Click:Connect(function()
+connections[#connections+1] = Exit.MouseButton1Click:Connect(function()
 	Kommand.Enabled = false
 	UnbindFrame(Blur)
 	game.Lighting:FindFirstChild("ConsoleBlur").Enabled = false
