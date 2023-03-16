@@ -62,6 +62,9 @@ IntroUICorner.Parent = Intro
 
 local loaded = false
 
+repeat wait() until IsLoaded.Value == true
+IsLoaded:Destroy()
+
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
 
@@ -169,9 +172,6 @@ EnvIndicator.Text = ">"
 EnvIndicator.TextColor3 = Color3.fromRGB(255, 255, 255)
 EnvIndicator.TextSize = 16.000
 EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
-
-repeat wait() until IsLoaded.Value == true
-IsLoaded:Destroy()
 
 ----------------------------------------------------------------------
 -- Blur Setup --
