@@ -3,6 +3,8 @@ rconsolename("Kommand")
 rconsoleprint("Bootstrapp version 0.8b - (c) Ooflet\nEnter debug mode by pressing the enter key\n\n")
 rconsoleprint("Initializing Bootstrapp\n\n")
 
+wait(2)
+
 local DebugCommands = false
 
 local UIS = game:GetService("UserInputService")
