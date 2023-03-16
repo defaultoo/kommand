@@ -639,7 +639,7 @@ CmdBar.Changed:Connect(function(property)
 		if SearchForCommand("*") then
 			CurrentMode = 1
 			EnvIndicator.Text = "*"
-			CmdBar.PlaceholderText = "In system command mode. Lua functions will not work. Type '>' to return."
+			CmdBar.PlaceholderText = "In system command mode."
 			CmdBar.Text = ""
 		elseif SearchForCommand(">") then
 			CurrentMode = 0
@@ -649,16 +649,16 @@ CmdBar.Changed:Connect(function(property)
 		elseif SearchForCommand("?") then
 			CurrentMode = 2
 			EnvIndicator.Text = "?"
-			CmdBar.PlaceholderText = "In help mode. Type '>' to return."
+			CmdBar.PlaceholderText = "In help mode."
 			CmdBar.Text = ""	
 		elseif SearchForCommand("help") then
 			CurrentMode = 2
 			EnvIndicator.Text = "?"
-			CmdBar.PlaceholderText = "In help mode. Type '>' to return."
+			CmdBar.PlaceholderText = "In help mode."
 		elseif SearchForCommand("!") then
 			CurrentMode = 3
 			EnvIndicator.Text = "!"
-			CmdBar.PlaceholderText = "In special mode. Install modules using 'install'. Type '>' to return"
+			CmdBar.PlaceholderText = "In special mode."
 			CmdBar.Text = ""
 		elseif SearchForCommand("clr") or SearchForCommand("clear") then
 			CmdBar.Text = ""
