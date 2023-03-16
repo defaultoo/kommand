@@ -191,8 +191,6 @@ else
 		Status.Text = "Initializing..."
 	end
 
-	wait(0.5)
-
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	wait(0.5)
 	BootstrapScreenGUI:Destroy()
