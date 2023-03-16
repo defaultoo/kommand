@@ -810,6 +810,7 @@ connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 						for _, connection in pairs(connections) do
    							connection:Disconnect()
 						end		
+						UnbindFrame(Blur)
 						Kommand:Destroy()
 					end
 				elseif text[1] == "debug" then
