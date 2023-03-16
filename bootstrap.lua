@@ -1,91 +1,89 @@
-rconsoleclear()
-rconsolename("Kommand")
-rconsoleprint("Bootstrapp version 0.8b - (c) Ooflet\nEnter debug mode by pressing the enter key\n\n")
-rconsoleprint("Initializing Bootstrapp\n\n")
+-- rconsoleclear()
+-- rconsolename("Kommand")
+-- rconsoleprint("Bootstrapp version 0.8b - (c) Ooflet\nEnter debug mode by pressing the enter key\n\n")
+-- rconsoleprint("Initializing Bootstrapp\n\n")
 
 local DebugCommands = false
 
 local UIS = game:GetService("UserInputService")
 
 local function PrintInfo()
-	rconsoleprint("[")
-	rconsoleprint("@@CYAN@@")
-	rconsoleprint("INFO")
-	rconsoleprint("@@WHITE@@")
-	rconsoleprint("] ")
+	-- rconsoleprint("[")
+	-- rconsoleprint("@@CYAN@@")
+	-- rconsoleprint("INFO")
+	-- rconsoleprint("@@WHITE@@")
+	-- rconsoleprint("] ")
 end
 
 local function PrintSucess()
-	rconsoleprint("[")
-	rconsoleprint("@@GREEN@@")
-	rconsoleprint("SUCCESS")
-	rconsoleprint("@@WHITE@@")
-	rconsoleprint("] ")
+	-- rconsoleprint("[")
+	-- rconsoleprint("@@GREEN@@")
+	-- rconsoleprint("SUCCESS")
+	-- rconsoleprint("@@WHITE@@")
+	-- rconsoleprint("] ")
 end
 
 local function PrintError()
-	rconsoleprint("[")
-	rconsoleprint("@@RED@@")
-	rconsoleprint("ERROR")
-	rconsoleprint("@@WHITE@@")
-	rconsoleprint("] ")
+	-- rconsoleprint("[")
+	-- rconsoleprint("@@RED@@")
+	-- rconsoleprint("ERROR")
+	-- rconsoleprint("@@WHITE@@")
+	-- rconsoleprint("] ")
 end
 
 local function PrintSystem()
-	rconsoleprint("[")
-	rconsoleprint("@@LIGHT_BLUE@@")
-	rconsoleprint("SYSTEM")
-	rconsoleprint("@@WHITE@@")
-	rconsoleprint("] ")
+	-- rconsoleprint("[")
+	-- rconsoleprint("@@LIGHT_BLUE@@")
+	-- rconsoleprint("SYSTEM")
+	-- rconsoleprint("@@WHITE@@")
+	-- rconsoleprint("] ")
 end
 
 spawn(function()
-	rconsoleinput()
+	-- rconsoleinput()
 	DebugCommands = true
 	PrintSystem()
-	rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'continue' on the prompt once debug mode has activated\n")
+	-- rconsoleprint("Interrupt! Wait for update daemon to be finished. If you do not intend this, type 'continue' on the prompt once debug mode has activated\n")
 end)
-
-wait(2)
 
 local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
 if not framework then
 	PrintError()
-	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. \n"..message.."\n")
+	-- rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. \n"..message.."\n")
 	error()
 end
 
 local library, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") end)
 if not library then
 	PrintError()
-	rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. \n"..message.."\n")
+	-- rconsoleprint("Could not ping https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. \n"..message.."\n")
 	error()
 end
 
 PrintInfo()
-rconsoleprint("Checking Kommand Framework\n")
+-- rconsoleprint("Checking Kommand Framework\n")
 
 if isfile("kommand/framework/kommandframework.kmd") then
 	if readfile("kommand/framework/kommandframework.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") then
 		PrintSucess()
-		rconsoleprint("Framework up-to-date\n")
+		-- rconsoleprint("Framework up-to-date\n")
 		PrintInfo()
-		rconsoleprint("Checking Kommand Library\n")
+		-- rconsoleprint("Checking Kommand Library\n")
 	else 
 		PrintInfo()
-		rconsoleprint("Framework Update Found\n")
+		-- rconsoleprint("Framework Update Found\n")
 		PrintInfo()
-		rconsoleprint("Updating Kommand Framework\n")
+		-- rconsoleprint("Updating Kommand Framework\n")
 		delfile("kommand/framework/kommandframework.kmd")
 		writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))	
 		PrintSucess()
-		rconsoleprint("Framework up-to-date\n")
+		-- rconsoleprint("Framework up-to-date\n")
 		PrintInfo()
-		rconsoleprint("Checking Kommand Library\n")
+		-- rconsoleprint("Checking Kommand Library\n")
 	end
 else
 	PrintInfo()
-	rconsoleprint("Installing Kommand Framework\n")
+	-- rconsoleprint("Installing Kommand Framework\n")
 	makefolder("kommand")
 	makefolder("kommand/framework")
 	writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))
@@ -94,67 +92,65 @@ end
 if isfile("kommand/library/kommandlibrary.kmd") then
 	if readfile("kommand/library/kommandlibrary.kmd") == game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
 		PrintSucess()
-		rconsoleprint("Library up-to-date\n")
+		-- rconsoleprint("Library up-to-date\n")
 	else 
 		PrintInfo()
-		rconsoleprint("Library Update Found\n")
+		-- rconsoleprint("Library Update Found\n")
 		PrintInfo()
-		rconsoleprint("Updating Kommand Library\n")
+		-- rconsoleprint("Updating Kommand Library\n")
 		delfile("kommand/library/kommandlibrary.kmd")
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 		PrintSucess()
-		rconsoleprint("Library up-to-date\n")
+		-- rconsoleprint("Library up-to-date\n")
 	end
 else
 	PrintInfo()
-	rconsoleprint("Installing Kommand Library\n")
+	-- rconsoleprint("Installing Kommand Library\n")
 	makefolder("kommand/library")
 	writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 	PrintSucess()
-	rconsoleprint("Library up-to-date\n")
+	-- rconsoleprint("Library up-to-date\n")
 end
 
 if not isfolder("kommand/modules") then
 	makefolder("kommand/modules")
 end
 
-wait(0.5)
-
 local function DebugCmd()
 	local success, err = pcall(function()
 	while true do
-		rconsoleprint("> ")
-		local command = rconsoleinput()
+		-- rconsoleprint("> ")
+		local command = -- rconsoleinput()
 		command = string.split(command, " ")
 		if command[1] == "help" then
-			rconsoleprint("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\nclear/clr - Clears output.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n")		
+			-- rconsoleprint("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\nclear/clr - Clears output.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n")		
 		elseif command[1] == "continue" then
 			spawn(function()
 				loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 				loadstring(readfile("kommand/framework/kommandframework.kmd"))()	
 			end)
-			rconsoleclose()
+			-- rconsoleclose()
 			break
 		elseif command[1] == "exit" then
-			rconsoleclose()	
+			-- rconsoleclose()	
 			break
 		elseif command[1] == "clear" or command == "clr" then
-			rconsoleclear()
+			-- rconsoleclear()
 		elseif command[1] == "install" then
 			local name = command[3] or command[2]
 			if command[2] == nil then
 				PrintError()
-				rconsoleprint("Argument 2 (moduleLink) must not be empty!\n")			
+				-- rconsoleprint("Argument 2 (moduleLink) must not be empty!\n")			
 			else
 				PrintInfo()
-				rconsoleprint("Downloading module from "..command[2].." with name "..command[3].."...\n")
+				-- rconsoleprint("Downloading module from "..command[2].." with name "..command[3].."...\n")
 				local success, err = pcall(function() writefile("kommand/modules/"..name, game:HttpGet(command[2])) end)
 				if success then 
 					PrintSucess()
-					rconsoleprint("Succesfully downloaded module\n")
+					-- rconsoleprint("Succesfully downloaded module\n")
 				else
 					PrintError()
-					rconsoleprint("Failed to download module; "..err.."\n")
+					-- rconsoleprint("Failed to download module; "..err.."\n")
 				end		
 			end
 			
@@ -163,37 +159,37 @@ local function DebugCmd()
 				if isfile("kommand/modules/"..command[2]) then
 					delfile("kommand/modules/"..command[2])
 					PrintSucess()
-					rconsoleprint("Successfully uninstalled module.\n")
+					-- rconsoleprint("Successfully uninstalled module.\n")
 				else
 					PrintError()
-					rconsoleprint("Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).\n")
+					-- rconsoleprint("Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).\n")
 				end
 			else
 				PrintError()
-				rconsoleprint("Argument 2 (name) must not be empty!\n")
+				-- rconsoleprint("Argument 2 (name) must not be empty!\n")
 			end
 		else
 			command = table.concat(command, " ")
 			local success, err = pcall(function() loadstring(command)() end)
 			if success then
 				PrintSucess()
-				rconsoleprint("Successfully ran.\n")
+				-- rconsoleprint("Successfully ran.\n")
 			else
 				PrintError()
-				local success, err = pcall(function() rconsoleprint("Error occured during execution: "..err.."\n") end)
+				local success, err = pcall(function() -- rconsoleprint("Error occured during execution: "..err.."\n") end)
 				if not success then 
-					rconsoleprint("Error occured during execution.\n")	
+					-- rconsoleprint("Error occured during execution.\n")	
 				end
 			end
 		end
 	end
 	end)
 	if not success then 
-		rconsoleprint("\n")
+		-- rconsoleprint("\n")
 		PrintError()
-		rconsoleprint("@@RED@@")	
-		rconsoleprint("Bootstrapp system error! "..err..". Terminate Bootstrapp manually by pressing ctrl+c. \n\n")
-		rconsoleprint("@@WHITE@@")
+		-- rconsoleprint("@@RED@@")	
+		-- rconsoleprint("Bootstrapp system error! "..err..". Terminate Bootstrapp manually by pressing ctrl+c. \n\n")
+		-- rconsoleprint("@@WHITE@@")
 		DebugCmd()
 	end
 end
@@ -201,12 +197,11 @@ end
 if DebugCommands == true then
 	DebugCmd()
 else
-	wait(0.5)
 	spawn(function()
 		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
 	end)
 	spawn(function()
 		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
 	end)
-	rconsoleclose()
+	-- rconsoleclose()
 end
