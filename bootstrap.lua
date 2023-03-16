@@ -59,8 +59,8 @@ Fill.Size = UDim2.new(1, 0, 1, 0)
 -- Throbber Animation
 spawn(function()
     while not StatusFail do
-        Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 0.5, true)
-        wait(0.25)
+        Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 1, true)
+        wait(0.75)
         Fill.Position = UDim2.new(-1,0,0,0)
         Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
         wait(0.5)
@@ -81,7 +81,7 @@ end
 
 -- Bootstrap Setup
 Status.Text = "Checking Kommand Framework"
-Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOUt, Enum.EasingStyle.Quad, 0.5, true)
+Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 wait(0.5)
 
 local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
@@ -102,6 +102,8 @@ if isfile("kommand/framework/kommandframework.kmd") then
 		delfile("kommand/framework/kommandframework.kmd")
 		writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))	
 		Status.Text = "Checking Kommand Library..."
+	else
+		Status.Text = "Checking Kommand Library..."
 	end
 else
 	Status.Text = "Installing Kommand Framework..."
@@ -117,6 +119,8 @@ if isfile("kommand/library/kommandlibrary.kmd") then
 		delfile("kommand/library/kommandlibrary.kmd")
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
         Status.Text = "Initializing..."
+	else
+		Status.Text = "Initializing..."
 	end
 else
 	Status.Text = "Installing Kommand Library..."
@@ -127,7 +131,7 @@ end
 
 wait(0.5)
 
-Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,50), Enum.EasingDirection.InOUt, Enum.EasingStyle.Quad, 0.5, true)
+Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,50), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 wait(0.5)
 BootstrapScreenGUI:Destroy()
 spawn(function()
