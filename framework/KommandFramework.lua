@@ -543,7 +543,7 @@ local ClientLog = Instance.new("ScrollingFrame")
 	ClientLog.BackgroundTransparency = 1.000
 	ClientLog.BorderSizePixel = 0
 	ClientLog.Position = UDim2.new(0.025, 0, 0.065, 30)
-	ClientLog.Size = UDim2.new(0, 765, 0, 440)
+	ClientLog.Size = UDim2.new(0, 765, 0, 460)
 	ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
 	ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
 			
