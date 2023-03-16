@@ -62,15 +62,6 @@ local loaded = false
 
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {CornerRadius = UDim.new(1,0)}):Play()
-wait(0.75)
-spawn(function()
-	while not loaded do
-		Intro:TweenPosition(UDim2.new(0.5,0,0.4,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
-		wait(0.25)
-		Intro:TweenPosition(UDim2.new(0.5,0,0.5,0), Enum.EasingDirection.In, Enum.EasingStyle.Quint, 0.5, true)
-		wait(0.5)
-	end	
-end)
 
 ConsoleWindow.Name = "ConsoleWindow"
 ConsoleWindow.Parent = Kommand
