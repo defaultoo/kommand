@@ -141,17 +141,19 @@ wait(0.5)
 connections[#connections+1] = TextBox.Changed:Connect(function(property)
 	if property == "Text" then
 		if TextBox.Text == "y" then
+			TextBox.Text = ""
 			for _, connection in pairs(connections) do
 				connection:Disconnect()
 		 	end		
 			BootstrapScreenGUI:Destroy()
-			--loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrapCMD.lua"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrapCMD.lua"))()
 		elseif TextBox.Text == "n" then
+			TextBox.Text = ""
 			for _, connection in pairs(connections) do
 				connection:Disconnect()
 		 	end		
 			BootstrapScreenGUI:Destroy()
-			--loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrap.lua"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrap.lua"))()
 		else
 			TextBox.Text = ""
 			TextBox:CaptureFocus()
