@@ -209,7 +209,7 @@ else
 	IsLoaded = true
 
 	if game.CoreGui:FindFirstChild("Kommand") then
-		FillError()
+		ThrobberError()
 		Status.Text = "Kommand is already executed!"
 	end
 
