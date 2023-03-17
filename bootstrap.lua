@@ -123,7 +123,8 @@ spawn(function()
     end
 end)
 
-local function ThrobberError()
+local function ThrobberError(err)
+	Status.Text = err
 	FillError:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
     StatusFail = true
     wait(5)
@@ -229,8 +230,7 @@ else
 	wait(0.1)
 
 	if game.CoreGui:FindFirstChild("Kommand") then
-		ThrobberError()
-		Status.Text = "Kommand is already executed!"
+		ThrobberError("Kommand is already executed!")
 	end
 
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
