@@ -231,18 +231,18 @@ else
 
 	if game.CoreGui:FindFirstChild("Kommand") then
 		ThrobberError("Kommand is already executed!")
+	else
+		Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+		wait(0.5)
+		for _, connection in pairs(connections) do
+			connection:Disconnect()
+		 end		
+		BootstrapScreenGUI:Destroy()
+		spawn(function()
+			loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
+		end)
+		spawn(function()
+			loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
+		end)
 	end
-
-	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
-	wait(0.5)
-	for _, connection in pairs(connections) do
-		connection:Disconnect()
- 	end		
-	BootstrapScreenGUI:Destroy()
-	spawn(function()
-		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
-	end)
-	spawn(function()
-		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
-	end)
 end
