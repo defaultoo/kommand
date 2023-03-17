@@ -86,7 +86,7 @@ Blur.AnchorPoint = Vector2.new(0.5, 0.5)
 Blur.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Blur.BackgroundTransparency = 1.000
 Blur.Position = UDim2.new(0.5, 0, 0.5, 0)
-Blur.Size = UDim2.new(0, 780, 0, 530)
+Blur.Size = UDim2.new(0, 770, 0, 520)
 
 TopBar.Name = "TopBar"
 TopBar.Parent = ConsoleWindow
