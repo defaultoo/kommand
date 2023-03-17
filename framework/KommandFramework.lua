@@ -535,7 +535,7 @@ local ClientLog = Instance.new("ScrollingFrame")
 	ClientLog.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	ClientLog.BackgroundTransparency = 1.000
 	ClientLog.BorderSizePixel = 0
-	ClientLog.Position = UDim2.new(0.025, 0, 0.065, 20)
+	ClientLog.Position = UDim2.new(0.025, 0, 0.065, 10)
 	ClientLog.Size = UDim2.new(0, 765, 0, 460)
 	ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
 	ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -872,7 +872,7 @@ connections[#connections+1] = Exit.MouseButton1Click:Connect(function()
 end)
 
 loaded = true
-wait(0.5)
+wait(1)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,550,0,550)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,0)}):Play()
 wait(0.5)

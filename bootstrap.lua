@@ -14,6 +14,9 @@ local PromptState = Instance.new("Frame")
 local PromptText = Instance.new("TextLabel")
 local TextBox = Instance.new("TextBox")
 
+local StatusFail = false
+local IsLoaded = false
+
 BootstrapScreenGUI.Parent = game.CoreGui
 BootstrapScreenGUI.Name = "Bootstrap"
 
@@ -97,13 +100,15 @@ TextBox.TextXAlignment = Enum.TextXAlignment.Left
 
 -- Throbber Animation
 spawn(function()
-    while not StatusFail do
-        Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 1, true)
-        wait(0.75)
-        Fill.Position = UDim2.new(-1,0,0,0)
-        Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
-        wait(0.5)
-        Fill.Position = UDim2.new(-1,0,0,0)
+    while not StatusFail and not IsLoaded do
+		pcall(function()
+			Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 1, true)
+			wait(0.75)
+			Fill.Position = UDim2.new(-1,0,0,0)
+			Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
+			wait(0.5)
+			Fill.Position = UDim2.new(-1,0,0,0)
+		end)
     end
 end)
 
@@ -115,7 +120,7 @@ local function ThrobberError()
     BootstrapScreenGUI:Destroy()
 end
 
-wait(1)
+wait(0.5)
 
 -- Bootstrap Setup
 TextBox.Changed:Connect(function(property)
@@ -191,6 +196,7 @@ else
 		Status.Text = "Initializing..."
 	end
 
+	IsLoaded = true
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	wait(0.5)
 	BootstrapScreenGUI:Destroy()
