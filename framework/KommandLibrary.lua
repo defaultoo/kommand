@@ -12,7 +12,6 @@ _G.KommandLibrary.Debug = {}
 
 local KonsoleExecuted = false
 local Ronaco = loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/vanilla/RonacoMain.lua"))
-local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
@@ -21,6 +20,7 @@ local InfoColor = Color3.fromRGB(0, 85, 255)
 
 local bar = ""
 local function OutputLoadingSequence(percent, msg)
+	local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 	if ClientLog:FindFirstChild("LoadingBar") then
 		local TextLabel = ClientLog:FindFirstChild("LoadingBar")
 		TextLabel.Text = "<b>[ "..percent * 10 .."% ]</b> "..msg.."..."
