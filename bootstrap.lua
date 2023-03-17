@@ -9,6 +9,7 @@ local UIPadding = Instance.new("UIPadding")
 local DefaultState = Instance.new("Frame")
 local Throbber = Instance.new("Frame")
 local Fill = Instance.new("Frame")
+local FillError = Instance.new("Frame")
 local Status = Instance.new("TextLabel")
 local PromptState = Instance.new("Frame")
 local PromptText = Instance.new("TextLabel")
@@ -56,6 +57,14 @@ Fill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Fill.BorderSizePixel = 0
 Fill.Position = UDim2.new(-1, 0, 0, 0)
 Fill.Size = UDim2.new(1, 0, 1, 0)
+
+FillError.Name = "Fill"
+FillError.Parent = Throbber
+FillError.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+FillError.BorderSizePixel = 0
+FillError.Position = UDim2.new(-1, 0, 0, 0)
+FillError.Size = UDim2.new(1, 0, 1, 0)
+FillError.ZIndex = 2
 
 Status.Name = "Status"
 Status.Parent = DefaultState
@@ -113,6 +122,7 @@ spawn(function()
 end)
 
 local function ThrobberError()
+	FillError:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
     StatusFail = true
     wait(5)
     Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
@@ -197,6 +207,12 @@ else
 	end
 
 	IsLoaded = true
+
+	if game.CoreGui:FindFirstChild("Kommand") then
+		FillError()
+		Status.Text = "Kommand is already executed!"
+	end
+
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	wait(0.5)
 	BootstrapScreenGUI:Destroy()
