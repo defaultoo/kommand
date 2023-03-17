@@ -396,7 +396,7 @@ local IsGraphicsSupportBlur = true
 local function UpdateGraphics()
 	local userSettings = UserSettings().GameSettings
 	local qualityLevel = userSettings.SavedQualityLevel.Value
-	print(qualityLevel.Value)
+	print(qualityLevel)
 	if qualityLevel >= 7 then
 		print("more")
 		IsGraphicsSupportBlur = true
