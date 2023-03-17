@@ -138,10 +138,11 @@ end
 wait(0.5)
 
 -- Bootstrap Setup
-connections[#connections+1] = TextBox.Changed:Connect(function(property)
-	if property == "Text" then
+connections[#connections+1] = TextBox.FocusLost:Connect(function(enter)
+	if enter then
 		if TextBox.Text == "y" then
 			TextBox.Text = ""
+			TextBox:ReleaseFocus()
 			for _, connection in pairs(connections) do
 				connection:Disconnect()
 		 	end		
@@ -149,6 +150,7 @@ connections[#connections+1] = TextBox.Changed:Connect(function(property)
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrapCMD.lua"))()
 		elseif TextBox.Text == "n" then
 			TextBox.Text = ""
+			TextBox:ReleaseFocus()
 			for _, connection in pairs(connections) do
 				connection:Disconnect()
 		 	end		
