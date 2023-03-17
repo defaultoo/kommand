@@ -12,55 +12,44 @@ _G.KommandLibrary.Debug = {}
 
 local KonsoleExecuted = false
 local Ronaco = loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/Ronaco-Editor/main/main/vanilla/RonacoMain.lua"))
+local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 
 local ErrorColor = Color3.fromRGB(255, 0, 0)
 local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
-local CurrentPage = nil
-
-local function CreateTerminal(Name)
-	local ClientLog = Instance.new("ScrollingFrame")
-	ClientLog.Parent = Console
-	ClientLog.Active = true
-	ClientLog.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	ClientLog.BackgroundTransparency = 1.000
-	ClientLog.BorderSizePixel = 0
-	ClientLog.Position = UDim2.new(0.025, 0, 0.065, 30)
-	ClientLog.Size = UDim2.new(0, 765, 0, 440)
-	ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
-	ClientLog.AutomaticCanvasSize = Enum.AutomaticSize.Y
-			
-	UIListLayout.Parent = ClientLog
-	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	UIListLayout.Padding = UDim.new(0, 5)
-			
-	local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
-
-	ClientLog.Changed:Connect(function(property)
-		if property ~= "CanvasPosition" then
-			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
+local bar = ""
+local function OutputLoadingSequence(percent, msg)
+	if ClientLog:FindFirstChild("LoadingBar") then
+		local TextLabel = ClientLog:FindFirstChild("LoadingBar")
+		TextLabel.Text = "<b>[ "..percent * 10 .."% ]</b> "..msg.."..."
+		if percent == 10 then
+			TextLabel.Name = "Complete"
 		end
-	end)
-	local pageloop = 0
-	for i, obj in pairs(game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):GetDescendants()) do
-		if string.find(obj.Name, "Terminal") then
-			pageloop += 1
-		end
-	end
-	if pageloop == 0 then
-		ClientLog.Name = Name
-		CurrentPage = Name
 	else
-		ClientLog.Name = Name..pageloop
-		CurrentPage = Name..pageloop
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = "LoadingBar"
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = "<b>[ "..percent * 10 .."% ]</b> "..msg.."..."
+		TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.RichText = true
+		TextLabel.TextTransparency = 1
+		game:GetService("TweenService"):Create(TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 	end
-	
 end
 
 function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
-	local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 	if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message
@@ -267,8 +256,7 @@ function _G.KommandLibrary.Tabs:CreateTab()
 
 	-- Page
 	local pageloop = 0
-	
-	CreateTerminal("Terminal"..pageloop)
+
 	CurrentPage = "Terminal"..pageloop
 end
 
