@@ -62,7 +62,7 @@ IntroUICorner.Parent = Intro
 
 local loaded = false
 
-repeat wait() until IsLoaded.Value == true
+repeat task.wait() until IsLoaded.Value == true
 IsLoaded:Destroy()
 
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(63, 63, 63), Size = UDim2.new(0,50,0,50)}):Play()
@@ -186,7 +186,7 @@ do
 	end
 	local continue = IsNotNaN(camera:ScreenPointToRay(0,0).Origin.x)
 	while not continue do
-		RunService.RenderStepped:wait()
+		RunService.RenderStepped:Wait()
 		continue = IsNotNaN(camera:ScreenPointToRay(0,0).Origin.x)
 	end
 end
@@ -618,13 +618,27 @@ local function SearchForCommand(cmd, ignore)
 	end
 end
 
+local commandHistory = {}
+local currentCommandIndex = 0
+
 connections[#connections+1] = game:GetService("UserInputService").InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.BackSlash then
-		wait(0.05)
+		task.wait(0.05)
 		CmdBar:CaptureFocus()
-	end
-	if input.KeyCode == Enum.KeyCode.Return or input.KeyCode == Enum.KeyCode.KeypadEnter then
-		--
+	elseif input.KeyCode == Enum.KeyCode.Up and UserInputService:GetFocusedTextBox().Name == "CmdBar" then
+		currentCommandIndex = math.max(currentCommandIndex - 1, 0)
+		local command = commandHistory[currentCommandIndex]
+		if command then
+		  CmdBar.Text = command
+		  CmdBar.CursorPosition = #CmdBar.Text
+		end
+	elseif input.KeyCode == Enum.KeyCode.Down and UserInputService:GetFocusedTextBox().Name == "CmdBar" then
+		currentCommandIndex = math.min(currentCommandIndex + 1, #commandHistory + 1)
+		local command = commandHistory[currentCommandIndex] or ""
+		if command then
+		  CmdBar.Text = command
+		  CmdBar.CursorPosition = #CmdBar.Text
+		end
 	end
 end)
 
@@ -669,7 +683,7 @@ connections[#connections+1] = CmdBar.Changed:Connect(function(property)
 				if v:IsA("TextBox") then
 					spawn(function()
 						game:GetService("TweenService"):Create(v, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
-						wait(0.5)
+						task.wait(0.5)
 						v:Destroy()
 					end)
 
@@ -690,12 +704,12 @@ local ResponseResult = nil
 local function CreateResponsePrompt(prefix)
 	CmdBar.Text = ""
 	PreviousMode = CurrentMode
-	wait(0.05)
+	task.wait(0.05)
 	CmdBar:CaptureFocus()
 	CurrentMode = 4
 	EnvIndicator.Text = "="
 	IsLookingForResponse = true
-	repeat wait() until ResponseGiven
+	repeat task.wait() until ResponseGiven
 	ResponseGiven = false
 	return ResponseResult
 end
@@ -765,10 +779,12 @@ connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 		local text = CmdBar.Text
 		text = string.split(text, " ")
 		if pressed then 
+			table.insert(commandHistory, command)
+            currentCommandIndex = #commandHistory + 1
 			OutputText("> "..table.concat(text, " "), Enum.MessageType.MessageOutput)
 			if CurrentMode == 0 then
 				CmdBar.Text = ""
-				wait(0.05)
+				task.wait(0.05)
 				CmdBar:CaptureFocus()
 				if CheckExecutor() then
 					local Correct, Err = pcall(function()
@@ -826,7 +842,7 @@ connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 				if text[1] == "safehop" or text[1] == "serverhop" then
 					queue_on_teleport(readfile("kommand/framework/kommandframework.kmd"))
 					game["Teleport Service"]:Teleport(game.PlaceId)
-					game.Players.LocalPlayer:Kick("Please await teleport to "..game.PlaceId)	
+					game.Players.LocalPlayer:Kick("Please atask.wait teleport to "..game.PlaceId)	
 				end
 			end
 			if CurrentMode == 2 then
@@ -859,7 +875,7 @@ connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			CmdBar.Text = ""
-			wait(0.05)
+			task.wait(0.05)
 			CmdBar:CaptureFocus()
 		end
 	end	
@@ -872,18 +888,18 @@ connections[#connections+1] = Exit.MouseButton1Click:Connect(function()
 end)
 
 loaded = true
-wait(1)
+task.wait(0.75)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,550,0,550)}):Play()
 game:GetService("TweenService"):Create(IntroUICorner, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {CornerRadius = UDim.new(0,0)}):Play()
-wait(0.5)
+task.wait(0.5)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,800,0,550)}):Play()
-wait(0.5)
+task.wait(0.5)
 ConsoleWindow.Visible = true
 BindFrame(Blur, {
 	Transparency = 0.98,
 	BrickColor = BrickColor.new('Institutional white')
 })
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
-task.wait(1)
+task.task.wait(1)
 Intro:Destroy()
 OutputText('<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help for help.</font>', Enum.MessageType.MessageOutput)
