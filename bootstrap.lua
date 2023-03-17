@@ -127,7 +127,7 @@ local function ThrobberError(err)
 	Status.Text = err
 	FillError:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
     StatusFail = true
-    wait(5)
+    wait(3)
     Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
     wait(0.5)
 	for _, connection in pairs(connections) do
