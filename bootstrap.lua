@@ -3,6 +3,8 @@
 
 -- GUI Setup
 
+local connections = {}
+
 local BootstrapScreenGUI = Instance.new("ScreenGui")
 local Bootstrapper = Instance.new("Frame")
 local UIPadding = Instance.new("UIPadding")
@@ -127,23 +129,31 @@ local function ThrobberError()
     wait(5)
     Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
     wait(0.5)
+	for _, connection in pairs(connections) do
+		connection:Disconnect()
+ 	end		
     BootstrapScreenGUI:Destroy()
 end
 
 wait(0.5)
 
 -- Bootstrap Setup
-TextBox.Changed:Connect(function(property)
+connections[#connections+1] = TextBox.Changed:Connect(function(property)
 	if property == "Text" then
 		if TextBox.Text == "y" then
+			for _, connection in pairs(connections) do
+				connection:Disconnect()
+		 	end		
 			BootstrapScreenGUI:Destroy()
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrapCMD.lua"))()
 		elseif TextBox.Text == "n" then
+			for _, connection in pairs(connections) do
+				connection:Disconnect()
+		 	end		
 			BootstrapScreenGUI:Destroy()
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrap.lua"))()
 		else
 			TextBox.Text = ""
-			wait()
 			TextBox:CaptureFocus()
 		end
 	end
@@ -217,6 +227,9 @@ else
 
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	wait(0.5)
+	for _, connection in pairs(connections) do
+		connection:Disconnect()
+ 	end		
 	BootstrapScreenGUI:Destroy()
 	spawn(function()
 		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
