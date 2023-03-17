@@ -178,6 +178,7 @@ EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
 ----------------------------------------------------------------------
 
 local RunService = game:GetService'RunService'
+local TweenService = game:GetService('TweenService')
 local camera = workspace.CurrentCamera
 
 do
@@ -391,7 +392,25 @@ local function Modify(frame, properties)
 end
 
 local userSettings = UserSettings().GameSettings
-local qualityLevel = userSettings.SavedQualityLevel.Value
+local IsGraphicsSupportBlur = true
+
+local function UpdateGraphics()
+	local qualityLevel = userSettings.SavedQualityLevel.Value
+	if qualityLevel >= 7 then
+		IsGraphicsSupportBlur = true
+		TweenService:Create(ConsoleWindow, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.1}):Play()
+		BindFrame(Blur, {
+			Transparency = 0.98,
+			BrickColor = BrickColor.new('Institutional white')
+		})
+	else
+		IsGraphicsSupportBlur = false
+		TweenService:Create(ConsoleWindow, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.025}):Play()
+		UnbindFrame(Blur)
+	end
+end
+
+connections[#connections+1] = userSettings.Changed:Connect(UpdateGraphics())
 
 local UIBlur = Instance.new("DepthOfFieldEffect")
 UIBlur.Name = "ConsoleBlur"
@@ -800,6 +819,7 @@ connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 					if text[2] == "blur" then
 						if text[3] == "true" then
 							CmdBar.Text = ""
+							TweenService:Create(ConsoleWindow, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.1}):Play()
 							BindFrame(Blur, {
 								Transparency = 0.98,
 								BrickColor = BrickColor.new('Institutional white')
@@ -807,6 +827,7 @@ connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 							OutputText('<b>UIBlur set to true.</b>', "Custom", "=>", Color3.fromRGB(85, 170, 255))
 						elseif text[3] == "false" then
 							CmdBar.Text = ""
+							TweenService:Create(ConsoleWindow, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.025}):Play()
 							UnbindFrame(Blur)
 							OutputText('<b>UIBlur set to false.</b>', "Custom", "=>", Color3.fromRGB(85, 170, 255))
 						else
@@ -895,10 +916,7 @@ task.wait(0.5)
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = Color3.fromRGB(20, 20, 20), Size = UDim2.new(0,800,0,550)}):Play()
 task.wait(0.5)
 ConsoleWindow.Visible = true
-BindFrame(Blur, {
-	Transparency = 0.98,
-	BrickColor = BrickColor.new('Institutional white')
-})
+UpdateGraphics()
 game:GetService("TweenService"):Create(Intro, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 task.wait(1)
 Intro:Destroy()
