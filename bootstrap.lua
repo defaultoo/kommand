@@ -190,6 +190,7 @@ else
 	if isfile("kommand/framework/kommandframework.kmd") then
 		if readfile("kommand/framework/kommandframework.kmd") ~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") then
 			Status.Text = "Updating Kommand Framework..."
+			wait(0.1)
 			delfile("kommand/framework/kommandframework.kmd")
 			writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))	
 			Status.Text = "Checking Kommand Library..."
@@ -198,6 +199,7 @@ else
 		end
 	else
 		Status.Text = "Installing Kommand Framework..."
+		wait(0.1)
 		makefolder("kommand")
 		makefolder("kommand/framework")
 		writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))
@@ -207,6 +209,7 @@ else
 	if isfile("kommand/library/kommandlibrary.kmd") then
 		if readfile("kommand/library/kommandlibrary.kmd") ~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
 			Status.Text = "Updating Kommand Library..."
+			wait(0.1)
 			delfile("kommand/library/kommandlibrary.kmd")
 			writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 			Status.Text = "Initializing..."
@@ -215,6 +218,7 @@ else
 		end
 	else
 		Status.Text = "Installing Kommand Library..."
+		wait(0.1)
 		makefolder("kommand/library")
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 		Status.Text = "Initializing..."
@@ -222,7 +226,7 @@ else
 
 	IsLoaded = true
 
-	wait()
+	wait(0.1)
 
 	if game.CoreGui:FindFirstChild("Kommand") then
 		ThrobberError()
