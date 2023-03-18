@@ -640,6 +640,7 @@ connections[#connections+1] = game:GetService("UserInputService").InputBegan:Con
 		task.wait(0.05)
 		CmdBar:CaptureFocus()
 	elseif input.KeyCode == Enum.KeyCode.Up and UserInputService:GetFocusedTextBox() then
+		print("up", currentCommandIndex, commandHistory)
 		currentCommandIndex = math.max(currentCommandIndex - 1, 0)
 		local command = commandHistory[currentCommandIndex]
 		if command then
@@ -647,6 +648,7 @@ connections[#connections+1] = game:GetService("UserInputService").InputBegan:Con
 		  CmdBar.CursorPosition = #CmdBar.Text
 		end
 	elseif input.KeyCode == Enum.KeyCode.Down and UserInputService:GetFocusedTextBox() then
+		print("down", currentCommandIndex, commandHistory)
 		currentCommandIndex = math.min(currentCommandIndex + 1, #commandHistory + 1)
 		local command = commandHistory[currentCommandIndex] or ""
 		if command then
