@@ -560,7 +560,7 @@ local ClientLog = Instance.new("ScrollingFrame")
 			
 	local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
 
-	connections[#connections+1] = ClientLog.Changed:Connect(function(property)
+	connections[#connections+1] = ClientLog.ChildAdded:Connect(function(property)
 		if property ~= "CanvasPosition" then
 			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
 		end
