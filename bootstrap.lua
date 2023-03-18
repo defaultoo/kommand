@@ -365,6 +365,7 @@ end)
 
 CmdBar.FocusLost:Connect(function(enter)
 	if enter then
+		CmdBar.Visible = false
 		OutputText("> "..CmdBar.Text)
 		wait()
 		CmdBar:CaptureFocus()
@@ -372,7 +373,7 @@ CmdBar.FocusLost:Connect(function(enter)
 		command = string.split(command, " ")
 		CmdBar.Text = ""
 		if command[1] == "help" then
-			OutputText("<b>System</b>\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\n<b>Debug</b>\nupdate <bool> - Determines whether to update or not.\n\n<b>Module Library</b>\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts.")
+			OutputText("System\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nDebug\nupdate <bool> - Sets the update variable.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts.")
 		elseif command[1] == "continue" then
 			Terminal:TweenPosition(UDim2.new(0.5,0,1,400), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 			wait(0.5)
@@ -384,6 +385,8 @@ CmdBar.FocusLost:Connect(function(enter)
 			end		
 			wait(0.5)
 			Terminal:Destroy()
+		elseif command[1] == "update" then
+			Update = command[2]
 		elseif command[1] == "install" then
 			local name = command[3] or command[2]
 			if command[2] == nil then
@@ -423,7 +426,7 @@ CmdBar.FocusLost:Connect(function(enter)
 				end
 			end
 		end
-		
+		CmdBar.Visible = true
 	end
 end)
 
