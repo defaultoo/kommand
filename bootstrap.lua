@@ -19,6 +19,8 @@ local TextBox = Instance.new("TextBox")
 
 local StatusFail = false
 local IsLoaded = false
+local IsStarted = false
+local Update = true
 
 BootstrapScreenGUI.Parent = game.CoreGui
 BootstrapScreenGUI.Name = "Bootstrap"
@@ -92,7 +94,7 @@ PromptText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 PromptText.BackgroundTransparency = 1.000
 PromptText.Size = UDim2.new(1, 0, 0.349999994, 0)
 PromptText.Font = Enum.Font.RobotoMono
-PromptText.Text = "Run CMD Bootstrapper?"
+PromptText.Text = "Update Kommand?"
 PromptText.TextColor3 = Color3.fromRGB(255, 255, 255)
 PromptText.TextSize = 16.000
 PromptText.TextXAlignment = Enum.TextXAlignment.Left
@@ -115,9 +117,6 @@ spawn(function()
 		pcall(function()
 			Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 1, true)
 			wait(0.75)
-			Fill.Position = UDim2.new(-1,0,0,0)
-			Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
-			wait(0.5)
 			Fill.Position = UDim2.new(-1,0,0,0)
 		end)
     end
@@ -142,24 +141,27 @@ wait(0.5)
 connections[#connections+1] = TextBox.FocusLost:Connect(function(enter)
 	if enter then
 		if TextBox.Text == "y" then
+			IsStarted = true
 			TextBox.Text = ""
 			TextBox:ReleaseFocus()
-			for _, connection in pairs(connections) do
-				connection:Disconnect()
-		 	end		
-			BootstrapScreenGUI:Destroy()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrapCMD.lua"))()
+			Update = true
+			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			wait(0.5)
+			DefaultState.Visible = true
+			PromptState.Visible = false
+			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 		elseif TextBox.Text == "n" then
+			IsStarted = true
 			TextBox.Text = ""
 			TextBox:ReleaseFocus()
-			for _, connection in pairs(connections) do
-				connection:Disconnect()
-		 	end		
-			BootstrapScreenGUI:Destroy()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrap.lua"))()
+			Update = false
+			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			wait(0.5)
+			DefaultState.Visible = true
+			PromptState.Visible = false
+			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 		else
 			TextBox.Text = ""
-			TextBox:CaptureFocus()
 		end
 	end
 end)
@@ -169,26 +171,26 @@ if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) and g
 	DefaultState.Visible = false
 	PromptState.Visible = true
 	TextBox:CaptureFocus()
-else
+	repeat wait() until IsStarted
+end
+
+if Update then
 	Status.Text = "Checking Kommand Framework"
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	wait(0.5)
-
 	local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
 	if not framework then
 		Status.Text = "Could not fetch data from https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. "..message
 		ThrobberError()
 		error()
 	end
-
 	local library, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") end)
 	if not library then
 		Status.Text = "Could not fetch data from https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. "..message
 		ThrobberError()
 		error()
 	end
-
-	if isfile("kommand/framework/kommandframework.kmd") then
+		if isfile("kommand/framework/kommandframework.kmd") then
 		if readfile("kommand/framework/kommandframework.kmd") ~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") then
 			Status.Text = "Updating Kommand Framework..."
 			wait(0.1)
@@ -206,7 +208,6 @@ else
 		writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))
 		Status.Text = "Checking Kommand Library.."
 	end
-
 	if isfile("kommand/library/kommandlibrary.kmd") then
 		if readfile("kommand/library/kommandlibrary.kmd") ~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
 			Status.Text = "Updating Kommand Library..."
@@ -224,25 +225,23 @@ else
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 		Status.Text = "Initializing..."
 	end
-
-	IsLoaded = true
-
-	wait(0.1)
-
-	if game.CoreGui:FindFirstChild("Kommand") then
-		ThrobberError("Kommand is already executed!")
-	else
-		Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
-		wait(0.5)
-		for _, connection in pairs(connections) do
-			connection:Disconnect()
-		 end		
-		BootstrapScreenGUI:Destroy()
-		spawn(function()
-			loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
-		end)
-		spawn(function()
-			loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
-		end)
-	end
+		wait(0.1)
+end
+IsLoaded = true
+Status.Text = "Initializing..."
+if game.CoreGui:FindFirstChild("Kommand") then
+	ThrobberError("Kommand is already executed!")
+else
+	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+	wait(0.5)
+	for _, connection in pairs(connections) do
+		connection:Disconnect()
+	 end		
+	BootstrapScreenGUI:Destroy()
+	spawn(function()
+		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
+	end)
+	spawn(function()
+		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
+	end)
 end
