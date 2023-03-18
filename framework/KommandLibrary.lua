@@ -50,6 +50,7 @@ local function OutputLoadingSequence(percent, msg)
 end
 
 function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
+	local ClientLog = game.CoreGui:WaitForChild("Kommand"):WaitForChild("ConsoleWindow"):WaitForChild("Console"):WaitForChild("ClientLog")
 	if Type == Enum.MessageType.MessageError then
 		local TextLabel = Instance.new("TextBox")
 		TextLabel.Name = Message

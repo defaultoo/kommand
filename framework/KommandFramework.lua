@@ -396,24 +396,19 @@ local IsGraphicsSupportBlur = true
 local function UpdateGraphics()
 	local userSettings = UserSettings().GameSettings
 	local qualityLevel = userSettings.SavedQualityLevel.Value
-	print(qualityLevel)
-	if qualityLevel >= 7 then
-		print("more")
+	if qualityLevel >= 8 then
 		IsGraphicsSupportBlur = true
-		TweenService:Create(ConsoleWindow, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.1}):Play()
+		ConsoleWindow.BackgroundTransparency = 0.1
 		BindFrame(Blur, {
 			Transparency = 0.98,
 			BrickColor = BrickColor.new('Institutional white')
 		})
 	else
-		print("less")
 		IsGraphicsSupportBlur = false
-		TweenService:Create(ConsoleWindow, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.025}):Play()
+		ConsoleWindow.BackgroundTransparency = 0.025
 		UnbindFrame(Blur)
 	end
 end
-
-connections[#connections+1] = UserSettings().GameSettings.Changed:Connect(UpdateGraphics())
 
 local UIBlur = Instance.new("DepthOfFieldEffect")
 UIBlur.Name = "ConsoleBlur"
@@ -489,10 +484,7 @@ connections[#connections+1] = game:GetService("UserInputService").InputBegan:Con
 		else
 			game:GetService("StarterGui"):SetCore("DevConsoleVisible", false)
 			Kommand.Enabled = true
-			BindFrame(Blur, {
-				Transparency = 0.98,
-				BrickColor = BrickColor.new('Institutional white')
-			})
+			UpdateGraphics()
 			game.Lighting:FindFirstChild("ConsoleBlur").Enabled = true
 		end
 	end
