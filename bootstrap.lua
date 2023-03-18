@@ -362,6 +362,7 @@ connections[#connections+1] = TextBox.FocusLost:Connect(function(enter)
 			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 		else
 			TextBox.Text = ""
+			TextBox:CaptureFocus()
 		end
 	end
 end)
