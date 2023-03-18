@@ -560,7 +560,7 @@ local ClientLog = Instance.new("ScrollingFrame")
 			
 	local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
 
-	connections[#connections+1] = ClientLog.ChildAdded:Connect(function(property)
+	connections[#connections+1] = ClientLog.Changed:Connect(function(property)
 		if property ~= "CanvasPosition" then
 			game:GetService("TweenService"):Create(ClientLog, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)}):Play()
 		end
@@ -569,6 +569,16 @@ local ClientLog = Instance.new("ScrollingFrame")
 ----------------------------------------------------------------------
 -- Command Bar Setup --
 ----------------------------------------------------------------------
+
+local TextBoxIsFocused = false
+
+connections[#connections+1] = CmdBar.Focused:Connect(function()
+	TextBoxIsFocused = true
+end)
+
+connections[#connections+1] = CmdBar.FocusLost:Connect(function()
+	TextBoxIsFocused = false
+end)
 
 local TextService = game:GetService("TextService")
 
@@ -639,21 +649,19 @@ connections[#connections+1] = game:GetService("UserInputService").InputBegan:Con
 	if input.KeyCode == Enum.KeyCode.BackSlash then
 		task.wait(0.05)
 		CmdBar:CaptureFocus()
-	elseif input.KeyCode == Enum.KeyCode.Up and UserInputService:GetFocusedTextBox() then
-		print("up", currentCommandIndex, commandHistory)
+	elseif input.KeyCode == Enum.KeyCode.Up and TextBoxIsFocused then
 		currentCommandIndex = math.max(currentCommandIndex - 1, 0)
 		local command = commandHistory[currentCommandIndex]
 		if command then
 		  CmdBar.Text = command
-		  CmdBar.CursorPosition = #CmdBar.Text
+		  CmdBar.CursorPosition = #CmdBar.Text + 1
 		end
-	elseif input.KeyCode == Enum.KeyCode.Down and UserInputService:GetFocusedTextBox() then
-		print("down", currentCommandIndex, commandHistory)
+	elseif input.KeyCode == Enum.KeyCode.Down and TextBoxIsFocused then
 		currentCommandIndex = math.min(currentCommandIndex + 1, #commandHistory + 1)
 		local command = commandHistory[currentCommandIndex] or ""
 		if command then
 		  CmdBar.Text = command
-		  CmdBar.CursorPosition = #CmdBar.Text
+		  CmdBar.CursorPosition = #CmdBar.Text + 1
 		end
 	end
 end)
@@ -795,8 +803,8 @@ connections[#connections+1] = CmdBar.FocusLost:Connect(function(pressed)
 		local text = CmdBar.Text
 		text = string.split(text, " ")
 		if pressed then 
-			table.insert(commandHistory, command)
-            currentCommandIndex = #commandHistory + 1
+			table.insert(commandHistory, table.concat(text, " "))
+        	currentCommandIndex = #commandHistory + 1
 			OutputText("> "..table.concat(text, " "), Enum.MessageType.MessageOutput)
 			if CurrentMode == 0 then
 				CmdBar.Text = ""
