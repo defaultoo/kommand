@@ -221,7 +221,12 @@ local WarningColor = Color3.fromRGB(255, 170, 0)
 local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
+local debounce = false
 ClientLog.Changed:Connect(function(property)
+	if debounce then
+		debounce = false
+		return
+	end
 	if property ~= "CanvasPosition" then
 		ClientLog.CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)
 	end
@@ -365,7 +370,7 @@ end)
 
 CmdBar.FocusLost:Connect(function(enter)
 	if enter then
-		CmdBar.Visible = false
+		CommandBar.Visible = false
 		OutputText("> "..CmdBar.Text)
 		wait()
 		CmdBar:CaptureFocus()
@@ -386,7 +391,17 @@ CmdBar.FocusLost:Connect(function(enter)
 			wait(0.5)
 			Terminal:Destroy()
 		elseif command[1] == "update" then
-			Update = command[2]
+			OutputText("Setting Update to "..tostring(command[2]))
+			if command[2] == "true" then
+				Update = true
+				OutputText("Succesfully ran")
+			elseif command[2] == "false" then
+				Update = false
+				OutputText("Succesfully ran")
+			else
+				OutputText("Failed to set Update to "..tostring(command[2])..". Note that argument 2 must be a bool (true/false).", Enum.MessageType.MessageError)
+			end
+			
 		elseif command[1] == "install" then
 			local name = command[3] or command[2]
 			if command[2] == nil then
@@ -426,7 +441,7 @@ CmdBar.FocusLost:Connect(function(enter)
 				end
 			end
 		end
-		CmdBar.Visible = true
+		CommandBar.Visible = true
 	end
 end)
 
