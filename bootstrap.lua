@@ -371,7 +371,7 @@ CmdBar.FocusLost:Connect(function(enter)
 		command = string.split(command, " ")
 		CmdBar.Text = ""
 		if command[1] == "help" then
-			OutputText("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.")		
+			OutputText("<b><u>System</u></b>\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\n<b><u>Debug</u></b>\nupdate <bool> - Determines whether to update or not.\n\n<b><u>Module Library</u></b>\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts.")
 		elseif command[1] == "continue" then
 			Terminal:TweenPosition(UDim2.new(0.5,0,1,400), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 			wait(0.5)
