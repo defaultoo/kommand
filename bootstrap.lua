@@ -94,7 +94,7 @@ PromptText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 PromptText.BackgroundTransparency = 1.000
 PromptText.Size = UDim2.new(1, 0, 0.349999994, 0)
 PromptText.Font = Enum.Font.RobotoMono
-PromptText.Text = "Update Kommand?"
+PromptText.Text = "Launch terminal?"
 PromptText.TextColor3 = Color3.fromRGB(255, 255, 255)
 PromptText.TextSize = 16.000
 PromptText.TextXAlignment = Enum.TextXAlignment.Left
@@ -137,24 +137,218 @@ end
 
 wait(0.5)
 
--- Bootstrap Setup
+-- Terminal Setup
+local Terminal = Instance.new("Frame")
+local Console = Instance.new("Frame")
+local ClientLog = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+local CommandBar = Instance.new("Frame")
+local CmdBar = Instance.new("TextBox")
+local EnvIndicator = Instance.new("TextLabel")
+
+Terminal.Name = "Terminal"
+Terminal.Parent = BootstrapScreenGUI
+Terminal.AnchorPoint = Vector2.new(0.5, 1)
+Terminal.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Terminal.BackgroundTransparency = 0.025
+Terminal.BorderSizePixel = 0
+Terminal.Position = UDim2.new(0.5, 0, 1, 400)
+Terminal.Size = UDim2.new(0, 700, 0, 400)
+
+Console.Name = "Console"
+Console.Parent = Terminal
+Console.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Console.BackgroundTransparency = 1.000
+Console.Size = UDim2.new(1, 0, 1, 0)
+
+ClientLog.Name = "ClientLog"
+ClientLog.Parent = Console
+ClientLog.Active = true
+ClientLog.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+ClientLog.BackgroundTransparency = 1.000
+ClientLog.BorderSizePixel = 0
+ClientLog.Position = UDim2.new(0, 20, 0, 20)
+ClientLog.Size = UDim2.new(1, -40, 1, -40)
+ClientLog.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+UIListLayout.Parent = ClientLog
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 2)
+
+CommandBar.Name = "CommandBar"
+CommandBar.Parent = ClientLog
+CommandBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CommandBar.BackgroundTransparency = 1.000
+CommandBar.LayoutOrder = 999999999
+CommandBar.Size = UDim2.new(1, 0, 0, 16)
+
+CmdBar.Name = "CmdBar"
+CmdBar.Parent = CommandBar
+CmdBar.AnchorPoint = Vector2.new(0, 0.5)
+CmdBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CmdBar.BackgroundTransparency = 1.000
+CmdBar.Position = UDim2.new(0, 16, 0.5, 0)
+CmdBar.Size = UDim2.new(1, -30, 0, 20)
+CmdBar.ClearTextOnFocus = false
+CmdBar.Font = Enum.Font.RobotoMono
+CmdBar.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
+CmdBar.Text = ""
+CmdBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+CmdBar.TextSize = 16.000
+CmdBar.TextWrapped = true
+CmdBar.TextXAlignment = Enum.TextXAlignment.Left
+
+EnvIndicator.Name = ">"
+EnvIndicator.Parent = CommandBar
+EnvIndicator.Active = true
+EnvIndicator.AnchorPoint = Vector2.new(0, 0.5)
+EnvIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+EnvIndicator.BackgroundTransparency = 1.000
+EnvIndicator.Position = UDim2.new(0, 0, 0.5, 0)
+EnvIndicator.Selectable = true
+EnvIndicator.Size = UDim2.new(0, 0, 0, 25)
+EnvIndicator.Font = Enum.Font.RobotoMono
+EnvIndicator.Text = ">"
+EnvIndicator.TextColor3 = Color3.fromRGB(255, 255, 255)
+EnvIndicator.TextSize = 16.000
+EnvIndicator.TextXAlignment = Enum.TextXAlignment.Left
+EnvIndicator.AutomaticSize = Enum.AutomaticSize.X
+
+local OriginalAbsoluteSize = ClientLog.AbsoluteCanvasSize.Y
+local ErrorColor = Color3.fromRGB(255, 0, 0)
+local WarningColor = Color3.fromRGB(255, 170, 0)
+local OutputColor = Color3.fromRGB(255, 255, 255)
+local InfoColor = Color3.fromRGB(0, 85, 255)
+
+ClientLog.Changed:Connect(function(property)
+	if property ~= "CanvasPosition" then
+		ClientLog.CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)
+	end
+end)
+
+local function OutputText(Message, Type, Prefix, Color)
+	if Type == Enum.MessageType.MessageError then
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = Message
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = ErrorColor
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = "🛑 "..Message
+		TextLabel.TextColor3 = ErrorColor
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.RichText = true
+	elseif Type == Enum.MessageType.MessageWarning then
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = Message
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = WarningColor
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = "⚠️ "..Message
+		TextLabel.TextColor3 = WarningColor
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.RichText = true
+	elseif Type == Enum.MessageType.MessageOutput then
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = Message
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = Message
+		TextLabel.TextColor3 = OutputColor
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.RichText = true
+	elseif Type == Enum.MessageType.MessageInfo then
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = Message
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = Message
+		TextLabel.TextColor3 = InfoColor
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.RichText = true
+	elseif Type == "Custom" then
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = Message
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = Message
+		TextLabel.TextColor3 = Color
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.RichText = true
+	else
+		local TextLabel = Instance.new("TextBox")
+		TextLabel.Name = Message
+		TextLabel.Parent = ClientLog
+		TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Size = UDim2.new(1, 0, 0, 0)
+		TextLabel.Font = Enum.Font.RobotoMono
+		TextLabel.Text = Message
+		TextLabel.TextColor3 = OutputColor
+		TextLabel.TextSize = 16.000
+		TextLabel.TextWrapped = true
+		TextLabel.ClearTextOnFocus = false
+		TextLabel.TextEditable = false
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel.RichText = true
+	end
+end
+
+-- Prompt Setup
 connections[#connections+1] = TextBox.FocusLost:Connect(function(enter)
 	if enter then
 		if TextBox.Text == "y" then
-			IsStarted = true
 			TextBox.Text = ""
 			TextBox:ReleaseFocus()
-			Update = true
 			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			Terminal:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 			wait(0.5)
 			DefaultState.Visible = true
 			PromptState.Visible = false
-			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			CmdBar:CaptureFocus()
+			OutputText("Bootstrap version 0.8b - (c) Ooflet", Enum.MessageType.MessageOutput)
 		elseif TextBox.Text == "n" then
 			IsStarted = true
 			TextBox.Text = ""
 			TextBox:ReleaseFocus()
-			Update = false
 			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 			wait(0.5)
 			DefaultState.Visible = true
@@ -165,6 +359,74 @@ connections[#connections+1] = TextBox.FocusLost:Connect(function(enter)
 		end
 	end
 end)
+
+-- Terminal Scripts
+
+CmdBar.FocusLost:Connect(function(enter)
+	if enter then
+		OutputText("> "..CmdBar.Text)
+		wait()
+		CmdBar:CaptureFocus()
+		local command = CmdBar.Text
+		command = string.split(command, " ")
+		CmdBar.Text = ""
+		if command[1] == "help" then
+			OutputText("continue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.")		
+		elseif command[1] == "continue" then
+			Terminal:TweenPosition(UDim2.new(0.5,0,1,400), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			wait(0.5)
+			IsStarted = true
+		elseif command[1] == "exit" then
+			Terminal:TweenPosition(UDim2.new(0.5,0,1,400), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			for _, connection in pairs(connections) do
+				connection:Disconnect()
+			end		
+			wait(0.5)
+			Terminal:Destroy()
+		elseif command[1] == "install" then
+			local name = command[3] or command[2]
+			if command[2] == nil then
+				OutputText("Argument 2 (moduleLink) must not be empty!", Enum.MessageType.MessageError)			
+			else
+				OutputText("Downloading module from "..tostring(command[2]).." with name "..tostring(command[3]).."...")
+				local success, err = pcall(function() writefile("kommand/modules/"..name, game:HttpGet(command[2])) end)
+				if success then 
+					OutputText("Succesfully downloaded module")
+				else
+					OutputText("Failed to download module; "..err, Enum.MessageType.MessageError)
+				end		
+			end
+
+		elseif command[1] == "uninstall" then
+			if command[2] ~= nil then
+				if isfile("kommand/modules/"..command[2]) then
+					delfile("kommand/modules/"..command[2])
+					OutputText("Successfully uninstalled module.")
+				else
+					OutputText("Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).", Enum.MessageType.MessageError)
+				end
+			else
+				OutputText("Argument 2 (name) must not be empty!", Enum.MessageType.MessageError)
+			end
+		else
+			command = table.concat(command, " ")
+			local success, err = pcall(function() loadstring(command)() end)
+			if success then
+				
+				OutputText("Successfully ran.")
+			else
+				
+				local success, err = pcall(function() OutputText("Error occured during execution: "..err, Enum.MessageType.MessageError) end)
+				if not success then 
+					OutputText("Error occured during execution.", Enum.MessageType.MessageError)	
+				end
+			end
+		end
+		
+	end
+end)
+
+-- Bootstrap Scripts
 
 if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift) then
 	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
@@ -225,7 +487,7 @@ if Update then
 		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
 		Status.Text = "Initializing..."
 	end
-		wait(0.1)
+	wait(0.1)
 end
 IsLoaded = true
 Status.Text = "Initializing..."
