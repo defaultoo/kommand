@@ -113,26 +113,26 @@ TextBox.TextXAlignment = Enum.TextXAlignment.Left
 
 -- Throbber Animation
 spawn(function()
-    while not StatusFail and not IsLoaded do
+	while not StatusFail and not IsLoaded do
 		pcall(function()
-			Fill:TweenPosition(UDim2.new(1,0,0,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 1, true)
+			Fill:TweenPosition(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, 1, true)
 			wait(0.75)
-			Fill.Position = UDim2.new(-1,0,0,0)
+			Fill.Position = UDim2.new(-1, 0, 0, 0)
 		end)
-    end
+	end
 end)
 
 local function ThrobberError(err)
 	Status.Text = err
-	FillError:TweenPosition(UDim2.new(0,0,0,0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
-    StatusFail = true
-    wait(3)
-    Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
-    wait(0.5)
+	FillError:TweenPosition(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quint, 0.5, true)
+	StatusFail = true
+	wait(3)
+	Bootstrapper:TweenPosition(UDim2.new(0.5, 0, 1, 60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+	wait(0.5)
 	for _, connection in pairs(connections) do
 		connection:Disconnect()
- 	end		
-    BootstrapScreenGUI:Destroy()
+	end
+	BootstrapScreenGUI:Destroy()
 end
 
 wait(0.5)
@@ -228,7 +228,8 @@ ClientLog.Changed:Connect(function(property)
 		return
 	end
 	if property ~= "CanvasPosition" then
-		ClientLog.CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)
+		ClientLog.CanvasPosition =
+			Vector2.new(ClientLog.CanvasPosition.X, ClientLog.AbsoluteCanvasSize.Y - OriginalAbsoluteSize)
 	end
 end)
 
@@ -242,7 +243,7 @@ local function OutputText(Message, Type, Prefix, Color)
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "🛑 "..Message
+		TextLabel.Text = "🛑 " .. Message
 		TextLabel.TextColor3 = ErrorColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
@@ -259,7 +260,7 @@ local function OutputText(Message, Type, Prefix, Color)
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "⚠️ "..Message
+		TextLabel.Text = "⚠️ " .. Message
 		TextLabel.TextColor3 = WarningColor
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
@@ -339,13 +340,25 @@ local function OutputText(Message, Type, Prefix, Color)
 end
 
 -- Prompt Setup
-connections[#connections+1] = TextBox.FocusLost:Connect(function(enter)
+connections[#connections + 1] = TextBox.FocusLost:Connect(function(enter)
 	if enter then
 		if TextBox.Text == "y" then
 			TextBox.Text = ""
 			TextBox:ReleaseFocus()
-			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
-			Terminal:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			Bootstrapper:TweenPosition(
+				UDim2.new(0.5, 0, 1, 60),
+				Enum.EasingDirection.InOut,
+				Enum.EasingStyle.Quad,
+				0.5,
+				true
+			)
+			Terminal:TweenPosition(
+				UDim2.new(0.5, 0, 1, 0),
+				Enum.EasingDirection.InOut,
+				Enum.EasingStyle.Quad,
+				0.5,
+				true
+			)
 			wait(0.5)
 			DefaultState.Visible = true
 			PromptState.Visible = false
@@ -355,11 +368,23 @@ connections[#connections+1] = TextBox.FocusLost:Connect(function(enter)
 			IsStarted = true
 			TextBox.Text = ""
 			TextBox:ReleaseFocus()
-			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			Bootstrapper:TweenPosition(
+				UDim2.new(0.5, 0, 1, 60),
+				Enum.EasingDirection.InOut,
+				Enum.EasingStyle.Quad,
+				0.5,
+				true
+			)
 			wait(0.5)
 			DefaultState.Visible = true
 			PromptState.Visible = false
-			Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			Bootstrapper:TweenPosition(
+				UDim2.new(0.5, 0, 1, 0),
+				Enum.EasingDirection.InOut,
+				Enum.EasingStyle.Quad,
+				0.5,
+				true
+			)
 		else
 			TextBox.Text = ""
 			TextBox:CaptureFocus()
@@ -372,73 +397,131 @@ end)
 CmdBar.FocusLost:Connect(function(enter)
 	if enter then
 		CommandBar.Visible = false
-		OutputText("> "..CmdBar.Text)
+		OutputText("> " .. CmdBar.Text)
 		wait()
 		CmdBar:CaptureFocus()
 		local command = CmdBar.Text
 		command = string.split(command, " ")
 		CmdBar.Text = ""
 		if command[1] == "help" then
-			OutputText("System\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nDebug\nupdate <bool> - Sets the update variable.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts.")
+			OutputText(
+				"System\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nDebug\nupdate <bool> - Sets the update variable.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts."
+			)
 		elseif command[1] == "continue" then
-			Terminal:TweenPosition(UDim2.new(0.5,0,1,400), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			Terminal:TweenPosition(
+				UDim2.new(0.5, 0, 1, 400),
+				Enum.EasingDirection.InOut,
+				Enum.EasingStyle.Quad,
+				0.5,
+				true
+			)
 			wait(0.5)
 			IsStarted = true
 		elseif command[1] == "exit" then
-			Terminal:TweenPosition(UDim2.new(0.5,0,1,400), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+			Terminal:TweenPosition(
+				UDim2.new(0.5, 0, 1, 400),
+				Enum.EasingDirection.InOut,
+				Enum.EasingStyle.Quad,
+				0.5,
+				true
+			)
 			for _, connection in pairs(connections) do
 				connection:Disconnect()
-			end		
+			end
 			wait(0.5)
 			Terminal:Destroy()
+		elseif command[1] == "settings" then
+			local settings = {
+				["blur"] = "auto",
+				["theme"] = "default",
+				["startupScripts"] = "",
+			}
+			local function SaveSettings()
+				writefile("/kommand/settings/setting.json", game:GetService("HttpService"):JSONEncode(settings))
+			end
+
+			local function LoadSettings()
+				settings = game:GetService("HttpService"):JSONDecode(readfile("/kommand/settings/setting.json"))
+			end
+			if command[2] == "reset" then
+				SaveSettings()
+				OutputText("Settings have been reset successfully.")
+			elseif command[2] == "set" then
+				LoadSettings()
+				settings[command[3]] = command[4]
+				SaveSettings()
+				OutputText("Set " .. command[3] .. " to " .. command[4] .. " successfully.")
+			elseif command[2] == "add" then
+				LoadSettings()
+				settings[command[3]] = settings[command[3]] .. command[4]
+				SaveSettings()
+				OutputText("Added " .. command[4] .. " to " .. command[3] .. " successfully.")
+			elseif command[2] == "delete" then
+				LoadSettings()
+				settings[command[3]] = nil
+				SaveSettings()
+				OutputText("Deleted " .. command[3] .. " successfully.")
+			end
 		elseif command[1] == "update" then
-			OutputText("Setting Update to "..tostring(command[2]))
+			OutputText("Setting Update to " .. tostring(command[2]))
 			if command[2] == "true" then
 				Update = true
-				OutputText("Succesfully ran")
+				OutputText("Successfully ran")
 			elseif command[2] == "false" then
 				Update = false
-				OutputText("Succesfully ran")
+				OutputText("Successfully ran")
 			else
-				OutputText("Failed to set Update to "..tostring(command[2])..". Note that argument 2 must be a bool (true/false).", Enum.MessageType.MessageError)
+				OutputText(
+					"Failed to set Update to "
+						.. tostring(command[2])
+						.. ". Note that argument 2 must be a bool (true/false).",
+					Enum.MessageType.MessageError
+				)
 			end
-			
 		elseif command[1] == "install" then
 			local name = command[3] or command[2]
 			if command[2] == nil then
-				OutputText("Argument 2 (moduleLink) must not be empty!", Enum.MessageType.MessageError)			
+				OutputText("Argument 2 (moduleLink) must not be empty!", Enum.MessageType.MessageError)
 			else
-				OutputText("Downloading module from "..tostring(command[2]).." with name "..tostring(command[3]).."...")
-				local success, err = pcall(function() writefile("kommand/modules/"..name, game:HttpGet(command[2])) end)
-				if success then 
+				OutputText(
+					"Downloading module from " .. tostring(command[2]) .. " with name " .. tostring(command[3]) .. "..."
+				)
+				local success, err = pcall(function()
+					writefile("kommand/modules/" .. name .. ".kmd", game:HttpGet(command[2]))
+				end)
+				if success then
 					OutputText("Succesfully downloaded module")
 				else
-					OutputText("Failed to download module; "..err, Enum.MessageType.MessageError)
-				end		
+					OutputText("Failed to download module; " .. err, Enum.MessageType.MessageError)
+				end
 			end
-
 		elseif command[1] == "uninstall" then
 			if command[2] ~= nil then
-				if isfile("kommand/modules/"..command[2]) then
-					delfile("kommand/modules/"..command[2])
+				if isfile("kommand/modules/" .. command[2]) then
+					delfile("kommand/modules/" .. command[2])
 					OutputText("Successfully uninstalled module.")
 				else
-					OutputText("Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).", Enum.MessageType.MessageError)
+					OutputText(
+						"Failed to uninstall module! The module was most likely not found, double check to see if the module name is correctly spelt (it is case sensitive).",
+						Enum.MessageType.MessageError
+					)
 				end
 			else
 				OutputText("Argument 2 (name) must not be empty!", Enum.MessageType.MessageError)
 			end
 		else
 			command = table.concat(command, " ")
-			local success, err = pcall(function() loadstring(command)() end)
+			local success, err = pcall(function()
+				loadstring(command)()
+			end)
 			if success then
-				
 				OutputText("Successfully ran.")
 			else
-				
-				local success, err = pcall(function() OutputText("Error occured during execution: "..err, Enum.MessageType.MessageError) end)
-				if not success then 
-					OutputText("Error occured during execution.", Enum.MessageType.MessageError)	
+				local success, err = pcall(function()
+					OutputText("Error occured during execution: " .. err, Enum.MessageType.MessageError)
+				end)
+				if not success then
+					OutputText("Error occured during execution.", Enum.MessageType.MessageError)
 				end
 			end
 		end
@@ -448,36 +531,53 @@ end)
 
 -- Bootstrap Scripts
 
-if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift) then
-	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+if
+	game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl)
+	and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift)
+then
+	Bootstrapper:TweenPosition(UDim2.new(0.5, 0, 1, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	DefaultState.Visible = false
 	PromptState.Visible = true
 	TextBox:CaptureFocus()
-	repeat wait() until IsStarted
+	repeat
+		wait()
+	until IsStarted
 end
 
 if Update then
 	Status.Text = "Checking Kommand Framework"
-	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+	Bootstrapper:TweenPosition(UDim2.new(0.5, 0, 1, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	wait(0.5)
-	local framework, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") end)
+	local framework, message = pcall(function()
+		module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua")
+	end)
 	if not framework then
-		Status.Text = "Could not fetch data from https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. "..message
+		Status.Text = "Could not fetch data from https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua. "
+			.. message
 		ThrobberError()
 		error()
 	end
-	local library, message = pcall(function() module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") end)
+	local library, message = pcall(function()
+		module = game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua")
+	end)
 	if not library then
-		Status.Text = "Could not fetch data from https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. "..message
+		Status.Text = "Could not fetch data from https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua. "
+			.. message
 		ThrobberError()
 		error()
 	end
-		if isfile("kommand/framework/kommandframework.kmd") then
-		if readfile("kommand/framework/kommandframework.kmd") ~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua") then
+	if isfile("kommand/framework/kommandframework.kmd") then
+		if
+			readfile("kommand/framework/kommandframework.kmd")
+			~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua")
+		then
 			Status.Text = "Updating Kommand Framework..."
 			wait(0.1)
 			delfile("kommand/framework/kommandframework.kmd")
-			writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))	
+			writefile(
+				"kommand/framework/kommandframework.kmd",
+				game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua")
+			)
 			Status.Text = "Checking Kommand Library..."
 		else
 			Status.Text = "Checking Kommand Library..."
@@ -487,15 +587,30 @@ if Update then
 		wait(0.1)
 		makefolder("kommand")
 		makefolder("kommand/framework")
-		writefile("kommand/framework/kommandframework.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua"))
+		writefile(
+			"kommand/framework/kommandframework.kmd",
+			game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua")
+		)
 		Status.Text = "Checking Kommand Library.."
 	end
+	if not isfolder("kommand/settings") then
+		makefolder("kommand/settings")
+		writefile("kommand/settings/setting.json", "")
+	elseif not isfile("kommand/settings/setting.json") then
+		writefile("kommand/settings/setting.json", "")
+	end
 	if isfile("kommand/library/kommandlibrary.kmd") then
-		if readfile("kommand/library/kommandlibrary.kmd") ~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua") then
+		if
+			readfile("kommand/library/kommandlibrary.kmd")
+			~= game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua")
+		then
 			Status.Text = "Updating Kommand Library..."
 			wait(0.1)
 			delfile("kommand/library/kommandlibrary.kmd")
-			writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
+			writefile(
+				"kommand/library/kommandlibrary.kmd",
+				game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua")
+			)
 			Status.Text = "Initializing..."
 		else
 			Status.Text = "Initializing..."
@@ -504,7 +619,10 @@ if Update then
 		Status.Text = "Installing Kommand Library..."
 		wait(0.1)
 		makefolder("kommand/library")
-		writefile("kommand/library/kommandlibrary.kmd", game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua"))
+		writefile(
+			"kommand/library/kommandlibrary.kmd",
+			game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandLibrary.lua")
+		)
 		Status.Text = "Initializing..."
 	end
 	wait(0.1)
@@ -514,16 +632,16 @@ Status.Text = "Initializing..."
 if game.CoreGui:FindFirstChild("Kommand") then
 	ThrobberError("Kommand is already executed!")
 else
-	Bootstrapper:TweenPosition(UDim2.new(0.5,0,1,60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
+	Bootstrapper:TweenPosition(UDim2.new(0.5, 0, 1, 60), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	wait(0.5)
 	for _, connection in pairs(connections) do
 		connection:Disconnect()
-	 end		
+	end
 	BootstrapScreenGUI:Destroy()
 	spawn(function()
-		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()	
+		loadstring(readfile("kommand/library/kommandlibrary.kmd"))()
 	end)
 	spawn(function()
-		loadstring(readfile("kommand/framework/kommandframework.kmd"))()		
+		loadstring(readfile("kommand/framework/kommandframework.kmd"))()
 	end)
 end

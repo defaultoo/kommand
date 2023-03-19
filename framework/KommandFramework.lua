@@ -2,6 +2,11 @@
 -- Ooflet
 
 local connections = {}
+local settings = {
+	["blur"] = "auto",
+	["theme"] = "default",
+	["startupScripts"] = "",
+}
 
 ----------------------------------------------------------------------
 -- Library Setup --
@@ -11,11 +16,34 @@ IsLoaded.Name = "IsLoaded"
 IsLoaded.Value = false
 IsLoaded.Parent = game:GetService("CoreGui")
 ----------------------------------------------------------------------
--- GUI Setup --
+-- Core Setup --
 ----------------------------------------------------------------------
 if game.CoreGui:FindFirstChild("Kommand") then
 	error("Kommand is already executed!")
 end
+
+if not isfile("/kommand/settings/setting.json") then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrap.lua"))()
+	error("Kommand is not properly installed!")
+end
+
+local function SaveSettings()
+	writefile("/kommand/settings/setting.json", game:GetService("HttpService"):JSONEncode(settings))
+end
+
+local function LoadSettings()
+	settings = game:GetService("HttpService"):JSONDecode(readfile("/kommand/settings/setting.json"))
+end
+
+if readfile("/kommand/settings/setting.json") == "" then
+	SaveSettings()
+else
+	LoadSettings()
+end
+
+----------------------------------------------------------------------
+-- GUI Setup --
+----------------------------------------------------------------------
 
 local Kommand = Instance.new("ScreenGui")
 local BlurEffect = Instance.new("Folder")
@@ -424,6 +452,12 @@ local function UpdateGraphics()
 	end
 end
 
+connections[#connections + 1] = UserSettings().GameSettings
+	:GetPropertyChangedSignal("SavedQualityLevel")
+	:Connect(function()
+		UpdateGraphics()
+	end)
+
 local UIBlur = Instance.new("DepthOfFieldEffect")
 UIBlur.Name = "ConsoleBlur"
 UIBlur.FarIntensity = 0
@@ -722,64 +756,59 @@ local CurrentMode = 0
 -- 4 = Response Mode
 
 -- ModeCheck
-connections[#connections + 1] = UserInputService.InputBegan:Connect(function(input)
+connections[#connections + 1] = CmdBar.Changed:Connect(function(property)
 	if CurrentMode ~= 4 then
-		if TextBoxIsFocused then
-			if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
-				if input.KeyCode == "*" then
-					CurrentMode = 1
-					EnvIndicator.Text = "*"
-					CmdBar.PlaceholderText = "In system command mode."
-					CmdBar.Text = ""
-				elseif input.KeyCode == ">" then
-					CurrentMode = 0
-					EnvIndicator.Text = ">"
-					CmdBar.PlaceholderText = "Input Command"
-					CmdBar.Text = ""
-				elseif input.KeyCode == "?" then
-					CurrentMode = 2
-					EnvIndicator.Text = "?"
-					CmdBar.PlaceholderText = "In help mode."
-					CmdBar.Text = ""
-				elseif SearchForCommand("help") then
-					CurrentMode = 2
-					EnvIndicator.Text = "?"
-					CmdBar.PlaceholderText = "In help mode."
-				elseif input.KeyCode == "!" then
-					CurrentMode = 3
-					EnvIndicator.Text = "!"
-					CmdBar.PlaceholderText = "In special mode."
-					CmdBar.Text = ""
-				elseif SearchForCommand("clr") or SearchForCommand("clear") then
-					CmdBar.Text = ""
-					game:GetService("TweenService")
-						:Create(
-							ClientLog,
-							TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-							{ CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, 0) }
-						)
-						:Play()
-					for _, v in pairs(ClientLog:GetDescendants()) do
-						if v:IsA("TextBox") then
-							spawn(function()
-								game:GetService("TweenService")
-									:Create(
-										v,
-										TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-										{ TextTransparency = 1 }
-									)
-									:Play()
-								task.wait(0.5)
-								v:Destroy()
-							end)
-						end
-					end
+		if SearchForCommand("*") then
+			CurrentMode = 1
+			EnvIndicator.Text = "*"
+			CmdBar.PlaceholderText = "In system command mode."
+			CmdBar.Text = ""
+		elseif SearchForCommand(">") then
+			CurrentMode = 0
+			EnvIndicator.Text = ">"
+			CmdBar.PlaceholderText = "Input Command"
+			CmdBar.Text = ""
+		elseif SearchForCommand("?") then
+			CurrentMode = 2
+			EnvIndicator.Text = "?"
+			CmdBar.PlaceholderText = "In help mode."
+			CmdBar.Text = ""
+		elseif SearchForCommand("help") then
+			CurrentMode = 2
+			EnvIndicator.Text = "?"
+			CmdBar.PlaceholderText = "In help mode."
+		elseif SearchForCommand("!") then
+			CurrentMode = 3
+			EnvIndicator.Text = "!"
+			CmdBar.PlaceholderText = "In special mode."
+			CmdBar.Text = ""
+		elseif SearchForCommand("clr") or SearchForCommand("clear") then
+			CmdBar.Text = ""
+			game:GetService("TweenService")
+				:Create(
+					ClientLog,
+					TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+					{ CanvasPosition = Vector2.new(ClientLog.CanvasPosition.X, 0) }
+				)
+				:Play()
+			for _, v in pairs(ClientLog:GetDescendants()) do
+				if v:IsA("TextBox") then
+					spawn(function()
+						game:GetService("TweenService")
+							:Create(
+								v,
+								TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+								{ TextTransparency = 1 }
+							)
+							:Play()
+						task.wait(0.5)
+						v:Destroy()
+					end)
 				end
 			end
 		end
 	end
 end)
-
 ----------------------------------------------------------------------
 -- Command Setup --
 ----------------------------------------------------------------------
