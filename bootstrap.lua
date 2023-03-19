@@ -431,36 +431,45 @@ CmdBar.FocusLost:Connect(function(enter)
 			wait(0.5)
 			Terminal:Destroy()
 		elseif command[1] == "settings" then
-			local settings = {
-				["blur"] = "auto",
-				["theme"] = "default",
-				["startupScripts"] = "",
-			}
-			local function SaveSettings()
-				writefile("/kommand/settings/setting.json", game:GetService("HttpService"):JSONEncode(settings))
-			end
+			if command[2] ~= nil then
+				local settings = {
+					["blur"] = "auto",
+					["theme"] = "default",
+					["startupScripts"] = "",
+				}
+				local function SaveSettings()
+					writefile("/kommand/config/setting.json", game:GetService("HttpService"):JSONEncode(settings))
+				end
 
-			local function LoadSettings()
-				settings = game:GetService("HttpService"):JSONDecode(readfile("/kommand/settings/setting.json"))
-			end
-			if command[2] == "reset" then
-				SaveSettings()
-				OutputText("Settings have been reset successfully.")
-			elseif command[2] == "set" then
-				LoadSettings()
-				settings[command[3]] = command[4]
-				SaveSettings()
-				OutputText("Set " .. command[3] .. " to " .. command[4] .. " successfully.")
-			elseif command[2] == "add" then
-				LoadSettings()
-				settings[command[3]] = settings[command[3]] .. command[4]
-				SaveSettings()
-				OutputText("Added " .. command[4] .. " to " .. command[3] .. " successfully.")
-			elseif command[2] == "delete" then
-				LoadSettings()
-				settings[command[3]] = nil
-				SaveSettings()
-				OutputText("Deleted " .. command[3] .. " successfully.")
+				local function LoadSettings()
+					settings = game:GetService("HttpService"):JSONDecode(readfile("/kommand/config/setting.json"))
+				end
+				if command[2] == "reset" then
+					SaveSettings()
+					OutputText("Settings have been reset successfully.")
+				end
+				if command[3] ~= nil and command[4] ~= nil then
+					if command[2] == "set" then
+						LoadSettings()
+						settings[command[3]] = command[4]
+						SaveSettings()
+						OutputText("Set " .. command[3] .. " to " .. command[4] .. " successfully.")
+					elseif command[2] == "add" then
+						LoadSettings()
+						settings[command[3]] = settings[command[3]] .. command[4]
+						SaveSettings()
+						OutputText("Added " .. command[4] .. " to " .. command[3] .. " successfully.")
+					elseif command[2] == "delete" then
+						LoadSettings()
+						settings[command[3]] = nil
+						SaveSettings()
+						OutputText("Deleted " .. command[3] .. " successfully.")
+					end
+				else
+					OutputText("Arguments missing.", Enum.MessageType.MessageWarning)
+				end
+			else
+				OutputText("Argument 2 missing.", Enum.MessageType.MessageWarning)
 			end
 		elseif command[1] == "update" then
 			OutputText("Setting Update to " .. tostring(command[2]))
@@ -593,11 +602,11 @@ if Update then
 		)
 		Status.Text = "Checking Kommand Library.."
 	end
-	if not isfolder("kommand/settings") then
-		makefolder("kommand/settings")
-		writefile("kommand/settings/setting.json", "")
-	elseif not isfile("kommand/settings/setting.json") then
-		writefile("kommand/settings/setting.json", "")
+	if not isfolder("kommand/config") then
+		makefolder("kommand/config")
+		writefile("kommand/config/setting.json", "")
+	elseif not isfile("kommand/config/setting.json") then
+		writefile("kommand/config/setting.json", "")
 	end
 	if isfile("kommand/library/kommandlibrary.kmd") then
 		if

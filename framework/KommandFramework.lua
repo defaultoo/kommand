@@ -19,23 +19,25 @@ IsLoaded.Parent = game:GetService("CoreGui")
 -- Core Setup --
 ----------------------------------------------------------------------
 if game.CoreGui:FindFirstChild("Kommand") then
+	game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 	error("Kommand is already executed!")
 end
 
-if not isfile("/kommand/settings/setting.json") then
+if not isfile("/kommand/config/setting.json") then
+	game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrap.lua"))()
 	error("Kommand is not properly installed!")
 end
 
 local function SaveSettings()
-	writefile("/kommand/settings/setting.json", game:GetService("HttpService"):JSONEncode(settings))
+	writefile("/kommand/config/setting.json", game:GetService("HttpService"):JSONEncode(settings))
 end
 
 local function LoadSettings()
-	settings = game:GetService("HttpService"):JSONDecode(readfile("/kommand/settings/setting.json"))
+	settings = game:GetService("HttpService"):JSONDecode(readfile("/kommand/config/setting.json"))
 end
 
-if readfile("/kommand/settings/setting.json") == "" then
+if readfile("/kommand/config/setting.json") == "" then
 	SaveSettings()
 else
 	LoadSettings()
@@ -438,18 +440,27 @@ local IsGraphicsSupportBlur = true
 local function UpdateGraphics()
 	local userSettings = UserSettings().GameSettings
 	local qualityLevel = userSettings.SavedQualityLevel.Value
-	if qualityLevel >= 8 then
-		IsGraphicsSupportBlur = true
-		ConsoleWindow.BackgroundTransparency = 0.1
-		BindFrame(Blur, {
-			Transparency = 0.98,
-			BrickColor = BrickColor.new("Institutional white"),
-		})
+	if settings.blur == "auto" then
+		if qualityLevel >= 8 then
+			IsGraphicsSupportBlur = true
+			ConsoleWindow.BackgroundTransparency = 0.1
+			BindFrame(Blur, {
+				Transparency = 0.98,
+				BrickColor = BrickColor.new("Institutional white"),
+			})
+		else
+			IsGraphicsSupportBlur = false
+			ConsoleWindow.BackgroundTransparency = 0.025
+			UnbindFrame(Blur)
+		end
+	elseif settings.blur == "true" then
+
+	elseif settings.blur == "false" then
+
 	else
-		IsGraphicsSupportBlur = false
-		ConsoleWindow.BackgroundTransparency = 0.025
-		UnbindFrame(Blur)
+
 	end
+	
 end
 
 connections[#connections + 1] = UserSettings().GameSettings
@@ -924,24 +935,15 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 					if text[2] == "blur" then
 						if text[3] == "true" then
 							CmdBar.Text = ""
-							TweenService:Create(
-								ConsoleWindow,
-								TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
-								{ BackgroundTransparency = 0.1 }
-							):Play()
-							BindFrame(Blur, {
-								Transparency = 0.98,
-								BrickColor = BrickColor.new("Institutional white"),
-							})
+							settings.blur = "true"
+							SaveSettings()
+							UpdateGraphics()
 							OutputText("<b>UIBlur set to true.</b>", "Custom", "=>", Color3.fromRGB(85, 170, 255))
 						elseif text[3] == "false" then
 							CmdBar.Text = ""
-							TweenService:Create(
-								ConsoleWindow,
-								TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
-								{ BackgroundTransparency = 0.025 }
-							):Play()
-							UnbindFrame(Blur)
+							settings.blur = "false"
+							SaveSettings()
+							UpdateGraphics()
 							OutputText("<b>UIBlur set to false.</b>", "Custom", "=>", Color3.fromRGB(85, 170, 255))
 						else
 							OutputText(
