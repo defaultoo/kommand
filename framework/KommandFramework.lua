@@ -215,7 +215,7 @@ CmdBarHolder.ClipsDescendants = true
 
 CmdBar.Font = Enum.Font.RobotoMono
 CmdBar.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
-CmdBar.PlaceholderText = "Input Command (\\)"
+CmdBar.PlaceholderText = "Input Command (')"
 CmdBar.Text = ""
 CmdBar.TextColor3 = Color3.fromRGB(255, 255, 255)
 CmdBar.TextSize = 16.000
@@ -759,7 +759,7 @@ local commandHistory = {}
 local currentCommandIndex = 0
 
 connections[#connections + 1] = game:GetService("UserInputService").InputBegan:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.BackSlash then
+	if input.KeyCode == Enum.KeyCode.Quote then
 		task.wait(0.05)
 		CmdBar:CaptureFocus()
 	elseif input.KeyCode == Enum.KeyCode.Up and TextBoxIsFocused then
