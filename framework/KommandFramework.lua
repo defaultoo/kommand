@@ -55,6 +55,8 @@ local TopBar = Instance.new("Frame")
 local Exit = Instance.new("TextButton")
 local UIPadding = Instance.new("UIPadding")
 local Title = Instance.new("TextLabel")
+local beta = Instance.new("TextLabel")
+local betaUIPadding = Instance.new("UIPadding")
 local UIPadding_2 = Instance.new("UIPadding")
 local Console = Instance.new("Frame")
 local UIListLayout = Instance.new("UIListLayout")
@@ -171,6 +173,24 @@ UIPadding_2.Parent = Title
 UIPadding_2.PaddingLeft = UDim.new(0, 10)
 UIPadding_2.PaddingRight = UDim.new(0, 10)
 UIPadding_2.PaddingTop = UDim.new(0, 5)
+
+beta.Name = "beta"
+beta.Parent = game.StarterGui.Kommand.ConsoleWindow.TopBar
+beta.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+beta.BackgroundTransparency = 1.000
+beta.Position = UDim2.new(0, 105, 0, 10)
+beta.Size = UDim2.new(0, 100, 0, 25)
+beta.Font = Enum.Font.GothamMedium
+beta.Text = "beta"
+beta.TextColor3 = Color3.fromRGB(255, 255, 255)
+beta.TextSize = 12.000
+beta.TextXAlignment = Enum.TextXAlignment.Left
+beta.TextYAlignment = Enum.TextYAlignment.Bottom
+
+betaUIPadding.Parent = beta
+betaUIPadding.PaddingLeft = UDim.new(0, 10)
+betaUIPadding.PaddingRight = UDim.new(0, 10)
+betaUIPadding.PaddingTop = UDim.new(0, 5)
 
 Console.Name = "Console"
 Console.Parent = ConsoleWindow
