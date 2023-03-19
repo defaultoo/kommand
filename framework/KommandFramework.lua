@@ -460,7 +460,7 @@ local function UpdateGraphics()
 	else
 
 	end
-	
+
 end
 
 connections[#connections + 1] = UserSettings().GameSettings
@@ -938,22 +938,22 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 							settings.blur = "true"
 							SaveSettings()
 							UpdateGraphics()
-							OutputText("<b>UIBlur set to true.</b>", "Custom", "=>", Color3.fromRGB(85, 170, 255))
+							OutputText("UIBlur set to true.", "Custom", "--", Color3.fromRGB(85, 170, 255))
 						elseif text[3] == "false" then
 							CmdBar.Text = ""
 							settings.blur = "false"
 							SaveSettings()
 							UpdateGraphics()
-							OutputText("<b>UIBlur set to false.</b>", "Custom", "=>", Color3.fromRGB(85, 170, 255))
+							OutputText("UIBlur set to false.", "Custom", "--", Color3.fromRGB(85, 170, 255))
 						else
 							OutputText(
-								"<b>Expected boolean, got nil/unknown. Type true or false to turn on or off.</b>",
+								"Expected boolean, got nil/unknown. Type true or false to turn on or off.",
 								Enum.MessageType.MessageWarning
 							)
 						end
 					else
 						OutputText(
-							"<b>Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.</b>",
+							"Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.",
 							Enum.MessageType.MessageWarning
 						)
 					end
@@ -964,7 +964,7 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 					game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 				elseif text[1] == "exit" or text[1] == "quit" then
 					OutputText(
-						"<b>Are you sure you want to quit Kommand? If you would like to hide Kommand, press F9 or click the X button. [y/n]</b>",
+						"Are you sure you want to quit Kommand? If you would like to hide Kommand, press F9 or click the X button. [y/n]",
 						Enum.MessageType.MessageWarning
 					)
 					if CreateResponsePrompt() then
@@ -982,7 +982,7 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 				else
 					if not IsLookingForResponse then
 						OutputText(
-							"<b>Expected function, got nil/unknown. Type ? or help to see all commands</b>",
+							"Expected function, got nil/unknown. Type ? or help to see all commands.",
 							Enum.MessageType.MessageWarning
 						)
 					end
@@ -1000,12 +1000,12 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 							setclipboard("https://ooflet.github.io/docs")
 						end
 					end)
-					OutputText("Copied!", "Custom", "=>", Color3.fromRGB(85, 170, 255))
+					OutputText("Copied!", "Custom", "--", Color3.fromRGB(85, 170, 255))
 				else
 					OutputText(
 						'To see all available functions, please visit Kommand documentation at https://ooflet.github.io/docs. Type "copy" to copy.',
 						"Custom",
-						"=>",
+						"--",
 						Color3.fromRGB(85, 170, 255)
 					)
 				end
@@ -1072,6 +1072,8 @@ game:GetService("TweenService")
 task.wait(1)
 Intro:Destroy()
 OutputText(
-	'<font color="rgb(85, 170, 255)"><b>Welcome to Kommand!</b> Type help for help.</font>',
-	Enum.MessageType.MessageOutput
+	'Welcome to Kommand! Type help for help.',
+	"Custom",
+	"--",
+	Color3.fromRGB(85, 170, 255)
 )
