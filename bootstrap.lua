@@ -447,8 +447,7 @@ CmdBar.FocusLost:Connect(function(enter)
 				if command[2] == "reset" then
 					SaveSettings()
 					OutputText("Settings have been reset successfully.")
-				end
-				if command[3] ~= nil and command[4] ~= nil then
+				elseif command[3] ~= nil and command[4] ~= nil then
 					if command[2] == "set" then
 						LoadSettings()
 						settings[command[3]] = command[4]
