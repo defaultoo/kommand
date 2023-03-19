@@ -175,7 +175,7 @@ UIPadding_2.PaddingRight = UDim.new(0, 10)
 UIPadding_2.PaddingTop = UDim.new(0, 5)
 
 beta.Name = "beta"
-beta.Parent = game.StarterGui.Kommand.ConsoleWindow.TopBar
+beta.Parent = TopBar
 beta.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 beta.BackgroundTransparency = 1.000
 beta.Position = UDim2.new(0, 105, 0, 10)
