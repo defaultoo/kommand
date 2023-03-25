@@ -4,6 +4,7 @@
 -- GUI Setup
 
 local connections = {}
+local About = "Bootstrap version 0.8b - (c) Ooflet"
 
 local BootstrapScreenGUI = Instance.new("ScreenGui")
 local Bootstrapper = Instance.new("Frame")
@@ -222,7 +223,7 @@ local OutputColor = Color3.fromRGB(255, 255, 255)
 local InfoColor = Color3.fromRGB(0, 85, 255)
 
 local debounce = false
-ClientLog.Changed:Connect(function(property)
+connections[#connections + 1] = ClientLog.Changed:Connect(function(property)
 	if debounce then
 		debounce = false
 		return
@@ -363,7 +364,7 @@ connections[#connections + 1] = TextBox.FocusLost:Connect(function(enter)
 			DefaultState.Visible = true
 			PromptState.Visible = false
 			CmdBar:CaptureFocus()
-			OutputText("Bootstrap version 0.8b - (c) Ooflet", Enum.MessageType.MessageOutput)
+			OutputText(About)
 		elseif TextBox.Text == "n" then
 			IsStarted = true
 			TextBox.Text = ""
@@ -405,8 +406,16 @@ CmdBar.FocusLost:Connect(function(enter)
 		CmdBar.Text = ""
 		if command[1] == "help" then
 			OutputText(
-				"System\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nDebug\nupdate <bool> - Sets the update variable.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts."
+				"System\nclr - Clears output.\nabout - Outputs about string.\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nDebug\nupdate <bool> - Sets the update variable.\n\nSettings\nsettings reset - Resets setting.json to default values.\nsettings set <setting> <value> - Overwrites and sets the setting to the value\nsettings add <setting> <value> - Adds the value to an already existing setting value.\nsettings delete <setting> - Sets the setting to nil, effectively deleting it.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts."
 			)
+		elseif command[1] == "about" then
+			OutputText(About)
+		elseif command[1] == "clr" or command[1] == "clear" then
+			for i, v in pairs(ClientLog:GetChildren()) do
+				if v.ClassName == "TextBox" then
+					v:Destroy()
+				end
+			end
 		elseif command[1] == "continue" then
 			Terminal:TweenPosition(
 				UDim2.new(0.5, 0, 1, 400),
@@ -447,22 +456,45 @@ CmdBar.FocusLost:Connect(function(enter)
 				if command[2] == "reset" then
 					SaveSettings()
 					OutputText("Settings have been reset successfully.")
-				elseif command[3] ~= nil and command[4] ~= nil then
-					if command[2] == "set" then
-						LoadSettings()
-						settings[command[3]] = command[4]
-						SaveSettings()
-						OutputText("Set " .. command[3] .. " to " .. command[4] .. " successfully.")
-					elseif command[2] == "add" then
-						LoadSettings()
-						settings[command[3]] = settings[command[3]] .. command[4]
-						SaveSettings()
-						OutputText("Added " .. command[4] .. " to " .. command[3] .. " successfully.")
-					elseif command[2] == "delete" then
+				elseif command[3] ~= nil then
+					if command[2] == "delete" then
 						LoadSettings()
 						settings[command[3]] = nil
 						SaveSettings()
 						OutputText("Deleted " .. command[3] .. " successfully.")
+					end
+					if command[4] ~= nil then
+						if command[2] == "set" then
+							LoadSettings()
+							settings[command[3]] = command[4]
+							SaveSettings()
+							OutputText("Set " .. command[3] .. " to " .. command[4] .. " successfully.")
+						elseif command[2] == "add" then
+							LoadSettings()
+							local success, err = pcall(function()
+								if settings[command[3]] == "" then
+									settings[command[3]] = command[4]
+								else
+									settings[command[3]] = settings[command[3]] .. ", " .. command[4]
+								end
+							end)
+							if success then
+								SaveSettings()
+								OutputText("Added " .. command[4] .. " to " .. command[3] .. " successfully.")
+							else
+								OutputText(
+									"Failed to add "
+										.. command[4]
+										.. " to "
+										.. command[3]
+										.. ". The key "
+										.. command[3]
+										.. " does not exist!"
+								)
+							end
+						end
+					else
+						OutputText("Arguments missing.", Enum.MessageType.MessageWarning)
 					end
 				else
 					OutputText("Arguments missing.", Enum.MessageType.MessageWarning)

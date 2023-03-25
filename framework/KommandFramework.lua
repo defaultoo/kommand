@@ -458,6 +458,7 @@ end
 local IsGraphicsSupportBlur = true
 
 local function UpdateGraphics()
+	LoadSettings()
 	local userSettings = UserSettings().GameSettings
 	local qualityLevel = userSettings.SavedQualityLevel.Value
 	if settings.blur == "auto" then
@@ -474,13 +475,16 @@ local function UpdateGraphics()
 			UnbindFrame(Blur)
 		end
 	elseif settings.blur == "true" then
-
+		BindFrame(Blur, {
+			Transparency = 0.98,
+			BrickColor = BrickColor.new("Institutional white"),
+		})
 	elseif settings.blur == "false" then
-
+		UnbindFrame(Blur)
 	else
-
+		LoadSettings()
+		settings.blur = "auto"
 	end
-
 end
 
 connections[#connections + 1] = UserSettings().GameSettings
@@ -965,9 +969,15 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 							SaveSettings()
 							UpdateGraphics()
 							OutputText("UIBlur set to false.", "Custom", "--", Color3.fromRGB(85, 170, 255))
+						elseif text[3] == "auto" then
+							CmdBar.Text = ""
+							settings.blur = "auto"
+							SaveSettings()
+							UpdateGraphics()
+							OutputText("UIBlur set to auto.", "Custom", "--", Color3.fromRGB(85, 170, 255))
 						else
 							OutputText(
-								"Expected boolean, got nil/unknown. Type true or false to turn on or off.",
+								"Expected SettingsBlurValue, got nil/unknown.",
 								Enum.MessageType.MessageWarning
 							)
 						end
