@@ -369,25 +369,11 @@ connections[#connections + 1] = TextBox.FocusLost:Connect(function(enter)
 			IsStarted = true
 			TextBox.Text = ""
 			TextBox:ReleaseFocus()
-			Bootstrapper:TweenPosition(
-				UDim2.new(0.5, 0, 1, 60),
-				Enum.EasingDirection.InOut,
-				Enum.EasingStyle.Quad,
-				0.5,
-				true
-			)
-			wait(0.5)
 			DefaultState.Visible = true
 			PromptState.Visible = false
-			Bootstrapper:TweenPosition(
-				UDim2.new(0.5, 0, 1, 0),
-				Enum.EasingDirection.InOut,
-				Enum.EasingStyle.Quad,
-				0.5,
-				true
-			)
 		else
 			TextBox.Text = ""
+			wait(0.05)
 			TextBox:CaptureFocus()
 		end
 	end

@@ -475,12 +475,16 @@ local function UpdateGraphics()
 			UnbindFrame(Blur)
 		end
 	elseif settings.blur == "true" then
-		BindFrame(Blur, {
-			Transparency = 0.98,
-			BrickColor = BrickColor.new("Institutional white"),
-		})
+		IsGraphicsSupportBlur = true
+			ConsoleWindow.BackgroundTransparency = 0.1
+			BindFrame(Blur, {
+				Transparency = 0.98,
+				BrickColor = BrickColor.new("Institutional white"),
+			})
 	elseif settings.blur == "false" then
-		UnbindFrame(Blur)
+		IsGraphicsSupportBlur = false
+			ConsoleWindow.BackgroundTransparency = 0.025
+			UnbindFrame(Blur)
 	else
 		LoadSettings()
 		settings.blur = "auto"
