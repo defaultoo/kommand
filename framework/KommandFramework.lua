@@ -987,7 +987,7 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 						end
 					else
 						OutputText(
-							"Expected property, got nil/unknown. Type ? setting or help setting to see all available settings.",
+							"Expected property, got nil/unknown. Type help setting to see all available settings.",
 							Enum.MessageType.MessageWarning
 						)
 					end
@@ -1016,7 +1016,7 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 				else
 					if not IsLookingForResponse then
 						OutputText(
-							"Expected function, got nil/unknown. Type ? or help to see all commands.",
+							"Expected function, got nil/unknown. Type help to see all commands.",
 							Enum.MessageType.MessageWarning
 						)
 					end
@@ -1028,16 +1028,26 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 				end
 			end
 			if CurrentMode == 2 then
-				if text[1] == "copy" then
-					pcall(function()
-						if identifyexecutor() then
-							setclipboard("https://ooflet.github.io/docs")
-						end
+				if text[1] ~= "help" then
+					local response
+					local success, err = pcall(function()
+						response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/kmdhelp/"..text[2]..".txt")
 					end)
-					OutputText("Copied!", "Custom", "--", Color3.fromRGB(85, 170, 255))
+					if success then
+						local tagFormat = string.split(response, " ")
+						if tagFormat[1] == "<redirect>" and tagFormat[3] == "</redirect>" then
+							response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/kmdhelp/"..tagFormat[2]..".txt")
+						end
+						OutputText(response,
+						"Custom",
+						"",
+						Color3.fromRGB(85, 170, 255))
+					else
+						OutputText("Failed to get help. Command most likely not found.", Enum.MessageType.MessageError)
+					end
 				else
 					OutputText(
-						'To see all available functions, please visit Kommand documentation at https://ooflet.github.io/docs. Type "copy" to copy.',
+						'To see all available functions, please visit Kommand documentation at https://ooflet.github.io/docs, or type the command you would like to view help on',
 						"Custom",
 						"--",
 						Color3.fromRGB(85, 170, 255)

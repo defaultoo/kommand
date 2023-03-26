@@ -392,7 +392,7 @@ CmdBar.FocusLost:Connect(function(enter)
 		CmdBar.Text = ""
 		if command[1] == "help" then
 			OutputText(
-				"System\nclr - Clears output.\nabout - Outputs about string.\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nDebug\nupdate <bool> - Sets the update variable.\n\nSettings\nsettings reset - Resets setting.json to default values.\nsettings set <setting> <value> - Overwrites and sets the setting to the value\nsettings add <setting> <value> - Adds the value to an already existing setting value.\nsettings delete <setting> - Sets the setting to nil, effectively deleting it.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts."
+				"System\nclr - Clears output.\nabout - Outputs about string.\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nSetup\nset update <bool> - Sets the update variable.\n\nSettings\nsettings reset - Resets setting.json to default values.\nsettings set <setting> <value> - Overwrites and sets the setting to the value\nsettings add <setting> <value> - Adds the value to an already existing setting value.\nsettings delete <setting> - Sets the setting to nil, effectively deleting it.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts."
 			)
 		elseif command[1] == "about" then
 			OutputText(About)
@@ -488,21 +488,22 @@ CmdBar.FocusLost:Connect(function(enter)
 			else
 				OutputText("Argument 2 missing.", Enum.MessageType.MessageWarning)
 			end
-		elseif command[1] == "update" then
-			OutputText("Setting Update to " .. tostring(command[2]))
-			if command[2] == "true" then
-				Update = true
-				OutputText("Successfully ran")
-			elseif command[2] == "false" then
-				Update = false
-				OutputText("Successfully ran")
-			else
-				OutputText(
+		elseif command[1] == "set" then
+			if command[2] == "update" then
+				if command[3] == "true" then
+					Update = true
+					OutputText("Successfully ran")
+				elseif command[3] == "false" then
+					Update = false
+					OutputText("Successfully ran")
+				else
+					OutputText(
 					"Failed to set Update to "
-						.. tostring(command[2])
-						.. ". Note that argument 2 must be a bool (true/false).",
+						.. tostring(command[3])
+						.. ". Note that argument 3 must be a bool (true/false).",
 					Enum.MessageType.MessageError
-				)
+					)
+				end
 			end
 		elseif command[1] == "install" then
 			local name = command[3] or command[2]

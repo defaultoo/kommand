@@ -136,7 +136,7 @@ function _G.KommandLibrary.Output:OutputText(Message, Type, Prefix, Color)
 		TextLabel.BackgroundTransparency = 1.000
 		TextLabel.Size = UDim2.new(1, 0, 0, 0)
 		TextLabel.Font = Enum.Font.RobotoMono
-		TextLabel.Text = "-- "..Message
+		TextLabel.Text = Prefix.." "..Message
 		TextLabel.TextColor3 = Color
 		TextLabel.TextSize = 16.000
 		TextLabel.TextWrapped = true
