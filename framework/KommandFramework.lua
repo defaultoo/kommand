@@ -1031,12 +1031,12 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 				if text[1] ~= "help" then
 					local response
 					local success, err = pcall(function()
-						response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/kmdhelp/"..text[1]..".txt")
+						response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/gh-pages/kmdhelp/"..text[1]..".txt")
 					end)
 					if success then
 						local tagFormat = string.split(response, " ")
 						if tagFormat[1] == "<redirect>" and tagFormat[3] == "</redirect>" then
-							response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/kmdhelp/"..tagFormat[2]..".txt")
+							response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/gh-pages/kmdhelp/"..tagFormat[2]..".txt")
 						end
 						OutputText(response,
 						"Custom",
