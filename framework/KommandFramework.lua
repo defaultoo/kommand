@@ -1031,7 +1031,7 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 				if text[1] ~= "help" then
 					local response
 					local success, err = pcall(function()
-						response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/kmdhelp/"..text[2]..".txt")
+						response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/kmdhelp/"..text[1]..".txt")
 					end)
 					if success then
 						local tagFormat = string.split(response, " ")
