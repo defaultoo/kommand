@@ -1022,9 +1022,9 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 					end
 				end
 				if text[1] == "safehop" or text[1] == "serverhop" then
-					queue_on_teleport(readfile("kommand/framework/kommandframework.kmd"))
+					queue_on_teleport(loadstring(game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/bootstrap.lua"))())
 					game["Teleport Service"]:Teleport(game.PlaceId)
-					game.Players.LocalPlayer:Kick("Please atask.wait teleport to " .. game.PlaceId)
+					game.Players.LocalPlayer:Kick("Please await teleport to " .. game.PlaceId)
 				end
 			end
 			if CurrentMode == 2 then
@@ -1036,7 +1036,7 @@ connections[#connections + 1] = CmdBar.FocusLost:Connect(function(pressed)
 					if success then
 						local tagFormat = string.split(response, " ")
 						if tagFormat[1] == "<redirect>" and tagFormat[3] == "</redirect>" then
-							response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/gh-pages/kmdhelp/"..tagFormat[2]..".txt")
+							response = game:HttpGet("https://raw.githubusercontent.com/ooflet/docs/gh-pages/kmdhelp/"..tagFormat[2])
 						end
 						OutputText(response,
 						"Custom",

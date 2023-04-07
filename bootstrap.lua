@@ -5,6 +5,7 @@
 
 local connections = {}
 local About = "Bootstrap version 0.8b - (c) Ooflet"
+local PreinstallModules = {""}
 
 local BootstrapScreenGUI = Instance.new("ScreenGui")
 local Bootstrapper = Instance.new("Frame")
@@ -21,6 +22,7 @@ local TextBox = Instance.new("TextBox")
 local StatusFail = false
 local IsLoaded = false
 local IsStarted = false
+local InstallModules = true
 local Update = true
 
 BootstrapScreenGUI.Parent = game.CoreGui
@@ -392,7 +394,7 @@ CmdBar.FocusLost:Connect(function(enter)
 		CmdBar.Text = ""
 		if command[1] == "help" then
 			OutputText(
-				"System\nclr - Clears output.\nabout - Outputs about string.\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nSetup\nset update <bool> - Sets the update variable.\n\nSettings\nsettings reset - Resets setting.json to default values.\nsettings set <setting> <value> - Overwrites and sets the setting to the value\nsettings add <setting> <value> - Adds the value to an already existing setting value.\nsettings delete <setting> - Sets the setting to nil, effectively deleting it.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts."
+				"System\nclr - Clears output.\nabout - Outputs about string.\nmakekey - Creates config key\ncontinue - Continues and launches Kommand.\nexit - Exits out of Bootstrapp and does not launch Kommand.\n\nSetup\nset update <bool> - Sets the update variable.\n\nSettings\nsettings reset - Resets setting.json to default values.\nsettings set <setting> <value> - Overwrites and sets the setting to the value\nsettings add <setting> <value> - Adds the value to an already existing setting value.\nsettings delete <setting> - Sets the setting to nil, effectively deleting it.\n\nModule Library\ninstall <moduleLink> <name*> - Installs a module provided with the moduleLink argument. If no name is provided, it will use moduleLink as the module's name.\nuninstall <name> - Uninstalls module with the provided name.\n\nAny commands other than these will be executed as Lua scripts."
 			)
 		elseif command[1] == "about" then
 			OutputText(About)
@@ -401,6 +403,13 @@ CmdBar.FocusLost:Connect(function(enter)
 				if v.ClassName == "TextBox" then
 					v:Destroy()
 				end
+			end
+		elseif command[1] == "makekey" then
+			if command[2] ~= nil then
+				writefile("kommand/config/"..command[2], "")
+				OutputText("Created key " .. command[2] .. " successfully.")
+			else
+				OutputText("Argument 2 missing")
 			end
 		elseif command[1] == "continue" then
 			Terminal:TweenPosition(
@@ -435,7 +444,6 @@ CmdBar.FocusLost:Connect(function(enter)
 				local function SaveSettings()
 					writefile("/kommand/config/setting.json", game:GetService("HttpService"):JSONEncode(settings))
 				end
-
 				local function LoadSettings()
 					settings = game:GetService("HttpService"):JSONDecode(readfile("/kommand/config/setting.json"))
 				end
@@ -448,8 +456,7 @@ CmdBar.FocusLost:Connect(function(enter)
 						settings[command[3]] = nil
 						SaveSettings()
 						OutputText("Deleted " .. command[3] .. " successfully.")
-					end
-					if command[4] ~= nil then
+					elseif command[4] ~= nil then
 						if command[2] == "set" then
 							LoadSettings()
 							settings[command[3]] = command[4]
@@ -469,14 +476,7 @@ CmdBar.FocusLost:Connect(function(enter)
 								OutputText("Added " .. command[4] .. " to " .. command[3] .. " successfully.")
 							else
 								OutputText(
-									"Failed to add "
-										.. command[4]
-										.. " to "
-										.. command[3]
-										.. ". The key "
-										.. command[3]
-										.. " does not exist!"
-								)
+									"Failed to add " .. command[4] .. " to " .. command[3] .. ". The key " .. command[3] .. " does not exist!")
 							end
 						end
 					else
@@ -499,6 +499,21 @@ CmdBar.FocusLost:Connect(function(enter)
 				else
 					OutputText(
 					"Failed to set Update to "
+						.. tostring(command[3])
+						.. ". Note that argument 3 must be a bool (true/false).",
+					Enum.MessageType.MessageError
+					)
+				end
+			elseif command[2] == "installmodules" then
+				if command[3] == "true" then
+					InstallModules = true
+					OutputText("Successfully ran")
+				elseif command[3] == "false" then
+					InstallModules = false
+					OutputText("Successfully ran")
+				else
+					OutputText(
+					"Failed to set InstallModules to "
 						.. tostring(command[3])
 						.. ". Note that argument 3 must be a bool (true/false).",
 					Enum.MessageType.MessageError
@@ -558,14 +573,35 @@ end)
 
 -- Bootstrap Scripts
 
-if
-	game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl)
-	and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift)
-then
+if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift) then
 	Bootstrapper:TweenPosition(UDim2.new(0.5, 0, 1, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.5, true)
 	DefaultState.Visible = false
 	PromptState.Visible = true
 	TextBox:CaptureFocus()
+	repeat
+		wait()
+	until IsStarted
+elseif isfile("kommand/config/OpenTerminal") then
+	delfile("kommand/config/OpenTerminal")
+	Bootstrapper:TweenPosition(
+		UDim2.new(0.5, 0, 1, 60),
+		Enum.EasingDirection.InOut,
+		Enum.EasingStyle.Quad,
+		0.5,
+		true
+	)
+	Terminal:TweenPosition(
+		UDim2.new(0.5, 0, 1, 0),
+		Enum.EasingDirection.InOut,
+		Enum.EasingStyle.Quad,
+			0.5,
+		true
+	)
+	wait(0.5)
+	DefaultState.Visible = true
+	PromptState.Visible = false
+	CmdBar:CaptureFocus()
+	OutputText(About)
 	repeat
 		wait()
 	until IsStarted
@@ -618,6 +654,18 @@ if Update then
 			"kommand/framework/kommandframework.kmd",
 			game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/framework/KommandFramework.lua")
 		)
+		if InstallModules then
+			Status.Text = "Installing Kommand Modules"
+			for index = 1, #PreinstallModules  do
+				local success, err = pcall(function()
+					writefile("kommand/modules/" .. PreinstallModules[index], game:HttpGet("https://raw.githubusercontent.com/ooflet/kommand/main/modules/"..PreinstallModules[index]))
+				end)
+				if not success then
+					Status.Text = "Failed to download module " .. PreinstallModules[index]
+					wait(3)
+				end
+			end
+		end
 		Status.Text = "Checking Kommand Library.."
 	end
 	if not isfolder("kommand/config") then
